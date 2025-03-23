@@ -1,7 +1,6 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import Image from 'next/image';
 import { useState } from 'react';
 
 export default function SignIn() {
