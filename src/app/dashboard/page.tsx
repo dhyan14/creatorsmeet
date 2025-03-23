@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface Challenge {
   id: string;
@@ -41,6 +42,14 @@ export default function Dashboard() {
     }
   }, [status, router]);
 
+  const handleChallengeComplete = (challengeId: string) => {
+    setChallenges(prevChallenges =>
+      prevChallenges.filter(challenge => challenge.id !== challengeId)
+    );
+    // Here you would typically make an API call to update the user's points
+    console.log(`Completing challenge: ${challengeId}`);
+  };
+
   if (status === 'loading') {
     return (
       <div className="min-h-screen bg-emerald-50 flex items-center justify-center">
@@ -58,10 +67,12 @@ export default function Dashboard() {
             <span className="bg-emerald-700 px-3 py-1 rounded-full text-sm">
               Points: {session?.user?.points || 0}
             </span>
-            <img
+            <Image
               src={session?.user?.image || '/default-avatar.png'}
               alt="Profile"
-              className="w-8 h-8 rounded-full"
+              width={32}
+              height={32}
+              className="rounded-full"
             />
           </div>
         </div>
@@ -87,10 +98,7 @@ export default function Dashboard() {
                   </span>
                   <button
                     className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors"
-                    onClick={() => {
-                      // Handle challenge completion
-                      console.log(`Completing challenge: ${challenge.id}`);
-                    }}
+                    onClick={() => handleChallengeComplete(challenge.id)}
                   >
                     Complete
                   </button>
