@@ -52,19 +52,21 @@ export default function Dashboard() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-emerald-50 flex items-center justify-center">
-        <div className="loading-spinner rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-600"></div>
+      <div className="min-h-screen cyber-bg flex items-center justify-center">
+        <div className="cyber-text text-4xl animate-pulse">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-emerald-50">
-      <nav className="bg-emerald-600 text-white p-4 shadow-lg" style={{ animation: 'slideIn 0.5s ease-out' }}>
+    <div className="min-h-screen cyber-bg">
+      <nav className="bg-black/80 text-white p-4 shadow-lg border-b border-[#00ffa5]">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold hover:scale-105 transition-transform">Creators Meet</h1>
+          <h1 className="cyber-text text-2xl font-bold hover:scale-105 transition-transform">
+            Creators_Meet.exe
+          </h1>
           <div className="flex items-center gap-4">
-            <span className="bg-emerald-700 px-3 py-1 rounded-full text-sm hover:bg-emerald-800 transition-colors">
+            <span className="cyber-text px-3 py-1 rounded-full border border-[#00ffa5]">
               Points: {session?.user?.points || 0}
             </span>
             <div className="relative hover:scale-110 transition-transform">
@@ -73,39 +75,39 @@ export default function Dashboard() {
                 alt="Profile"
                 width={32}
                 height={32}
-                className="rounded-full ring-2 ring-white"
+                className="rounded-full ring-2 ring-[#00ffa5]"
               />
             </div>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-8 px-4" style={{ animation: 'fadeIn 0.5s ease-out' }}>
-        <h2 className="text-3xl font-bold text-emerald-800 mb-8 hover:text-emerald-700 transition-colors">
-          Available Challenges
+      <main className="max-w-7xl mx-auto py-8 px-4">
+        <h2 className="cyber-text text-3xl font-bold mb-8">
+          Available_Challenges
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {challenges.map((challenge, index) => (
             <div
               key={challenge.id}
-              className="challenge-card bg-white rounded-xl shadow-md overflow-hidden"
+              className="cyber-card rounded-xl overflow-hidden"
               style={{ animation: `fadeIn 0.5s ease-out ${index * 0.1}s` }}
             >
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-emerald-700 mb-2">
+                <h3 className="cyber-text text-xl font-semibold mb-2">
                   {challenge.title}
                 </h3>
-                <p className="text-gray-600 mb-4">{challenge.description}</p>
+                <p className="text-gray-400 mb-4">{challenge.description}</p>
                 <div className="flex justify-between items-center">
-                  <span className="text-emerald-600 font-medium">
-                    {challenge.points} points
+                  <span className="cyber-text font-medium">
+                    {challenge.points} pts
                   </span>
                   <button
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-all hover:scale-105 active:scale-95"
+                    className="cyber-button px-4 py-2 rounded-md"
                     onClick={() => handleChallengeComplete(challenge.id)}
                   >
-                    Complete
+                    Execute
                   </button>
                 </div>
               </div>
