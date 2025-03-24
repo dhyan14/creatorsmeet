@@ -101,11 +101,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
+    const body = document.body;
+    
+    // Create menu overlay
+    const menuOverlay = document.createElement('div');
+    menuOverlay.className = 'menu-overlay';
+    body.appendChild(menuOverlay);
     
     if (menuToggle && navLinks) {
+        // Toggle menu when hamburger is clicked
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            
+            // Prevent body scrolling when menu is open
+            if (navLinks.classList.contains('active')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = '';
+            }
+        });
+        
+        // Close menu when overlay is clicked
+        menuOverlay.addEventListener('click', () => {
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            body.style.overflow = '';
         });
         
         // Close mobile menu when clicking a link
@@ -116,10 +139,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (navLinks.classList.contains('active')) {
                     menuToggle.classList.remove('active');
                     navLinks.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    body.style.overflow = '';
                 }
             });
         });
     }
+    
+    // Close menu when window is resized to desktop size
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 992 && navLinks.classList.contains('active')) {
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            body.style.overflow = '';
+        }
+    });
 });
 
 // Simplified GSAP animations
