@@ -319,4 +319,36 @@ document.addEventListener('DOMContentLoaded', () => {
             glitchTitle.style.clipPath = 'inset(0 0 0% 0)';
         }, 500);
     }
+});
+
+// Initialize AOS animations
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize AOS
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 1000,
+            easing: 'ease-in-out',
+            once: false,
+            mirror: false
+        });
+    }
+    
+    // Typewriter effect
+    const typewriterText = document.querySelector('.typewriter-text');
+    if (typewriterText) {
+        const text = typewriterText.textContent;
+        typewriterText.textContent = '';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                typewriterText.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 150);
+            }
+        }
+        
+        // Start typing after a delay
+        setTimeout(typeWriter, 1500);
+    }
 }); 
