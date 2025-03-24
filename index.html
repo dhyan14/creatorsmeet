@@ -258,57 +258,121 @@
 
         /* Hero Section */
         .hero {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 100px 20px 60px;
             min-height: 100vh;
-            position: relative;
-            background: #000000 !important;
-        }
-
-        .hero-content {
-            max-width: 700px;
-            z-index: 2;
             display: flex;
-            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            background-color: #000000;
+            padding: 0;
         }
-
-        /* Heading styles - SMALLER SIZE */
-        .hero h1 {
-            font-size: 2.4rem;
-            margin-bottom: 12px;
+        
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+        
+        .content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
             color: #fff;
-            font-weight: 700;
         }
         
-        .hero h1 span {
+        .content h1 span {
             color: var(--primary-color);
-            text-shadow: 0 0 15px rgba(0, 255, 0, 0.7), 0 0 25px rgba(0, 255, 0, 0.5);
-            font-weight: 800;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
         }
         
-        /* Typewriter effect - SMALLER SIZE */
         .typewriter {
-            font-size: 2.1rem;
-            margin-bottom: 20px;
-            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
             color: #fff;
         }
         
         .typewriter-text {
             color: var(--primary-color);
-            text-shadow: 0 0 15px rgba(0, 255, 0, 0.7), 0 0 25px rgba(0, 255, 0, 0.5);
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
         }
         
-        .cursor {
+        .typewriter label {
             display: inline-block;
-            width: 3px;
+            width: 2px;
+            height: 1.2em;
             background-color: var(--primary-color);
-            margin-left: 5px;
+            margin-left: 2px;
             animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+        
+        .content p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            border: 1px solid var(--primary-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-5px);
+            background-color: var(--primary-color);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+        }
+        
+        .btn {
+            margin-top: 10px;
+        }
+        
+        .btn button {
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+        
+        .btn button:hover {
+            background-color: transparent;
+            color: var(--primary-color);
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
         }
         
         @keyframes blink {
@@ -316,40 +380,9 @@
             50% { opacity: 0; }
         }
         
-        /* Description paragraph - SMALLER SIZE */
-        .hero-description {
-            max-width: 600px;
-            margin: 0 auto 25px;
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #ccc;
-        }
-        
-        /* Social icons - SMALLER SIZE */
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.1rem;
-        }
-        
-        /* CTA Button - SMALLER SIZE */
-        .cta-button {
-            padding: 10px 30px;
-            font-size: 1rem;
-            letter-spacing: 1px;
-        }
-        
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .hero h1 {
+            .content h1 {
                 font-size: 2rem;
             }
             
@@ -357,39 +390,23 @@
                 font-size: 1.8rem;
             }
             
-            .hero-description {
+            .content p {
                 font-size: 0.9rem;
             }
             
-            .social-icon {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-            
-            .cta-button {
-                padding: 8px 20px;
-                font-size: 0.9rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .typewriter {
-                font-size: 1.8rem;
-            }
-            
-            .social-icons {
+            .social-links {
                 gap: 15px;
             }
             
-            .social-icon {
+            .social-links a {
                 width: 35px;
                 height: 35px;
                 font-size: 1rem;
+            }
+            
+            .btn button {
+                padding: 10px 25px;
+                font-size: 0.9rem;
             }
         }
 
@@ -1205,32 +1222,39 @@
 
     <main>
         <section id="home" class="hero">
-            <div class="hero-content">
-                <!-- Heading with green glowing text -->
-                <h1 data-aos="fade-left" data-aos-duration="1500" data-aos-delay="700" class="aos-init aos-animate">
-                    Hey <span class="highlight">Innovators</span> and <span class="highlight">Coders!</span>
-                </h1>
-                
-                <!-- Typewriter effect -->
-                <div class="typewriter aos-init aos-animate" data-aos="fade-right" data-aos-duration="1500" data-aos-delay="900">
-                    Welcome to <span class="typewriter-text">CodersMeet</span><label class="cursor">|</label>
+            <div class="main-container">
+                <div class="content">
+                    <h1 data-aos="fade-left" data-aos-duration="1500" data-aos-delay="700" class="aos-init aos-animate">
+                        Hey <span>Innovators</span> and <span>Coders!</span>
+                    </h1>
+                    
+                    <div class="typewriter aos-init aos-animate" data-aos="fade-right" data-aos-duration="1500" data-aos-delay="900">
+                        Welcome to <span class="typewriter-text">CodersMeet</span><label for="">|</label>
+                    </div>
+                    
+                    <p data-aos="flip-down" data-aos-duration="1500" data-aos-delay="1100" class="aos-init aos-animate">
+                        A platform designed to connect innovative thinkers with skilled coders. If you have a groundbreaking idea but lack coding skills, or if you're a coder looking for exciting projects to build, this is the place for you! Form squads, collaborate on ideas, solve weekly coding challenges, earn points, and become the MVP. Together, let's turn ideas into reality and build a brighter tech future!
+                    </p>
+                    
+                    <div class="social-links">
+                        <a href="#" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="1300" class="aos-init aos-animate">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="1400" class="aos-init aos-animate">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="1500" class="aos-init aos-animate">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" data-aos="fade-up" data-aos-duration="1500" data-aos-delay="1600" class="aos-init aos-animate">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="btn aos-init aos-animate" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay="1800">
+                        <button onclick="window.location.href='#join'">Join now</button>
+                    </div>
                 </div>
-                
-                <!-- Description paragraph -->
-                <p data-aos="flip-down" data-aos-duration="1500" data-aos-delay="1100" class="aos-init aos-animate hero-description">
-                    A platform designed to connect innovative thinkers with skilled coders. If you have a groundbreaking idea but lack coding skills, or if you're a coder looking for exciting projects to build, this is the place for you! Form squads, collaborate on ideas, solve weekly coding challenges, earn points, and become the MVP. Together, let's turn ideas into reality and build a brighter tech future!
-                </p>
-                
-                <!-- Social media icons -->
-                <div class="social-icons">
-                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
-                </div>
-                
-                <!-- Join now button -->
-                <a href="#join" class="cta-button">Join now</a>
             </div>
             
             <div class="matrix-bg"></div>
