@@ -1047,6 +1047,79 @@
                 max-width: 300px;
             }
         }
+
+        /* Hero Description Styling */
+        .hero-description {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-color);
+            animation: fadeIn 1.5s ease-in-out forwards;
+            animation-delay: 1s;
+            opacity: 0;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+            padding: 15px 40px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 20px;
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+        
+        .cta-button:hover {
+            background-color: transparent;
+            color: var(--primary-color);
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-description {
+                font-size: 1.1rem;
+                margin: 25px auto;
+            }
+            
+            .cta-button {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-description {
+                font-size: 1rem;
+                margin: 20px auto;
+                line-height: 1.6;
+            }
+            
+            .cta-button {
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1078,19 +1151,13 @@
             <div class="glitch-container">
                 <h1 class="glitch" data-text="WHERE CODERS AND CREATORS MEET">WHERE CODERS AND CREATORS MEET</h1>
             </div>
-            <div class="terminal">
-                <div class="terminal-header">
-                    <div class="terminal-button red"></div>
-                    <div class="terminal-button yellow"></div>
-                    <div class="terminal-button green"></div>
-                </div>
-                <div class="terminal-content">
-                    <p class="typing-text">$ connecting to coders_network...</p>
-                    <p class="typing-text">$ establishing secure connection...</p>
-                    <p class="typing-text">$ welcome to the community of innovators</p>
-                    <p class="typing-text blink">$ join_now --platform=coders_meet <span class="cursor-blink">|</span></p>
-                </div>
+            
+            <div class="hero-description">
+                <p>A platform designed to connect innovative thinkers with skilled coders. If you have a groundbreaking idea but lack coding skills, or if you're a coder looking for exciting projects to build, this is the place for you! Form squads, collaborate on ideas, solve weekly coding challenges, earn points, and become the MVP. Together, let's turn ideas into reality and build a brighter tech future!</p>
             </div>
+            
+            <a href="#join" class="cta-button">Get Started</a>
+            
             <div class="scroll-indicator">
                 <p>Scroll Down</p>
                 <i class="fas fa-chevron-down"></i>
