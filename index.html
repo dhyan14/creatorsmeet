@@ -623,7 +623,7 @@
             font-weight: 500;
         }
         
-        /* Stats Cards */
+        /* Stats Cards - Fixed Alignment */
         .stats-cards {
             display: flex;
             justify-content: center;
@@ -654,36 +654,42 @@
             box-shadow: 0 0 25px rgba(0, 255, 0, 0.4);
         }
         
+        /* Fix the number and plus alignment */
+        .stat-number-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
         .stat-number {
             font-size: 3.5rem;
             font-weight: 700;
             color: var(--primary-color);
-            display: inline-block;
+            line-height: 1;
         }
         
         .stat-plus {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--primary-color);
-            display: inline-block;
-            position: absolute;
-            top: 30px;
-            right: 70px;
+            margin-left: 2px;
+            line-height: 1;
         }
         
         .stat-label {
             font-size: 1.2rem;
-            margin-top: 10px;
             color: #fff;
+            margin-top: 5px;
         }
         
-        /* Feature Cards */
+        /* Feature Cards - Fixed Alignment */
         .feature-cards {
             display: flex;
             justify-content: center;
             gap: 30px;
             flex-wrap: wrap;
-            margin: 20px 0;
+            margin: 40px 0;
         }
         
         .feature-card {
@@ -691,6 +697,7 @@
             border-radius: 10px;
             padding: 40px 30px;
             width: 300px;
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -700,15 +707,18 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 0 25px rgba(0, 255, 0, 0.4);
-        }
-        
         .feature-icon {
             font-size: 2.5rem;
             color: var(--primary-color);
             margin-bottom: 20px;
+            height: 60px;
+            width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
         }
         
         .feature-card h3 {
@@ -809,20 +819,26 @@
                     <!-- Stats Cards (similar to the image) -->
                     <div class="stats-cards">
                         <div class="stat-card">
-                            <div class="stat-number counter" data-target="5">0</div>
-                            <div class="stat-plus">+</div>
+                            <div class="stat-number-container">
+                                <div class="stat-number counter" data-target="5">0</div>
+                                <div class="stat-plus">+</div>
+                            </div>
                             <div class="stat-label">Years Experience</div>
                         </div>
                         
                         <div class="stat-card">
-                            <div class="stat-number counter" data-target="100">0</div>
-                            <div class="stat-plus">+</div>
+                            <div class="stat-number-container">
+                                <div class="stat-number counter" data-target="100">0</div>
+                                <div class="stat-plus">+</div>
+                            </div>
                             <div class="stat-label">Projects Completed</div>
                         </div>
                         
                         <div class="stat-card">
-                            <div class="stat-number counter" data-target="50">0</div>
-                            <div class="stat-plus">+</div>
+                            <div class="stat-number-container">
+                                <div class="stat-number counter" data-target="50">0</div>
+                                <div class="stat-plus">+</div>
+                            </div>
                             <div class="stat-label">Happy Clients</div>
                         </div>
                     </div>
