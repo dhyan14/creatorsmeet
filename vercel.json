@@ -4,6 +4,11 @@
     { "src": "**/*", "use": "@vercel/static" }
   ],
   "routes": [
+    {
+      "src": "/style.css",
+      "headers": { "Content-Type": "text/css" },
+      "continue": true
+    },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/$1" }
   ],
