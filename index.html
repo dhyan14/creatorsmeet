@@ -271,6 +271,7 @@
             position: relative;
             margin-bottom: 40px;
             animation: pulse-glow 4s infinite alternate;
+            animation-delay: 1.5s;
         }
 
         .glitch {
@@ -281,12 +282,11 @@
             font-family: 'Orbitron', sans-serif;
             font-weight: 800;
             font-size: 3.8rem;
-            animation: glitch-skew 1s infinite linear alternate-reverse;
             text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
             opacity: 1;
             transform-origin: center;
-            animation: entrance 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards, 
-                       glitch-skew 1s infinite linear alternate-reverse 1.5s;
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+            animation-delay: 1.5s;
         }
 
         .glitch::before,
@@ -559,6 +559,43 @@
         }
         
         /* Add all your other CSS rules here */
+
+        /* Update the glitch animation to reveal from top to bottom */
+        .glitch {
+            position: relative;
+            color: var(--primary-color);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 3.8rem;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+            opacity: 1;
+            transform-origin: center;
+            /* Remove the entrance animation that spreads letters */
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+            animation-delay: 1.5s;
+        }
+
+        /* Add this to ensure the title is revealed from top to bottom */
+        @keyframes reveal-down {
+            0% {
+                clip-path: inset(0 0 100% 0);
+                -webkit-clip-path: inset(0 0 100% 0);
+            }
+            100% {
+                clip-path: inset(0 0 0% 0);
+                -webkit-clip-path: inset(0 0 0% 0);
+            }
+        }
+        
+        /* Update the glitch container animation */
+        .glitch-container {
+            position: relative;
+            margin-bottom: 40px;
+            animation: pulse-glow 4s infinite alternate;
+            animation-delay: 1.5s; /* Start after the reveal animation */
+        }
     </style>
 </head>
 <body>

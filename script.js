@@ -273,15 +273,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.opacity = '1';
     }, 300);
     
-    // Add a cool scan effect when the page loads
-    const scanEffect = document.createElement('div');
-    scanEffect.className = 'scan-effect';
-    document.body.appendChild(scanEffect);
-    
-    setTimeout(() => {
-        scanEffect.style.top = '100%';
+    // REMOVED: Scan effect that goes down
+    // Instead, add a reveal effect to the title
+    const glitchTitle = document.querySelector('.glitch');
+    if (glitchTitle) {
+        glitchTitle.style.clipPath = 'inset(0 0 100% 0)';
+        glitchTitle.style.transition = 'clip-path 1.5s cubic-bezier(0.77, 0, 0.175, 1)';
+        
         setTimeout(() => {
-            scanEffect.remove();
-        }, 1000);
-    }, 500);
+            glitchTitle.style.clipPath = 'inset(0 0 0% 0)';
+        }, 500);
+    }
 }); 
