@@ -1,4 +1,4 @@
-<<<<<<< HEAD @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap');
 * {
     padding: 0;
     margin: 0;
@@ -543,4 +543,22 @@ section {
 
 .developer-social a:hover {
     color: var(--primary-color);
+}
+
+/* Make sure your selectors match the elements in your HTML */
+/* For example, if you have <div class="container"> in your HTML */
+.container {
+    /* Your styles here */
+}
+
+/* If you have elements with IDs like <div id="header"> */
+#header {
+    /* Your styles here */
+}
+
+/* For general element styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
 }
