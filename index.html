@@ -1,305 +1,338 @@
-                    <div class="contact-info" data-aos="fade-right" data-aos-duration="1500">
-                        <h3>Get In Touch</h3>
-                        <p>Have questions or feedback? We'd love to hear from you. Reach out to our team using the contact form or through any of the channels below.</p>
-                        
-                        <div class="contact-methods">
-                            <div class="contact-method">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <div>
-                                    <h4>Our Location</h4>
-                                    <p>123 Tech Avenue, Innovation District, CA 94103</p>
-                                </div>
-                            </div>
-                            <div class="contact-method">
-                                <i class="fas fa-envelope"></i>
-                                <div>
-                                    <h4>Email Us</h4>
-                                    <p>hello@codersmeet.com</p>
-                                </div>
-                            </div>
-                            <div class="contact-method">
-                                <i class="fas fa-phone-alt"></i>
-                                <div>
-                                    <h4>Call Us</h4>
-                                    <p>+1 (555) 123-4567</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coders Meet - Where Coders and Creators Connect</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <span class="bracket">{</span> Coders<span class="highlight">Meet</span> <span class="bracket">}</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#developers" class="nav-link">Developers</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="#join" class="join-btn">Join Now</a>
+            </div>
+            <div class="menu-toggle">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="glitch-container">
+                <h1 class="glitch" data-text="WHERE CODERS AND CREATORS MEET">WHERE CODERS AND CREATORS MEET</h1>
+            </div>
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-button red"></div>
+                    <div class="terminal-button yellow"></div>
+                    <div class="terminal-button green"></div>
+                </div>
+                <div class="terminal-content">
+                    <p class="typing-text">$ connecting to coders_network...</p>
+                    <p class="typing-text">$ establishing secure connection...</p>
+                    <p class="typing-text">$ welcome to the community of innovators</p>
+                    <p class="typing-text blink">$ join_now --platform=coders_meet <span class="cursor-blink">|</span></p>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <p>Scroll Down</p>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="matrix-bg"></div>
+        </section>
+
+        <section id="about" class="about reveal">
+            <div class="section-header">
+                <h2><span class="bracket">{</span> About Us <span class="bracket">}</span></h2>
+                <div class="underline"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Building the Future, One Line of Code at a Time</h3>
+                    <p>Coders Meet is a vibrant community where programmers, developers, and digital creators come together to collaborate, learn, and innovate. We believe in the power of collective intelligence and the magic that happens when brilliant minds connect.</p>
+                    <p>Founded in 2023, our platform has quickly grown into a hub for tech enthusiasts who are passionate about pushing the boundaries of what's possible in the digital realm.</p>
+                    <div class="stats-container">
+                        <div class="stat">
+                            <span class="counter" data-target="5000">0</span>+
+                            <p>Active Members</p>
+                        </div>
+                        <div class="stat">
+                            <span class="counter" data-target="350">0</span>+
+                            <p>Projects Launched</p>
+                        </div>
+                        <div class="stat">
+                            <span class="counter" data-target="120">0</span>+
+                            <p>Tech Meetups</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <div class="code-dot"></div>
+                            <span>about.js</span>
+                        </div>
+                        <pre><code>
+class CodersMeet {
+  constructor() {
+    this.community = [];
+    this.projects = [];
+    this.events = [];
+  }
+
+  connect(developer) {
+    this.community.push(developer);
+    return `Welcome ${developer.name}!`;
+  }
+
+  createProject(name, tech) {
+    const project = new Project(name, tech);
+    this.projects.push(project);
+    return project;
+  }
+
+  hostEvent(title, date) {
+    const event = new Event(title, date);
+    this.events.push(event);
+    return event;
+  }
+
+  get mission() {
+    return "Empowering coders to 
+    build the future together";
+  }
+}
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="developers" class="developers reveal">
+            <div class="section-header">
+                <h2><span class="bracket">{</span> Developers <span class="bracket">}</span></h2>
+                <div class="underline"></div>
+            </div>
+            <div class="dev-content">
+                <p class="dev-intro">Join a community of passionate developers from around the globe. Whether you're a seasoned professional or just starting your coding journey, there's a place for you here.</p>
+                
+                <div class="dev-cards">
+                    <div class="dev-card">
+                        <div class="dev-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Frontend Wizards</h3>
+                        <p>Crafting beautiful, responsive interfaces with the latest frameworks and technologies.</p>
+                    </div>
+                    <div class="dev-card">
+                        <div class="dev-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3>Backend Architects</h3>
+                        <p>Building robust systems and APIs that power the digital experiences of tomorrow.</p>
+                    </div>
+                    <div class="dev-card">
+                        <div class="dev-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Mobile Developers</h3>
+                        <p>Creating seamless applications for iOS, Android, and cross-platform environments.</p>
+                    </div>
+                    <div class="dev-card">
+                        <div class="dev-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>AI Enthusiasts</h3>
+                        <p>Exploring the frontiers of machine learning, neural networks, and data science.</p>
+                    </div>
+                </div>
+                
+                <div class="tech-stack">
+                    <h3>Our Tech Stack</h3>
+                    <div class="tech-icons">
+                        <div class="tech-icon" data-tech="JavaScript"><i class="fab fa-js"></i></div>
+                        <div class="tech-icon" data-tech="Python"><i class="fab fa-python"></i></div>
+                        <div class="tech-icon" data-tech="React"><i class="fab fa-react"></i></div>
+                        <div class="tech-icon" data-tech="Node.js"><i class="fab fa-node-js"></i></div>
+                        <div class="tech-icon" data-tech="HTML5"><i class="fab fa-html5"></i></div>
+                        <div class="tech-icon" data-tech="CSS3"><i class="fab fa-css3-alt"></i></div>
+                        <div class="tech-icon" data-tech="Angular"><i class="fab fa-angular"></i></div>
+                        <div class="tech-icon" data-tech="Vue.js"><i class="fab fa-vuejs"></i></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="join" class="join-section reveal">
+            <div class="section-header">
+                <h2><span class="bracket">{</span> Join Now <span class="bracket">}</span></h2>
+                <div class="underline"></div>
+            </div>
+            <div class="join-content">
+                <div class="join-text">
+                    <h3>Ready to Connect with Fellow Coders?</h3>
+                    <p>Become part of our growing community and unlock a world of opportunities:</p>
+                    <ul class="benefits-list">
+                        <li><i class="fas fa-check-circle"></i> Collaborate on innovative projects</li>
+                        <li><i class="fas fa-check-circle"></i> Expand your professional network</li>
+                        <li><i class="fas fa-check-circle"></i> Access exclusive learning resources</li>
+                        <li><i class="fas fa-check-circle"></i> Participate in hackathons and coding challenges</li>
+                        <li><i class="fas fa-check-circle"></i> Get mentorship from industry experts</li>
+                    </ul>
+                </div>
+                <div class="join-form-container">
+                    <form class="join-form">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="specialty">Your Specialty</label>
+                            <select id="specialty" required>
+                                <option value="" disabled selected>Select your field</option>
+                                <option value="frontend">Frontend Development</option>
+                                <option value="backend">Backend Development</option>
+                                <option value="fullstack">Full Stack Development</option>
+                                <option value="mobile">Mobile Development</option>
+                                <option value="ai">AI/Machine Learning</option>
+                                <option value="devops">DevOps</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="experience">Experience Level</label>
+                            <div class="range-container">
+                                <input type="range" id="experience" min="0" max="4" value="2">
+                                <div class="range-labels">
+                                    <span>Beginner</span>
+                                    <span>Intermediate</span>
+                                    <span>Expert</span>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="social-links">
-                            <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-                            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
-                            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-                            <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                        <button type="submit" class="submit-btn">Join the Community</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact reveal">
+            <div class="section-header">
+                <h2><span class="bracket">{</span> Contact Us <span class="bracket">}</span></h2>
+                <div class="underline"></div>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Get In Touch</h3>
+                    <p>Have questions or suggestions? We'd love to hear from you!</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <p>info@codersmeet.com</p>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>123 Tech Hub Street, Silicon Valley, CA</p>
                         </div>
                     </div>
-                    
-                    <div class="contact-form" data-aos="fade-left" data-aos-duration="1500">
-                        <form id="contactForm">
-                            <div class="form-group">
-                                <label for="name">Your Name</label>
-                                <input type="text" id="name" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Your Email</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="subject">Subject</label>
-                                <input type="text" id="subject" name="subject" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="message">Message</label>
-                                <textarea id="message" name="message" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="primary-btn">Send Message</button>
-                        </form>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
                     </div>
+                </div>
+                <div class="contact-form-container">
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="contact-name">Name</label>
+                            <input type="text" id="contact-name" placeholder="Your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" placeholder="Your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-subject">Subject</label>
+                            <input type="text" id="contact-subject" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">Message</label>
+                            <textarea id="contact-message" placeholder="Your message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
                 </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <div class="logo">Coders<span>MEET</span></div>
-                    <p>Connecting innovators and coders to build the future together.</p>
-                </div>
-                
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h3>Quick Links</h3>
-                        <ul>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#about">About Us</a></li>
-                            <li><a href="#features">Features</a></li>
-                            <li><a href="#testimonials">Testimonials</a></li>
-                            <li><a href="#contact">Contact</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="footer-column">
-                        <h3>Resources</h3>
-                        <ul>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Documentation</a></li>
-                            <li><a href="#">Tutorials</a></li>
-                            <li><a href="#">FAQs</a></li>
-                            <li><a href="#">Support</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="footer-column">
-                        <h3>Legal</h3>
-                        <ul>
-                            <li><a href="#">Terms of Service</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Cookie Policy</a></li>
-                            <li><a href="#">GDPR</a></li>
-                        </ul>
-                    </div>
-                </div>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="bracket">{</span> Coders<span class="highlight">Meet</span> <span class="bracket">}</span>
+                <p>Where code meets creativity</p>
             </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2023 Coders MEET. All rights reserved.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Navigation</h4>
+                    <a href="#home">Home</a>
+                    <a href="#about">About Us</a>
+                    <a href="#developers">Developers</a>
+                    <a href="#join">Join Now</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">Tutorials</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Events</a>
+                    <a href="#">FAQ</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Cookie Policy</a>
+                    <a href="#">Code of Conduct</a>
                 </div>
             </div>
         </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 CodersMeet. All rights reserved.</p>
+            <p class="footer-tagline">< Coded with <span class="heart">♥</span> by developers for developers /></p>
+        </div>
     </footer>
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            offset: 0,
-            once: true
-        });
-
-        // Typewriter effect
-        document.addEventListener('DOMContentLoaded', function() {
-            const typewriterText = document.querySelector('.typewriter-text');
-            const words = ["Coders MEET", "Innovation Hub", "Collaboration Space", "Coding Community"];
-            let wordIndex = 0;
-            let charIndex = 0;
-            let isDeleting = false;
-            let typingSpeed = 100;
-
-            function type() {
-                const currentWord = words[wordIndex];
-                
-                if (isDeleting) {
-                    typewriterText.textContent = currentWord.substring(0, charIndex - 1);
-                    charIndex--;
-                    typingSpeed = 50;
-                } else {
-                    typewriterText.textContent = currentWord.substring(0, charIndex + 1);
-                    charIndex++;
-                    typingSpeed = 150;
-                }
-
-                if (!isDeleting && charIndex === currentWord.length) {
-                    isDeleting = true;
-                    typingSpeed = 1500; // Pause at end of word
-                } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false;
-                    wordIndex = (wordIndex + 1) % words.length;
-                    typingSpeed = 500; // Pause before typing next word
-                }
-
-                setTimeout(type, typingSpeed);
-            }
-
-            // Start the typewriter effect
-            setTimeout(type, 1000);
-
-            // Check if user is logged in
-            const user = localStorage.getItem('user');
-            if (user) {
-                // Update navigation for logged-in users
-                const loginLinks = document.querySelectorAll('a[href="login.html"]');
-                const signupLinks = document.querySelectorAll('a[href="signup.html"]');
-                
-                loginLinks.forEach(link => {
-                    link.href = 'dashboard.html';
-                    link.textContent = 'Dashboard';
-                });
-                
-                signupLinks.forEach(link => {
-                    link.href = '#';
-                    link.textContent = 'Logout';
-                    link.onclick = function(e) {
-                        e.preventDefault();
-                        localStorage.removeItem('user');
-                        window.location.href = 'index.html';
-                    };
-                });
-            }
-
-            // Load saved theme preference
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                document.getElementById('theme-switch-checkbox').checked = true;
-                document.getElementById('theme-switch-checkbox-mobile').checked = true;
-            }
-
-            // Testimonial slider
-            const testimonials = document.querySelectorAll('.testimonial');
-            const dots = document.querySelectorAll('.dot');
-            const prevBtn = document.querySelector('.prev-btn');
-            const nextBtn = document.querySelector('.next-btn');
-            let currentSlide = 0;
-
-            function showSlide(index) {
-                testimonials.forEach((testimonial, i) => {
-                    testimonial.style.display = i === index ? 'block' : 'none';
-                });
-                
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === index);
-                });
-                
-                currentSlide = index;
-            }
-
-            // Initialize slider
-            showSlide(0);
-
-            // Event listeners for controls
-            prevBtn.addEventListener('click', () => {
-                let newIndex = currentSlide - 1;
-                if (newIndex < 0) newIndex = testimonials.length - 1;
-                showSlide(newIndex);
-            });
-
-            nextBtn.addEventListener('click', () => {
-                let newIndex = currentSlide + 1;
-                if (newIndex >= testimonials.length) newIndex = 0;
-                showSlide(newIndex);
-            });
-
-            dots.forEach((dot, i) => {
-                dot.addEventListener('click', () => {
-                    showSlide(i);
-                });
-            });
-
-            // Auto-advance slides
-            setInterval(() => {
-                let newIndex = currentSlide + 1;
-                if (newIndex >= testimonials.length) newIndex = 0;
-                showSlide(newIndex);
-            }, 5000);
-
-            // Contact form submission
-            const contactForm = document.getElementById('contactForm');
-            if (contactForm) {
-                contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Get form values
-                    const name = document.getElementById('name').value;
-                    const email = document.getElementById('email').value;
-                    const subject = document.getElementById('subject').value;
-                    const message = document.getElementById('message').value;
-                    
-                    // Here you would typically send the data to a server
-                    // For now, we'll just show an alert
-                    alert(`Thank you, ${name}! Your message has been received. We'll get back to you soon.`);
-                    
-                    // Reset the form
-                    contactForm.reset();
-                });
-            }
-        });
-
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                    
-                    // Close mobile menu if open
-                    const mobileMenu = document.querySelector('.mobile-menu');
-                    if (mobileMenu.classList.contains('active')) {
-                        toggleMobileMenu();
-                    }
-                }
-            });
-        });
-
-        // Theme toggle functionality
-        function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle('dark-theme');
-
-            // Save theme preference
-            localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
-        }
-
-        // Add event listeners to theme switches
-        document.getElementById('theme-switch-checkbox').addEventListener('change', toggleTheme);
-        document.getElementById('theme-switch-checkbox-mobile').addEventListener('change', toggleTheme);
-
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const mobileMenu = document.querySelector('.mobile-menu');
-            mobileMenu.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
-        }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
     <script src="script.js"></script>
 </body>
-
 </html> 
