@@ -319,4 +319,102 @@ document.addEventListener('DOMContentLoaded', () => {
             glitchTitle.style.clipPath = 'inset(0 0 0% 0)';
         }, 500);
     }
+});
+
+// Mobile menu functionality
+function hamburg() {
+    document.querySelector('.mobile-menu').style.display = 'block';
+}
+
+function cancel() {
+    document.querySelector('.mobile-menu').style.display = 'none';
+}
+
+// Typewriter effect
+document.addEventListener('DOMContentLoaded', function() {
+    const typewriterText = document.querySelector('.typewriter-text');
+    const words = ['Innovation', 'Collaboration', 'Creation'];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let isEnd = false;
+
+    function type() {
+        const current = wordIndex % words.length;
+        const fullText = words[current];
+
+        if (isDeleting) {
+            typewriterText.textContent = fullText.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            typewriterText.textContent = fullText.substring(0, charIndex + 1);
+            charIndex++;
+        }
+
+        if (!isDeleting && charIndex === fullText.length) {
+            isEnd = true;
+            isDeleting = true;
+            setTimeout(function() {
+                type();
+            }, 2000);
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            wordIndex++;
+            setTimeout(function() {
+                type();
+            }, 500);
+        } else {
+            setTimeout(function() {
+                type();
+            }, isDeleting ? 50 : 100);
+        }
+    }
+
+    if (typewriterText) {
+        type();
+    }
+
+    // Theme toggle functionality
+    function toggleTheme() {
+        const body = document.body;
+        body.classList.toggle('dark-theme');
+
+        // Save theme preference
+        localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    }
+
+    // Add event listeners to theme switches
+    const themeCheckbox = document.getElementById('theme-switch-checkbox');
+    const mobileThemeCheckbox = document.getElementById('theme-switch-checkbox-mobile');
+    
+    if (themeCheckbox) {
+        themeCheckbox.addEventListener('change', toggleTheme);
+    }
+    
+    if (mobileThemeCheckbox) {
+        mobileThemeCheckbox.addEventListener('change', toggleTheme);
+    }
+
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        if (themeCheckbox) themeCheckbox.checked = true;
+        if (mobileThemeCheckbox) mobileThemeCheckbox.checked = true;
+    }
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                document.querySelector('.mobile-menu').style.display = 'none';
+            }
+        });
+    });
 }); 
