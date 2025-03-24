@@ -17,9 +17,9 @@
             --primary-dark: #00b300;
             --primary-light: #66ff66;
             --dark-bg: #000000; /* Pure black background */
-            --darker-bg: #050505;
-            --medium-dark: #0a0a0a;
-            --light-dark: #111111;
+            --darker-bg: #000000; /* Also pure black */
+            --medium-dark: #000000; /* Also pure black */
+            --light-dark: #000000; /* Also pure black */
             --text-color: #0f0; /* Green text */
             --secondary-text: #00cc00;
             --accent-color: #00ffaa;
@@ -46,12 +46,12 @@
 
         body {
             font-family: var(--font-main);
-            background-color: var(--dark-bg);
+            background-color: #000000 !important;
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
             position: relative;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%230f0' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-image: none !important;
         }
 
         /* Add a scanline effect to the entire page */
@@ -168,13 +168,13 @@
             z-index: 1000;
             transition: all var(--transition-speed) ease;
             padding: 20px 0;
-            background-color: rgba(10, 10, 10, 0.8);
+            background-color: rgba(0, 0, 0, 0.9) !important;
             backdrop-filter: blur(10px);
         }
 
         header.scrolled {
             padding: 10px 0;
-            background-color: rgba(5, 5, 5, 0.95);
+            background-color: #000000 !important;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
         }
 
@@ -573,7 +573,6 @@
             text-shadow: 0 0 15px rgba(0, 255, 0, 0.8) !important;
             opacity: 1;
             transform-origin: center;
-            /* Remove the entrance animation that spreads letters */
             animation: glitch-skew 1s infinite linear alternate-reverse;
             animation-delay: 1.5s;
         }
@@ -633,7 +632,7 @@
         }
         
         .stat-card {
-            background-color: var(--darker-bg);
+            background-color: #000000 !important;
             border-radius: 10px;
             padding: 30px;
             width: 200px;
@@ -644,7 +643,7 @@
             align-items: center;
             text-align: center;
             position: relative;
-            border: 1px solid var(--primary-color);
+            border: 1px solid var(--primary-color) !important;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -693,7 +692,7 @@
         }
         
         .feature-card {
-            background-color: var(--darker-bg);
+            background-color: #000000 !important;
             border-radius: 10px;
             padding: 40px 30px;
             width: 300px;
@@ -702,7 +701,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            border: 1px solid var(--primary-color);
+            border: 1px solid var(--primary-color) !important;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -928,12 +927,12 @@
         }
         
         .profile-card {
-            background-color: var(--darker-bg);
+            background-color: #000000 !important;
             border-radius: 10px;
             overflow: hidden;
             width: 300px;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-            border: 1px solid var(--primary-color);
+            border: 1px solid var(--primary-color) !important;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -946,7 +945,7 @@
         
         .profile-image {
             height: 200px;
-            background-color: var(--medium-dark);
+            background-color: #000000 !important;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1006,7 +1005,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-color: var(--medium-dark);
+            background-color: #000000 !important;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1119,6 +1118,57 @@
                 padding: 10px 25px;
                 font-size: 1rem;
             }
+        }
+
+        /* Update the root variables to change background to solid black */
+        :root {
+            --primary-color: #0f0; /* Bright green */
+            --primary-dark: #00b300;
+            --primary-light: #66ff66;
+            --dark-bg: #000000; /* Pure black background */
+            --darker-bg: #000000; /* Also pure black */
+            --medium-dark: #000000; /* Also pure black */
+            --light-dark: #000000; /* Also pure black */
+            --text-color: #0f0; /* Green text */
+            --secondary-text: #00cc00;
+            --accent-color: #00ffaa;
+            --danger-color: #ff3860;
+            --warning-color: #ffdd57;
+            --success-color: #23d160;
+            --font-code: 'Fira Code', monospace;
+            --font-main: 'Courier New', monospace; /* More hacker-like font */
+            --transition-speed: 0.3s;
+            --glow-shadow: 0 0 10px rgba(0, 255, 0, 0.7), 0 0 20px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 255, 0, 0.3);
+        }
+
+        /* Remove any background patterns or images */
+        body {
+            background-color: #000000 !important;
+            background-image: none !important;
+        }
+
+        /* Update card backgrounds to solid black with green borders */
+        .stat-card, .feature-card, .profile-card, .dev-card {
+            background-color: #000000 !important;
+            border: 1px solid var(--primary-color) !important;
+        }
+
+        /* Update header background to solid black */
+        header {
+            background-color: rgba(0, 0, 0, 0.9) !important;
+        }
+
+        header.scrolled {
+            background-color: #000000 !important;
+        }
+
+        /* Update any other elements that might have backgrounds */
+        .profile-image {
+            background-color: #000000 !important;
+        }
+
+        .social-icon {
+            background-color: #000000 !important;
         }
     </style>
 </head>
