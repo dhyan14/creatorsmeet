@@ -133,17 +133,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Basic animations that don't depend on ScrollTrigger
         gsap.from('.hero .glitch-container', {
-            opacity: 0,
-            y: -50,
-            duration: 1,
-            delay: 0.5
+            opacity: 1,
+            y: 0,
+            duration: 0.1,
+            delay: 0
         });
         
         gsap.from('.terminal', {
             opacity: 0,
-            y: 50,
-            duration: 1,
-            delay: 1
+            y: 20,
+            duration: 0.5,
+            delay: 0.2
         });
     }
 });
