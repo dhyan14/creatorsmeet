@@ -25,14 +25,12 @@ function validateForm(formId) {
 }
 
 // Mobile menu functionality
-function toggleMobileMenu() {
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const hamburger = document.querySelector('.hamburger');
+function hamburg() {
+    document.querySelector('.mobile-menu').style.display = 'block';
+}
 
-    if (mobileMenu && hamburger) {
-        mobileMenu.classList.toggle('active');
-        hamburger.classList.toggle('active');
-    }
+function cancel() {
+    document.querySelector('.mobile-menu').style.display = 'none';
 }
 
 // Initialize mobile menu
@@ -782,202 +780,111 @@ document.addEventListener('DOMContentLoaded', function() {
 // Typewriter effect
 document.addEventListener('DOMContentLoaded', function() {
     const typewriterText = document.querySelector('.typewriter-text');
+    const words = ['Innovation', 'Collaboration', 'Creation'];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let isEnd = false;
+
+    function type() {
+        const current = wordIndex % words.length;
+        const fullText = words[current];
+
+        if (isDeleting) {
+            typewriterText.textContent = fullText.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            typewriterText.textContent = fullText.substring(0, charIndex + 1);
+            charIndex++;
+        }
+
+        if (!isDeleting && charIndex === fullText.length) {
+            isEnd = true;
+            isDeleting = true;
+            setTimeout(function() {
+                type();
+            }, 2000);
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            wordIndex++;
+            setTimeout(function() {
+                type();
+            }, 500);
+        } else {
+            setTimeout(function() {
+                type();
+            }, isDeleting ? 50 : 100);
+        }
+    }
+
     if (typewriterText) {
-        const phrases = ['CodersMEET', 'Innovation', 'Collaboration', 'Community'];
-        let currentPhraseIndex = 0;
-        let currentCharIndex = 0;
-        let isDeleting = false;
-        let typingSpeed = 100;
+        type();
+    }
 
-        function typeEffect() {
-            const currentPhrase = phrases[currentPhraseIndex];
+    // Check if user is logged in
+    const user = localStorage.getItem('user');
+    if (user) {
+        // Update navigation for logged-in users
+        const loginLink = document.querySelector('a[href="login.html"]');
+        const signupLink = document.querySelector('a[href="signup.html"]');
+        if (loginLink) {
+            loginLink.href = 'dashboard.html';
+            loginLink.textContent = 'Dashboard';
+        }
+        if (signupLink) {
+            signupLink.href = '#';
+            signupLink.textContent = 'Logout';
+            signupLink.onclick = function(e) {
+                e.preventDefault();
+                localStorage.removeItem('user');
+                window.location.href = 'index.html';
+            };
+        }
+    }
 
-            if (isDeleting) {
-                typewriterText.textContent = currentPhrase.substring(0, currentCharIndex - 1);
-                currentCharIndex--;
-                typingSpeed = 50;
-            } else {
-                typewriterText.textContent = currentPhrase.substring(0, currentCharIndex + 1);
-                currentCharIndex++;
-                typingSpeed = 100;
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        const themeCheckbox = document.getElementById('theme-switch-checkbox');
+        const mobileThemeCheckbox = document.getElementById('theme-switch-checkbox-mobile');
+        if (themeCheckbox) themeCheckbox.checked = true;
+        if (mobileThemeCheckbox) mobileThemeCheckbox.checked = true;
+    }
+
+    // Theme toggle functionality
+    function toggleTheme() {
+        const body = document.body;
+        body.classList.toggle('dark-theme');
+
+        // Save theme preference
+        localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    }
+
+    // Add event listeners to theme switches
+    const themeCheckbox = document.getElementById('theme-switch-checkbox');
+    const mobileThemeCheckbox = document.getElementById('theme-switch-checkbox-mobile');
+    
+    if (themeCheckbox) {
+        themeCheckbox.addEventListener('change', toggleTheme);
+    }
+    
+    if (mobileThemeCheckbox) {
+        mobileThemeCheckbox.addEventListener('change', toggleTheme);
+    }
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                document.querySelector('.mobile-menu').style.display = 'none';
             }
-
-            if (!isDeleting && currentCharIndex === currentPhrase.length) {
-                isDeleting = true;
-                typingSpeed = 1000; // Pause at the end
-            } else if (isDeleting && currentCharIndex === 0) {
-                isDeleting = false;
-                currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
-                typingSpeed = 500; // Pause before typing next phrase
-            }
-
-            setTimeout(typeEffect, typingSpeed);
-        }
-
-        typeEffect();
-    }
-});
-
-// Update the hamburg function
-function hamburg() {
-    const dropdown = document.querySelector('.dropdown');
-    dropdown.classList.add('active');
-}
-
-// Update the cancel function
-function cancel() {
-    const dropdown = document.querySelector('.dropdown');
-    dropdown.classList.remove('active');
-}
-
-// Add these functions after other functions
-let isEmailVerified = false;
-
-async function sendOTP() {
-    const email = document.getElementById('email').value.trim();
-    const verifyBtn = document.getElementById('verifyEmailBtn');
-    const statusDiv = document.getElementById('emailVerificationStatus');
-
-    try {
-        verifyBtn.disabled = true;
-        verifyBtn.innerHTML = 'Sending...';
-
-        const response = await fetch(`${API_CONFIG.baseURL}/send-otp`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email
-            })
         });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            document.getElementById('otpModal').style.display = 'flex';
-            document.getElementById('resendOtpBtn').style.display = 'block';
-            statusDiv.innerHTML = '<span style="color: green;">OTP sent! Please check your email.</span>';
-        } else {
-            throw new Error(data.error);
-        }
-    } catch (error) {
-        statusDiv.innerHTML = `<span style="color: red;">${error.message}</span>`;
-    } finally {
-        verifyBtn.disabled = false;
-        verifyBtn.innerHTML = 'Verify Email';
-    }
-}
-
-async function verifyOTP() {
-    const email = document.getElementById('email').value.trim();
-    const otp = document.getElementById('otpInput').value.trim();
-    const messageDiv = document.getElementById('otpMessage');
-    const statusDiv = document.getElementById('emailVerificationStatus');
-
-    try {
-        const response = await fetch(`${API_CONFIG.baseURL}/verify-otp`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-                otp
-            })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            isEmailVerified = true;
-            document.getElementById('otpModal').style.display = 'none';
-            statusDiv.innerHTML = '<span style="color: green;">✓ Email verified!</span>';
-            document.getElementById('verifyEmailBtn').disabled = true;
-            document.getElementById('email').readOnly = true;
-        } else {
-            throw new Error(data.error);
-        }
-    } catch (error) {
-        messageDiv.innerHTML = `<span style="color: red;">${error.message}</span>`;
-    }
-}
-
-// Update the handleSignup function to check for email verification
-async function handleSignup(event) {
-    event.preventDefault();
-
-    if (!isEmailVerified) {
-        alert('Please verify your email first');
-        return;
-    }
-
-    if (!validateForm('signupForm')) return;
-
-    const fullName = document.getElementById('fullName').value.trim();
-    const username = document.getElementById('username').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const signupBtn = document.querySelector('.signup-btn');
-
-    try {
-        // Check server connection first
-        const isConnected = await checkServerConnection();
-        if (!isConnected) {
-            throw new Error('Unable to connect to server. Please try again later.');
-        }
-
-        if (password !== confirmPassword) {
-            throw new Error('Passwords do not match!');
-        }
-
-        signupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-        const response = await fetch(`${API_CONFIG.baseURL}/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                fullName,
-                username,
-                email,
-                password
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Registration failed');
-        }
-
-        signupBtn.innerHTML = '<i class="fas fa-check"></i> Success!';
-        alert('Registration successful! Please login.');
-        window.location.href = 'login.html';
-    } catch (error) {
-        console.error('Signup error:', error);
-        signupBtn.innerHTML = 'Sign Up';
-        alert(error.message || 'Registration failed. Please try again.');
-    }
-}
-
-// Add event listeners when the document loads
-document.addEventListener('DOMContentLoaded', function() {
-    const verifyEmailBtn = document.getElementById('verifyEmailBtn');
-    const submitOtpBtn = document.getElementById('submitOtpBtn');
-    const resendOtpBtn = document.getElementById('resendOtpBtn');
-
-    if (verifyEmailBtn) {
-        verifyEmailBtn.addEventListener('click', sendOTP);
-    }
-
-    if (submitOtpBtn) {
-        submitOtpBtn.addEventListener('click', verifyOTP);
-    }
-
-    if (resendOtpBtn) {
-        resendOtpBtn.addEventListener('click', sendOTP);
-    }
+    });
 });
