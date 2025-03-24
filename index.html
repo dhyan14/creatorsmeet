@@ -56,36 +56,50 @@
             background-image: none !important;
         }
 
-        /* Add a scanline effect to the entire page */
+        /* Remove the scanline effect */
         body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                rgba(18, 16, 16, 0) 50%, 
-                rgba(0, 0, 0, 0.25) 50%
-            );
-            background-size: 100% 4px;
-            z-index: 1000;
-            pointer-events: none;
-            opacity: 0.15;
+            content: none !important;
+            display: none !important;
         }
 
-        /* Add a CRT flicker effect */
+        /* Remove the CRT flicker effect */
         body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 255, 0, 0.03);
-            z-index: 1001;
-            pointer-events: none;
-            animation: flicker 0.15s infinite alternate;
+            content: none !important;
+            display: none !important;
+        }
+        
+        /* Remove glitch animations */
+        .glitch::before,
+        .glitch::after {
+            content: none !important;
+            display: none !important;
+        }
+        
+        /* Remove any entrance animations that change the design */
+        .glitch {
+            clip-path: none !important;
+            transition: none !important;
+            animation: none !important;
+        }
+        
+        /* Ensure consistent font and styling */
+        .glitch, .glitch::before, .glitch::after {
+            font-family: 'Audiowide', cursive !important;
+            font-weight: 700 !important;
+            font-size: 3.5rem !important;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.8) !important;
+        }
+        
+        /* Remove any other animations that might cause flickering */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+        }
+        
+        /* Ensure the hero section loads with the final design immediately */
+        .hero-content, .main-container, .content {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
         }
 
         /* Typography */
@@ -387,14 +401,7 @@
             z-index: -1;
         }
 
-        /* Add more CSS as needed */
-        
         /* Animations */
-        @keyframes flicker {
-            0% { opacity: 0.1; }
-            100% { opacity: 0.05; }
-        }
-        
         @keyframes typing {
             from {
                 width: 0;
@@ -406,99 +413,6 @@
             }
         }
         
-        @keyframes glitch-skew {
-            0% { transform: skew(1deg); }
-            10% { transform: skew(-1deg); }
-            20% { transform: skew(0deg); }
-            30% { transform: skew(-1deg); }
-            40% { transform: skew(1deg); }
-            50% { transform: skew(0deg); }
-            60% { transform: skew(-1deg); }
-            70% { transform: skew(1deg); }
-            80% { transform: skew(0deg); }
-            90% { transform: skew(-1deg); }
-            100% { transform: skew(0deg); }
-        }
-        
-        @keyframes glitch-anim {
-            0% { clip: rect(1px, 9999px, 1px, 0); }
-            50% { clip: rect(0px, 9999px, 9999px, 0px); }
-            100% { clip: rect(1px, 9999px, 1px, 0); }
-        }
-        
-        @keyframes glitch-anim2 {
-            0% { clip: rect(1px, 9999px, 1px, 0); }
-            50% { clip: rect(0px, 9999px, 9999px, 0px); }
-            100% { clip: rect(1px, 9999px, 1px, 0); }
-        }
-        
-        /* Add an entrance animation */
-        @keyframes entrance {
-            0% {
-                opacity: 0;
-                letter-spacing: 30px;
-                filter: blur(10px);
-                transform: scale(1.5);
-            }
-            50% {
-                opacity: 0.5;
-                filter: blur(5px);
-            }
-            100% {
-                opacity: 1;
-                letter-spacing: 3px;
-                filter: blur(0);
-                transform: scale(1);
-            }
-        }
-        
-        /* Add a pulsating glow effect */
-        @keyframes pulse-glow {
-            0% {
-                filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.7));
-            }
-            100% {
-                filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.9));
-            }
-        }
-        
-        /* Add a cool background animation to the hero section */
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(0, 255, 0, 0.05) 25%, transparent 25%, transparent 50%, rgba(0, 255, 0, 0.05) 50%, rgba(0, 255, 0, 0.05) 75%, transparent 75%, transparent);
-            background-size: 100px 100px;
-            animation: bg-slide 20s linear infinite;
-            opacity: 0.3;
-            z-index: -1;
-        }
-        
-        @keyframes bg-slide {
-            0% {
-                background-position: 0 0;
-            }
-            100% {
-                background-position: 100px 100px;
-            }
-        }
-        
-        /* Add a cool entry animation for the terminal */
-        @keyframes terminal-entry {
-            0% {
-                opacity: 0;
-                transform: perspective(800px) rotateX(90deg) translateY(100px);
-            }
-            100% {
-                opacity: 1;
-                transform: perspective(800px) rotateX(0) translateY(0);
-            }
-        }
-        
-        /* Make the typing animation more dramatic */
         @keyframes typing-gradient {
             from {
                 left: 0;

@@ -300,24 +300,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Add a dramatic entrance for the page
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 1s ease';
+    // Remove the dramatic entrance for the page
+    document.body.style.opacity = '1';
+    document.body.style.transition = 'none';
     
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 300);
-    
-    // REMOVED: Scan effect that goes down
-    // Instead, add a reveal effect to the title
+    // Remove the scan effect and glitch title reveal
     const glitchTitle = document.querySelector('.glitch');
     if (glitchTitle) {
-        glitchTitle.style.clipPath = 'inset(0 0 100% 0)';
-        glitchTitle.style.transition = 'clip-path 1.5s cubic-bezier(0.77, 0, 0.175, 1)';
-        
-        setTimeout(() => {
-            glitchTitle.style.clipPath = 'inset(0 0 0% 0)';
-        }, 500);
+        glitchTitle.style.clipPath = 'none';
+        glitchTitle.style.transition = 'none';
+    }
+    
+    // Initialize AOS with no delay
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 1000,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false,
+            disable: window.innerWidth < 768 // Disable on mobile for better performance
+        });
+    }
+    
+    // Make typewriter effect immediate
+    const typewriterText = document.querySelector('.typewriter-text');
+    if (typewriterText) {
+        const text = typewriterText.getAttribute('data-text') || 'CodersMeet';
+        typewriterText.textContent = text;
     }
 });
 
