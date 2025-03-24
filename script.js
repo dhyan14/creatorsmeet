@@ -33,51 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Matrix background effect
-document.addEventListener('DOMContentLoaded', () => {
-    const matrixBg = document.querySelector('.matrix-bg');
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    matrixBg.appendChild(canvas);
-    
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    const characters = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const columns = Math.floor(canvas.width / 20);
-    const drops = [];
-    
-    for (let i = 0; i < columns; i++) {
-        drops[i] = Math.floor(Math.random() * -100);
-    }
-    
-    function draw() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.fillStyle = '#0f0';
-        ctx.font = '15px monospace';
-        
-        for (let i = 0; i < drops.length; i++) {
-            const text = characters.charAt(Math.floor(Math.random() * characters.length));
-            ctx.fillText(text, i * 20, drops[i] * 20);
-            
-            if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
-            
-            drops[i]++;
-        }
-    }
-    
-    setInterval(draw, 35);
-    
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-});
+// Removed Matrix background effect
 
 // Scroll animations
 document.addEventListener('DOMContentLoaded', () => {
@@ -131,167 +87,65 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start counter when about section is visible
     const aboutSection = document.querySelector('.about');
     
-    const aboutObserver = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-            runCounter();
-            aboutObserver.disconnect();
-        }
-    }, { threshold: 0.5 });
-    
-    aboutObserver.observe(aboutSection);
+    if (aboutSection) {
+        const aboutObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                runCounter();
+                aboutObserver.disconnect();
+            }
+        }, { threshold: 0.5 });
+        
+        aboutObserver.observe(aboutSection);
+    }
     
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
     
-    menuToggle.addEventListener('click', () => {
-        menuToggle.classList.toggle('active');
-        navLinks.classList.toggle('active');
-    });
-    
-    // Close mobile menu when clicking a link
-    const navLinksItems = document.querySelectorAll('.nav-link, .join-btn');
-    
-    navLinksItems.forEach(item => {
-        item.addEventListener('click', () => {
-            if (navLinks.classList.contains('active')) {
-                menuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
-            }
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
         });
-    });
+        
+        // Close mobile menu when clicking a link
+        const navLinksItems = document.querySelectorAll('.nav-link, .join-btn');
+        
+        navLinksItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (navLinks.classList.contains('active')) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    }
 });
 
-// GSAP animations
+// Simplified GSAP animations
 document.addEventListener('DOMContentLoaded', () => {
-    // Register ScrollTrigger plugin
-    gsap.registerPlugin(ScrollTrigger);
-    
-    // Hero section animations
-    gsap.from('.hero .glitch-container', {
-        opacity: 0,
-        y: -50,
-        duration: 1,
-        delay: 0.5
-    });
-    
-    gsap.from('.terminal', {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        delay: 1
-    });
-    
-    // About section animations
-    gsap.from('.about-text h3', {
-        scrollTrigger: {
-            trigger: '.about-text',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        x: -50,
-        duration: 0.8
-    });
-    
-    gsap.from('.about-text p', {
-        scrollTrigger: {
-            trigger: '.about-text',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        x: -50,
-        duration: 0.8,
-        stagger: 0.2,
-        delay: 0.3
-    });
-    
-    gsap.from('.code-window', {
-        scrollTrigger: {
-            trigger: '.about-image',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        x: 50,
-        duration: 0.8,
-        delay: 0.5
-    });
-    
-    // Developers section animations
-    gsap.from('.dev-intro', {
-        scrollTrigger: {
-            trigger: '.developers',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        y: 30,
-        duration: 0.8
-    });
-    
-    gsap.from('.dev-card', {
-        scrollTrigger: {
-            trigger: '.dev-cards',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        y: 50,
-        duration: 0.8,
-        stagger: 0.2
-    });
-    
-    gsap.from('.tech-icon', {
-        scrollTrigger: {
-            trigger: '.tech-stack',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        y: 30,
-        duration: 0.5,
-        stagger: 0.1
-    });
-    
-    // Join section animations
-    gsap.from('.join-text h3, .join-text p, .benefits-list li', {
-        scrollTrigger: {
-            trigger: '.join-section',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        x: -50,
-        duration: 0.8,
-        stagger: 0.1
-    });
-    
-    gsap.from('.join-form', {
-        scrollTrigger: {
-            trigger: '.join-form-container',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        x: 50,
-        duration: 0.8
-    });
-    
-    // Contact section animations
-    gsap.from('.contact-info h3, .contact-info p, .contact-item, .social-links', {
-        scrollTrigger: {
-            trigger: '.contact',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        x: -50,
-        duration: 0.8,
-        stagger: 0.1
-    });
-    
-    gsap.from('.contact-form', {
-        scrollTrigger: {
-            trigger: '.contact-form-container',
-            start: 'top 80%'
-        },
-        opacity: 0,
-        x: 50,
-        duration: 0.8
-    });
+    // Only run if GSAP is available
+    if (typeof gsap !== 'undefined') {
+        // Register ScrollTrigger plugin if available
+        if (gsap.registerPlugin && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+        }
+        
+        // Basic animations that don't depend on ScrollTrigger
+        gsap.from('.hero .glitch-container', {
+            opacity: 0,
+            y: -50,
+            duration: 1,
+            delay: 0.5
+        });
+        
+        gsap.from('.terminal', {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            delay: 1
+        });
+    }
 });
 
 // Form validation and submission
@@ -309,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const specialty = joinForm.querySelector('#specialty').value;
             
             if (name && email && specialty) {
-                // Show success message (in a real app, you'd send this to a server)
+                // Show success message
                 alert('Thanks for joining! We\'ll be in touch soon.');
                 joinForm.reset();
             } else {
@@ -328,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = contactForm.querySelector('#contact-message').value;
             
             if (name && email && message) {
-                // Show success message (in a real app, you'd send this to a server)
+                // Show success message
                 alert('Thanks for your message! We\'ll respond as soon as possible.');
                 contactForm.reset();
             } else {
