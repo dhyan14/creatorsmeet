@@ -597,6 +597,143 @@
             animation: pulse-glow 4s infinite alternate;
             animation-delay: 1.5s; /* Start after the reveal animation */
         }
+
+        /* About Section Styling */
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .about-text {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .about-description, .about-mission {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .about-mission {
+            font-weight: 500;
+        }
+        
+        /* Stats Cards */
+        .stats-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        
+        .stat-card {
+            background-color: var(--darker-bg);
+            border-radius: 10px;
+            padding: 30px;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.4);
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: inline-block;
+        }
+        
+        .stat-plus {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: inline-block;
+            position: absolute;
+            top: 30px;
+            right: 70px;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            color: #fff;
+        }
+        
+        /* Feature Cards */
+        .feature-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background-color: var(--darker-bg);
+            border-radius: 10px;
+            padding: 40px 30px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.4);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .stats-cards, .feature-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-card, .feature-card {
+                width: 90%;
+                max-width: 300px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -648,70 +785,73 @@
             <div class="matrix-bg"></div>
         </section>
 
-        <section id="about" class="about reveal">
-            <div class="section-header">
-                <h2><span class="bracket">{</span> About Us <span class="bracket">}</span></h2>
-                <div class="underline"></div>
-            </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Building the Future, One Line of Code at a Time</h3>
-                    <p>Coders Meet is a vibrant community where programmers, developers, and digital creators come together to collaborate, learn, and innovate. We believe in the power of collective intelligence and the magic that happens when brilliant minds connect.</p>
-                    <p>Founded in 2023, our platform has quickly grown into a hub for tech enthusiasts who are passionate about pushing the boundaries of what's possible in the digital realm.</p>
-                    <div class="stats-container">
-                        <div class="stat">
-                            <span class="counter" data-target="5000">0</span>+
-                            <p>Active Members</p>
+        <section id="about" class="about">
+            <div class="container">
+                <div class="section-header">
+                    <h2>About Us</h2>
+                    <div class="underline"></div>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <p class="about-description">
+                            We are a team of passionate developers from UCP Institute of Technology pursuing B.Tech in Computer Science. 
+                            We identified a critical gap in the tech community: many developers have strong coding skills but lack innovative ideas, 
+                            while creators have brilliant concepts but limited technical abilities to bring them to life.
+                        </p>
+                        <p class="about-mission">
+                            <span class="highlight">CodersMeet</span> bridges this gap by connecting coders with creators, 
+                            fostering collaboration that transforms ideas into reality. Our platform enables developers to find exciting 
+                            projects while helping creators find the technical talent they need.
+                        </p>
+                    </div>
+                    
+                    <!-- Stats Cards (similar to the image) -->
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-number counter" data-target="5">0</div>
+                            <div class="stat-plus">+</div>
+                            <div class="stat-label">Years Experience</div>
                         </div>
-                        <div class="stat">
-                            <span class="counter" data-target="350">0</span>+
-                            <p>Projects Launched</p>
+                        
+                        <div class="stat-card">
+                            <div class="stat-number counter" data-target="100">0</div>
+                            <div class="stat-plus">+</div>
+                            <div class="stat-label">Projects Completed</div>
                         </div>
-                        <div class="stat">
-                            <span class="counter" data-target="120">0</span>+
-                            <p>Tech Meetups</p>
+                        
+                        <div class="stat-card">
+                            <div class="stat-number counter" data-target="50">0</div>
+                            <div class="stat-plus">+</div>
+                            <div class="stat-label">Happy Clients</div>
                         </div>
                     </div>
-                </div>
-                <div class="about-image">
-                    <div class="code-window">
-                        <div class="code-header">
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                            <div class="code-dot"></div>
-                            <span>about.js</span>
+                    
+                    <!-- Feature Cards (similar to the image) -->
+                    <div class="feature-cards">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h3>Clean Code</h3>
+                            <p>We maintain high standards with clean, efficient, and well-documented code.</p>
                         </div>
-                        <pre><code>
-class CodersMeet {
-  constructor() {
-    this.community = [];
-    this.projects = [];
-    this.events = [];
-  }
-
-  connect(developer) {
-    this.community.push(developer);
-    return `Welcome ${developer.name}!`;
-  }
-
-  createProject(name, tech) {
-    const project = new Project(name, tech);
-    this.projects.push(project);
-    return project;
-  }
-
-  hostEvent(title, date) {
-    const event = new Event(title, date);
-    this.events.push(event);
-    return event;
-  }
-
-  get mission() {
-    return "Empowering coders to 
-    build the future together";
-  }
-}
-                        </code></pre>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <h3>Modern Design</h3>
+                            <p>Our projects feature cutting-edge design principles and technologies.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h3>Responsive</h3>
+                            <p>All our solutions work flawlessly across devices of all sizes.</p>
+                        </div>
                     </div>
                 </div>
             </div>
