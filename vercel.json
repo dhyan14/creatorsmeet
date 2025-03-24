@@ -16,6 +16,11 @@
     }
   ],
   "routes": [
+    {
+      "src": "/styles.css",
+      "headers": { "cache-control": "public, max-age=0, must-revalidate" },
+      "dest": "/styles.css"
+    },
     { 
       "src": "/(.*)", 
       "dest": "/$1" 
