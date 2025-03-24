@@ -239,4 +239,49 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.head.appendChild(baseStyles);
     }
+});
+
+// Add this to your existing script.js file
+document.addEventListener('DOMContentLoaded', () => {
+    // Create a matrix-like background effect for the hero section
+    const hero = document.querySelector('.hero');
+    
+    if (hero) {
+        // Create floating characters
+        for (let i = 0; i < 50; i++) {
+            const floatingChar = document.createElement('div');
+            floatingChar.className = 'floating-char';
+            floatingChar.textContent = Math.random() > 0.5 ? 
+                String.fromCharCode(Math.floor(Math.random() * 26) + 97) : 
+                Math.floor(Math.random() * 10);
+            
+            floatingChar.style.left = `${Math.random() * 100}%`;
+            floatingChar.style.top = `${Math.random() * 100}%`;
+            floatingChar.style.animationDuration = `${Math.random() * 10 + 5}s`;
+            floatingChar.style.animationDelay = `${Math.random() * 5}s`;
+            floatingChar.style.opacity = Math.random() * 0.5;
+            
+            hero.appendChild(floatingChar);
+        }
+    }
+    
+    // Add a dramatic entrance for the page
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 1s ease';
+    
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 300);
+    
+    // Add a cool scan effect when the page loads
+    const scanEffect = document.createElement('div');
+    scanEffect.className = 'scan-effect';
+    document.body.appendChild(scanEffect);
+    
+    setTimeout(() => {
+        scanEffect.style.top = '100%';
+        setTimeout(() => {
+            scanEffect.remove();
+        }, 1000);
+    }, 500);
 }); 
