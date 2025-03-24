@@ -265,7 +265,7 @@
             padding-top: 80px;
             position: relative;
             overflow: hidden;
-            background: radial-gradient(circle at center, rgba(0, 50, 0, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%) !important;
         }
 
         .glitch-container {
@@ -273,6 +273,9 @@
             margin-bottom: 40px;
             animation: pulse-glow 4s infinite alternate;
             animation-delay: 1.5s;
+            background-color: #000000 !important;
+            padding: 10px 20px;
+            border-radius: 5px;
         }
 
         .glitch {
@@ -292,30 +295,8 @@
 
         .glitch::before,
         .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            color: var(--primary-color);
-            opacity: 1;
-        }
-
-        .glitch::before {
-            left: 2px;
-            text-shadow: -2px 0 #00ff00;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-            animation-delay: 1.5s;
-        }
-
-        .glitch::after {
-            left: -2px;
-            text-shadow: -2px 0 #00ff00;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
-            animation-delay: 1.5s;
+            font-family: 'Audiowide', cursive !important;
+            font-weight: 700 !important;
         }
 
         .terminal {
