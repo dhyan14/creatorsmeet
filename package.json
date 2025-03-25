@@ -1,0 +1,8 @@
+{
+  "name": "purple-black-website",
+  "version": "1.0.0",
+  "description": "Professional website with glowy purple and black theme",
+  "scripts": {
+    "build": "echo 'No build step required'"
+  }
+} 
