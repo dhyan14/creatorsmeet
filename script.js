@@ -298,6 +298,91 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.background = 'linear-gradient(to right, var(--primary-color), var(--secondary-color))';
         });
     });
+    
+    // Enhanced connection line animation
+    const heroSection = document.querySelector('.hero');
+    const ideaBubble = document.querySelector('.idea-bubble');
+    const skillBubble = document.querySelector('.skill-bubble');
+    const connectionLine = document.querySelector('.connection-line');
+    
+    if (heroSection && ideaBubble && skillBubble && connectionLine) {
+        // Replace static SVG with dynamic canvas-based connection
+        connectionLine.innerHTML = '';
+        const canvas = document.createElement('canvas');
+        connectionLine.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        
+        function updateConnectionLine() {
+            const ideaRect = ideaBubble.getBoundingClientRect();
+            const skillRect = skillBubble.getBoundingClientRect();
+            const heroRect = heroSection.getBoundingClientRect();
+            
+            // Set canvas size to match container
+            canvas.width = connectionLine.offsetWidth;
+            canvas.height = connectionLine.offsetHeight;
+            
+            // Calculate relative positions
+            const startX = ideaRect.left - heroRect.left + ideaRect.width/2;
+            const startY = ideaRect.top - heroRect.top + ideaRect.height/2;
+            const endX = skillRect.left - heroRect.left + skillRect.width/2;
+            const endY = skillRect.top - heroRect.top + skillRect.height/2;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw curved path with gradient
+            const gradient = ctx.createLinearGradient(startX, startY, endX, endY);
+            gradient.addColorStop(0, 'rgba(138, 43, 226, 0.8)');
+            gradient.addColorStop(1, 'rgba(255, 0, 255, 0.8)');
+            
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            // Draw the path
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            
+            // Control point for the curve
+            const controlX = (startX + endX) / 2;
+            const controlY = Math.min(startY, endY) - 50;
+            
+            ctx.quadraticCurveTo(controlX, controlY, endX, endY);
+            ctx.stroke();
+            
+            // Add glowing particles along the path
+            const particleCount = 5;
+            const time = Date.now() * 0.001;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const t = (i / particleCount + time * 0.1) % 1;
+                const x = (1-t)*(1-t)*startX + 2*(1-t)*t*controlX + t*t*endX;
+                const y = (1-t)*(1-t)*startY + 2*(1-t)*t*controlY + t*t*endY;
+                
+                // Draw glowing particle
+                const glow = ctx.createRadialGradient(x, y, 0, x, y, 8);
+                glow.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+                glow.addColorStop(0.5, 'rgba(138, 43, 226, 0.5)');
+                glow.addColorStop(1, 'rgba(138, 43, 226, 0)');
+                
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(x, y, 8, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // Update on load and animation frame
+        updateConnectionLine();
+        window.addEventListener('resize', updateConnectionLine);
+        
+        // Animate continuously
+        function animate() {
+            updateConnectionLine();
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
 });
 
 // Add CSS for mobile menu
