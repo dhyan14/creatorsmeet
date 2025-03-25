@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creators Meet - Connect Ideas with Skills</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="background-animation"></div>
+    
+    <header>
+        <nav>
+            <div class="logo">
+                <span class="glow-text">Creators</span><span class="accent-text">Meet</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#explore">Explore</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="login-btn">Login</button>
+                <button class="signup-btn">Sign Up</button>
+            </div>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Where <span class="glow-text">Ideas</span> Meet <span class="glow-text">Skills</span></h1>
+                <p>Connect with talented developers or find creative minds to bring your ideas to life.</p>
+                <div class="cta-buttons">
+                    <button class="primary-btn">I Have an Idea</button>
+                    <button class="secondary-btn">I Can Code</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-element code-block">
+                    <pre><code>function connectCreators() {
+  const idea = new Idea();
+  const skill = new Skill();
+  return Collaboration.create(idea, skill);
+}</code></pre>
+                </div>
+                <div class="floating-element idea-bubble">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Ideas</span>
+                </div>
+                <div class="floating-element skill-bubble">
+                    <i class="fas fa-code"></i>
+                    <span>Skills</span>
+                </div>
+                <div class="connection-line"></div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="how-it-works">
+            <h2>How <span class="accent-text">It Works</span></h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                    <h3>Create Profile</h3>
+                    <p>Sign up and specify if you're an idea creator or a developer.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon"><i class="fas fa-search"></i></div>
+                    <h3>Find Matches</h3>
+                    <p>Browse through profiles or let our algorithm find the perfect match.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon"><i class="fas fa-comments"></i></div>
+                    <h3>Connect</h3>
+                    <p>Communicate directly with potential partners.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Collaborate</h3>
+                    <p>Work together to bring amazing ideas to life.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="explore" class="explore">
+            <h2>Explore <span class="accent-text">Opportunities</span></h2>
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="ideas">Ideas</button>
+                <button class="filter-btn" data-filter="developers">Developers</button>
+                <button class="filter-btn" data-filter="success">Success Stories</button>
+            </div>
+            <div class="cards-container">
+                <!-- Idea Card -->
+                <div class="card idea-card">
+                    <div class="card-header">
+                        <span class="card-tag">Idea</span>
+                        <h3>AI-Powered Fitness Coach</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Looking for developers to create an AI fitness coach app that provides personalized workout plans.</p>
+                        <div class="skills-needed">
+                            <span>AI/ML</span>
+                            <span>Mobile Dev</span>
+                            <span>UX/UI</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="user-info">
+                            <div class="user-avatar">JD</div>
+                            <span>John Doe</span>
+                        </div>
+                        <button class="connect-btn">Connect</button>
+                    </div>
+                </div>
+                
+                <!-- Developer Card -->
+                <div class="card developer-card">
+                    <div class="card-header">
+                        <span class="card-tag">Developer</span>
+                        <h3>Full-Stack Developer</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Experienced in building web applications with React, Node.js, and MongoDB. Looking for innovative projects.</p>
+                        <div class="skills-offered">
+                            <span>React</span>
+                            <span>Node.js</span>
+                            <span>MongoDB</span>
+                            <span>AWS</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="user-info">
+                            <div class="user-avatar">JS</div>
+                            <span>Jane Smith</span>
+                        </div>
+                        <button class="connect-btn">Connect</button>
+                    </div>
+                </div>
+                
+                <!-- Success Story Card -->
+                <div class="card success-card">
+                    <div class="card-header">
+                        <span class="card-tag">Success Story</span>
+                        <h3>EcoTrack App</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Alex had an idea for an app that tracks carbon footprint. Met with developer Sam, and launched EcoTrack in just 3 months!</p>
+                        <div class="success-metrics">
+                            <div class="metric">
+                                <span class="metric-value">10K+</span>
+                                <span class="metric-label">Downloads</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">4.8</span>
+                                <span class="metric-label">Rating</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="read-more-btn">Read Full Story</button>
+                    </div>
+                </div>
+            </div>
+            <button class="load-more-btn">Load More</button>
+        </section>
+
+        <section id="about" class="about">
+            <h2>About <span class="accent-text">Creators Meet</span></h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Creators Meet was born from a simple observation: many brilliant ideas never see the light of day due to lack of technical skills, while many talented developers are looking for meaningful projects to work on.</p>
+                    <p>Our mission is to bridge this gap and create a community where ideas and skills can come together to create amazing things.</p>
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Successful Matches</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">2000+</span>
+                            <span class="stat-label">Active Users</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">100+</span>
+                            <span class="stat-label">Launched Projects</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="image-container">
+                        <div class="glow-effect"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="testimonials">
+            <h2>What Our <span class="accent-text">Users Say</span></h2>
+            <div class="testimonial-slider">
+                <div class="testimonial">
+                    <div class="quote">"I had this app idea for years but couldn't code. Within a week on Creators Meet, I found the perfect developer partner. Now our app is in beta testing!"</div>
+                    <div class="author">
+                        <div class="author-avatar">MJ</div>
+                        <div class="author-info">
+                            <div class="author-name">Michael Johnson</div>
+                            <div class="author-role">Idea Creator</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-nav">
+                    <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                    <div class="dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                    <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2>Get in <span class="accent-text">Touch</span></h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>hello@creatorsmeet.com</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>123 Innovation Street, Tech City</span>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <select id="subject">
+                            <option value="" disabled selected>Select Subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="support">Support</option>
+                            <option value="partnership">Partnership</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="newsletter">
+            <div class="newsletter-content">
+                <h3>Stay Updated</h3>
+                <p>Subscribe to our newsletter for the latest features and success stories.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your Email Address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="glow-text">Creators</span><span class="accent-text">Meet</span>
+                <p>Connecting Ideas with Skills</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Browse Ideas</a></li>
+                        <li><a href="#">Find Developers</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Developers</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">IP Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Creators Meet. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
