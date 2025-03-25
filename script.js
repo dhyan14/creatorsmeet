@@ -1,5 +1,3 @@
-console.log('Script loaded successfully');
-
 document.addEventListener('DOMContentLoaded', function() {
     // Add smooth scrolling for navigation links
     document.querySelectorAll('nav a').forEach(anchor => {

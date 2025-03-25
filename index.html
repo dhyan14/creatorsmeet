@@ -1,14 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Test Site</title>
-  <style>
-    body { background-color: purple; color: white; font-family: sans-serif; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Professional Website</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Test Site</h1>
-  <p>This is a test deployment.</p>
-  <script>console.log('Script loaded');</script>
+    <div class="background-animation"></div>
+    
+    <header>
+        <div class="logo">
+            <span class="logo-text">YourBrand</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Portfolio</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Welcome to <span class="highlight">YourBrand</span></h1>
+                <p>Professional solutions for your business needs</p>
+                <button class="cta-button">Get Started</button>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2>Our <span class="highlight">Services</span></h2>
+            <div class="feature-cards">
+                <div class="card">
+                    <div class="card-icon">🚀</div>
+                    <h3>Fast Delivery</h3>
+                    <p>Quick and efficient solutions for your projects.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">💡</div>
+                    <h3>Creative Ideas</h3>
+                    <p>Innovative approaches to solve complex problems.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🛠️</div>
+                    <h3>Expert Support</h3>
+                    <p>Professional assistance whenever you need it.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">YourBrand</div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon">📱</a>
+                <a href="#" class="social-icon">📷</a>
+                <a href="#" class="social-icon">🐦</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 YourBrand. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html> 
