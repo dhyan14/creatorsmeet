@@ -62,7 +62,37 @@ h1 {
 }
 
 h2 {
+    position: relative;
+    display: inline-block;
     font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+h2::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--primary-color);
+    filter: blur(8px);
+    animation: neon-pulse 2s infinite alternate;
+}
+
+@keyframes neon-pulse {
+    0% {
+        opacity: 0.5;
+        filter: blur(8px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(12px);
+    }
+}
+
+h3, h4, h5, h6 {
     text-align: center;
     margin-bottom: 3rem;
 }
@@ -448,11 +478,46 @@ nav {
     overflow: hidden;
     transition: var(--transition);
     border: 1px solid rgba(138, 43, 226, 0.1);
+    perspective: 1000px;
+    transition: transform 0.6s;
 }
 
 .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(138, 43, 226, 0.3);
+    transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+    box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(138, 43, 226, 0.5);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, 
+        rgba(138, 43, 226, 0) 0%, 
+        rgba(138, 43, 226, 0.1) 50%, 
+        rgba(138, 43, 226, 0) 100%);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.6s;
+    pointer-events: none;
+}
+
+.card:hover::before {
+    opacity: 1;
+    animation: shine 1.5s infinite;
+}
+
+@keyframes shine {
+    0% {
+        background-position: -100% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
 }
 
 .card-header {

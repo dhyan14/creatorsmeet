@@ -423,6 +423,319 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         animate();
     }
+    
+    // Create particle background
+    const particleContainer = document.createElement('div');
+    particleContainer.className = 'particle-background';
+    document.body.prepend(particleContainer);
+    
+    // Create particles
+    const particleCount = 50;
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particle.style.animationDuration = `${5 + Math.random() * 10}s`;
+        particle.style.opacity = Math.random() * 0.5;
+        particle.style.width = particle.style.height = `${Math.random() * 10 + 5}px`;
+        particleContainer.appendChild(particle);
+    }
+    
+    // Add CSS for particles
+    const style = document.createElement('style');
+    style.textContent = `
+        .particle-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle at center, rgba(138, 43, 226, 0.8), rgba(138, 43, 226, 0));
+            border-radius: 50%;
+            animation: float-around linear infinite;
+        }
+        
+        @keyframes float-around {
+            0% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(100px, 50px);
+            }
+            50% {
+                transform: translate(50px, 100px);
+            }
+            75% {
+                transform: translate(-50px, 50px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Typing animation for hero heading
+    const heroHeading = document.querySelector('.hero-content h1');
+    if (heroHeading) {
+        const originalText = heroHeading.innerHTML;
+        heroHeading.innerHTML = '';
+        
+        // Create wrapper for typing animation
+        const typingWrapper = document.createElement('div');
+        typingWrapper.className = 'typing-wrapper';
+        heroHeading.parentNode.insertBefore(typingWrapper, heroHeading);
+        typingWrapper.appendChild(heroHeading);
+        
+        // Add cursor element
+        const cursor = document.createElement('span');
+        cursor.className = 'typing-cursor';
+        cursor.textContent = '|';
+        typingWrapper.appendChild(cursor);
+        
+        // Typing animation
+        let i = 0;
+        const typingSpeed = 80;
+        
+        function typeText() {
+            if (i < originalText.length) {
+                heroHeading.innerHTML += originalText.charAt(i);
+                i++;
+                setTimeout(typeText, typingSpeed);
+            }
+        }
+        
+        // Start typing after a short delay
+        setTimeout(typeText, 500);
+        
+        // Add CSS for typing animation
+        const style = document.createElement('style');
+        style.textContent = `
+            .typing-wrapper {
+                display: inline-flex;
+                align-items: center;
+            }
+            
+            .typing-cursor {
+                font-weight: 700;
+                color: var(--primary-color);
+                animation: blink 1s infinite;
+                margin-left: 5px;
+            }
+            
+            @keyframes blink {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Add this to create an interactive skill matching visualization
+    const exploreSection = document.querySelector('#explore');
+    if (exploreSection) {
+        const visualizationSection = document.createElement('div');
+        visualizationSection.className = 'skill-visualization';
+        visualizationSection.innerHTML = `
+            <h3>Find Your Perfect Match</h3>
+            <div class="visualization-container">
+                <div class="ideas-pool">
+                    <h4>Ideas</h4>
+                    <div class="pool-items">
+                        <div class="pool-item" data-skill="ai">AI Assistant</div>
+                        <div class="pool-item" data-skill="web">E-commerce Platform</div>
+                        <div class="pool-item" data-skill="mobile">Fitness Tracker</div>
+                        <div class="pool-item" data-skill="game">Educational Game</div>
+                        <div class="pool-item" data-skill="data">Data Visualization Tool</div>
+                    </div>
+                </div>
+                <div class="skills-pool">
+                    <h4>Skills</h4>
+                    <div class="pool-items">
+                        <div class="pool-item" data-skill="ai">Machine Learning</div>
+                        <div class="pool-item" data-skill="web">Full-Stack Development</div>
+                        <div class="pool-item" data-skill="mobile">Mobile App Development</div>
+                        <div class="pool-item" data-skill="game">Game Development</div>
+                        <div class="pool-item" data-skill="data">Data Science</div>
+                    </div>
+                </div>
+                <canvas id="matching-canvas"></canvas>
+            </div>
+        `;
+        
+        exploreSection.appendChild(visualizationSection);
+        
+        // Add CSS for visualization
+        const style = document.createElement('style');
+        style.textContent = `
+            .skill-visualization {
+                margin-top: 4rem;
+                padding: 2rem;
+                background: rgba(10, 10, 10, 0.5);
+                border-radius: 20px;
+            }
+            
+            .visualization-container {
+                display: flex;
+                justify-content: space-between;
+                position: relative;
+                min-height: 300px;
+                margin-top: 2rem;
+            }
+            
+            .ideas-pool, .skills-pool {
+                width: 45%;
+                padding: 1rem;
+            }
+            
+            .pool-items {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+            
+            .pool-item {
+                padding: 1rem;
+                background: var(--card-bg);
+                border-radius: 10px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 1px solid rgba(138, 43, 226, 0.2);
+            }
+            
+            .pool-item:hover, .pool-item.active {
+                background: rgba(138, 43, 226, 0.2);
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+            
+            #matching-canvas {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize canvas for connections
+        const canvas = document.getElementById('matching-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Handle item clicks
+            const poolItems = document.querySelectorAll('.pool-item');
+            poolItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const skill = this.getAttribute('data-skill');
+                    
+                    // Toggle active class
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active');
+                        // Remove all connections with this skill
+                        document.querySelectorAll(`.pool-item[data-skill="${skill}"]`).forEach(el => {
+                            el.classList.remove('active');
+                        });
+                    } else {
+                        // Activate matching items
+                        document.querySelectorAll(`.pool-item[data-skill="${skill}"]`).forEach(el => {
+                            el.classList.add('active');
+                        });
+                    }
+                    
+                    // Draw connections
+                    drawConnections();
+                });
+            });
+            
+            function drawConnections() {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Get active items
+                const activeIdeas = document.querySelectorAll('.ideas-pool .pool-item.active');
+                const activeSkills = document.querySelectorAll('.skills-pool .pool-item.active');
+                
+                // Draw connections between matching items
+                activeIdeas.forEach(idea => {
+                    const ideaSkill = idea.getAttribute('data-skill');
+                    const ideaRect = idea.getBoundingClientRect();
+                    const canvasRect = canvas.getBoundingClientRect();
+                    
+                    activeSkills.forEach(skill => {
+                        const skillSkill = skill.getAttribute('data-skill');
+                        if (ideaSkill === skillSkill) {
+                            const skillRect = skill.getBoundingClientRect();
+                            
+                            // Calculate positions relative to canvas
+                            const startX = ideaRect.right - canvasRect.left;
+                            const startY = ideaRect.top + ideaRect.height/2 - canvasRect.top;
+                            const endX = skillRect.left - canvasRect.left;
+                            const endY = skillRect.top + skillRect.height/2 - canvasRect.top;
+                            
+                            // Draw gradient line
+                            const gradient = ctx.createLinearGradient(startX, startY, endX, endY);
+                            gradient.addColorStop(0, 'rgba(138, 43, 226, 0.8)');
+                            gradient.addColorStop(1, 'rgba(255, 0, 255, 0.8)');
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(startX, startY);
+                            ctx.lineTo(endX, endY);
+                            ctx.strokeStyle = gradient;
+                            ctx.lineWidth = 2;
+                            ctx.stroke();
+                            
+                            // Add pulsing effect
+                            const pulseSize = 5 + Math.sin(Date.now() * 0.005) * 2;
+                            ctx.beginPath();
+                            ctx.arc(startX, startY, pulseSize, 0, Math.PI * 2);
+                            ctx.fillStyle = 'rgba(138, 43, 226, 0.5)';
+                            ctx.fill();
+                            
+                            ctx.beginPath();
+                            ctx.arc(endX, endY, pulseSize, 0, Math.PI * 2);
+                            ctx.fillStyle = 'rgba(255, 0, 255, 0.5)';
+                            ctx.fill();
+                        }
+                    });
+                });
+            }
+            
+            // Animate connections
+            function animate() {
+                if (document.querySelector('.pool-item.active')) {
+                    drawConnections();
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                drawConnections();
+            });
+        }
+    }
+    
+    // Add neon effect to headings
+    document.querySelectorAll('h2').forEach(heading => {
+        heading.setAttribute('data-text', heading.textContent);
+    });
 });
 
 // Add CSS for mobile menu
