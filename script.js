@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const mobileMenu = document.querySelector('.mobile-menu');
             mobileMenu.classList.toggle('active');
             
-            // Prevent scrolling when menu is open
+            //Prevent scrolling when menu is open
             document.body.classList.toggle('no-scroll');
         });
     }
