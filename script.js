@@ -809,4 +809,554 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(style);
+});
+
+// Add Interactive Skill Matcher Tool
+document.addEventListener('DOMContentLoaded', function() {
+    // Create the Skill Matcher section
+    const aboutSection = document.querySelector('#about');
+    if (aboutSection) {
+        const skillMatcherSection = document.createElement('section');
+        skillMatcherSection.id = 'skill-matcher';
+        skillMatcherSection.className = 'skill-matcher';
+        
+        skillMatcherSection.innerHTML = `
+            <h2 data-text="Find Your Match">Find Your <span class="accent-text">Match</span></h2>
+            <div class="matcher-container">
+                <div class="matcher-intro">
+                    <p>See how your skills or ideas align with potential collaborators. Drag the sliders to set your preferences.</p>
+                </div>
+                
+                <div class="matcher-controls">
+                    <div class="matcher-sliders">
+                        <div class="slider-group">
+                            <label>Technical Expertise</label>
+                            <input type="range" min="0" max="100" value="50" class="skill-slider" id="technical-slider">
+                            <div class="slider-labels">
+                                <span>Beginner</span>
+                                <span>Expert</span>
+                            </div>
+                        </div>
+                        
+                        <div class="slider-group">
+                            <label>Creativity Level</label>
+                            <input type="range" min="0" max="100" value="50" class="skill-slider" id="creativity-slider">
+                            <div class="slider-labels">
+                                <span>Practical</span>
+                                <span>Innovative</span>
+                            </div>
+                        </div>
+                        
+                        <div class="slider-group">
+                            <label>Project Scope</label>
+                            <input type="range" min="0" max="100" value="50" class="skill-slider" id="scope-slider">
+                            <div class="slider-labels">
+                                <span>Small</span>
+                                <span>Large</span>
+                            </div>
+                        </div>
+                        
+                        <div class="slider-group">
+                            <label>Commitment Level</label>
+                            <input type="range" min="0" max="100" value="50" class="skill-slider" id="commitment-slider">
+                            <div class="slider-labels">
+                                <span>Part-time</span>
+                                <span>Full-time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="matcher-type-toggle">
+                        <button class="toggle-btn active" data-type="idea">I Have an Idea</button>
+                        <button class="toggle-btn" data-type="skill">I Have Skills</button>
+                    </div>
+                </div>
+                
+                <div class="matcher-results">
+                    <div class="compatibility-meter">
+                        <div class="meter-label">Compatibility with potential matches</div>
+                        <div class="meter-container">
+                            <div class="meter-fill"></div>
+                            <div class="meter-percentage">0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="match-cards">
+                        <div class="match-card">
+                            <div class="match-percentage">87%</div>
+                            <div class="match-avatar">JS</div>
+                            <div class="match-info">
+                                <h4>Jane Smith</h4>
+                                <p>Full-Stack Developer</p>
+                                <div class="match-tags">
+                                    <span>React</span>
+                                    <span>Node.js</span>
+                                </div>
+                            </div>
+                            <button class="connect-btn">Connect</button>
+                        </div>
+                        
+                        <div class="match-card">
+                            <div class="match-percentage">74%</div>
+                            <div class="match-avatar">MR</div>
+                            <div class="match-info">
+                                <h4>Mike Rodriguez</h4>
+                                <p>Mobile Developer</p>
+                                <div class="match-tags">
+                                    <span>Flutter</span>
+                                    <span>Firebase</span>
+                                </div>
+                            </div>
+                            <button class="connect-btn">Connect</button>
+                        </div>
+                        
+                        <div class="match-card">
+                            <div class="match-percentage">68%</div>
+                            <div class="match-avatar">AK</div>
+                            <div class="match-info">
+                                <h4>Aisha Khan</h4>
+                                <p>UX/UI Designer</p>
+                                <div class="match-tags">
+                                    <span>Figma</span>
+                                    <span>User Research</span>
+                                </div>
+                            </div>
+                            <button class="connect-btn">Connect</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Insert the section before the about section
+        aboutSection.parentNode.insertBefore(skillMatcherSection, aboutSection);
+        
+        // Add CSS for the Skill Matcher
+        const style = document.createElement('style');
+        style.textContent = `
+            .skill-matcher {
+                margin-top: 3rem;
+                padding: 4rem 2rem;
+                background: rgba(10, 10, 10, 0.5);
+                border-radius: 20px;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .skill-matcher::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" width="100" height="100"/><circle cx="50" cy="50" r="40" stroke="rgba(138, 43, 226, 0.05)" stroke-width="2" fill="none"/></svg>');
+                opacity: 0.5;
+                z-index: -1;
+            }
+            
+            .matcher-container {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+            
+            .matcher-intro {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+            
+            .matcher-controls {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                margin-bottom: 3rem;
+            }
+            
+            .matcher-sliders {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 2rem;
+            }
+            
+            .slider-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .slider-group label {
+                font-weight: 500;
+            }
+            
+            .skill-slider {
+                -webkit-appearance: none;
+                width: 100%;
+                height: 8px;
+                border-radius: 5px;
+                background: rgba(30, 30, 30, 0.8);
+                outline: none;
+            }
+            
+            .skill-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                cursor: pointer;
+                box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+                transition: all 0.3s ease;
+            }
+            
+            .skill-slider::-webkit-slider-thumb:hover {
+                transform: scale(1.2);
+                box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
+            }
+            
+            .slider-labels {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.8rem;
+                color: var(--gray-text);
+            }
+            
+            .matcher-type-toggle {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .toggle-btn {
+                padding: 0.8rem 2rem;
+                border-radius: 50px;
+                background: transparent;
+                border: 1px solid var(--primary-color);
+                color: var(--light-text);
+                cursor: pointer;
+                transition: var(--transition);
+            }
+            
+            .toggle-btn.active {
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                border-color: transparent;
+                box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+            }
+            
+            .compatibility-meter {
+                text-align: center;
+                margin-bottom: 3rem;
+            }
+            
+            .meter-label {
+                margin-bottom: 1rem;
+                font-weight: 500;
+            }
+            
+            .meter-container {
+                height: 30px;
+                background: rgba(30, 30, 30, 0.8);
+                border-radius: 15px;
+                position: relative;
+                overflow: hidden;
+                border: 1px solid rgba(138, 43, 226, 0.3);
+            }
+            
+            .meter-fill {
+                height: 100%;
+                width: 70%;
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                border-radius: 15px;
+                transition: width 1s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .meter-fill::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, 
+                    rgba(255, 255, 255, 0) 0%, 
+                    rgba(255, 255, 255, 0.2) 50%, 
+                    rgba(255, 255, 255, 0) 100%);
+                animation: shine 2s infinite;
+            }
+            
+            .meter-percentage {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-weight: 600;
+                color: var(--light-text);
+                text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            }
+            
+            .match-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+            }
+            
+            .match-card {
+                background: var(--card-bg);
+                border-radius: 10px;
+                padding: 1.5rem;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                border: 1px solid rgba(138, 43, 226, 0.1);
+                transition: transform 0.5s ease, box-shadow 0.5s ease;
+            }
+            
+            .match-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(138, 43, 226, 0.4);
+            }
+            
+            .match-percentage {
+                position: absolute;
+                top: -15px;
+                right: -15px;
+                width: 50px;
+                height: 50px;
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+            }
+            
+            .match-avatar {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.8rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+            }
+            
+            .match-info {
+                margin-bottom: 1.5rem;
+            }
+            
+            .match-info h4 {
+                margin-bottom: 0.5rem;
+            }
+            
+            .match-info p {
+                color: var(--gray-text);
+                margin-bottom: 1rem;
+            }
+            
+            .match-tags {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+            
+            .match-tags span {
+                padding: 0.3rem 0.8rem;
+                border-radius: 50px;
+                font-size: 0.8rem;
+                background: rgba(138, 43, 226, 0.1);
+                color: var(--primary-color);
+            }
+            
+            @keyframes shine {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(100%); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Add interactivity to the Skill Matcher
+        const sliders = document.querySelectorAll('.skill-slider');
+        const meterFill = document.querySelector('.meter-fill');
+        const meterPercentage = document.querySelector('.meter-percentage');
+        const toggleBtns = document.querySelectorAll('.toggle-btn');
+        const matchCards = document.querySelectorAll('.match-card');
+        
+        // Update compatibility meter based on slider values
+        function updateCompatibility() {
+            let total = 0;
+            sliders.forEach(slider => {
+                total += parseInt(slider.value);
+            });
+            
+            const average = total / (sliders.length * 100) * 100;
+            const percentage = Math.round(average);
+            
+            meterFill.style.width = `${percentage}%`;
+            meterPercentage.textContent = `${percentage}%`;
+            
+            // Update match cards based on compatibility
+            matchCards.forEach(card => {
+                const matchPercentage = parseInt(card.querySelector('.match-percentage').textContent);
+                const diff = Math.abs(matchPercentage - percentage);
+                
+                if (diff < 15) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(138, 43, 226, 0.4)';
+                } else if (diff < 30) {
+                    card.style.opacity = '0.7';
+                    card.style.transform = 'translateY(5px)';
+                    card.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
+                } else {
+                    card.style.opacity = '0.4';
+                    card.style.transform = 'translateY(10px)';
+                    card.style.boxShadow = 'none';
+                }
+            });
+        }
+        
+        // Initialize compatibility
+        updateCompatibility();
+        
+        // Add event listeners to sliders
+        sliders.forEach(slider => {
+            slider.addEventListener('input', updateCompatibility);
+            
+            // Add custom styling for the slider track
+            slider.addEventListener('input', function() {
+                const value = this.value;
+                const percentage = (value / this.max) * 100;
+                this.style.background = `linear-gradient(to right, 
+                    var(--primary-color) 0%, 
+                    var(--secondary-color) ${percentage}%, 
+                    rgba(30, 30, 30, 0.8) ${percentage}%)`;
+            });
+            
+            // Initialize slider styling
+            const value = slider.value;
+            const percentage = (value / slider.max) * 100;
+            slider.style.background = `linear-gradient(to right, 
+                var(--primary-color) 0%, 
+                var(--secondary-color) ${percentage}%, 
+                rgba(30, 30, 30, 0.8) ${percentage}%)`;
+        });
+        
+        // Toggle between idea and skill modes
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                toggleBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update UI based on selected mode
+                const type = this.getAttribute('data-type');
+                if (type === 'idea') {
+                    document.querySelector('label[for="technical-slider"]').textContent = 'Technical Complexity';
+                    document.querySelector('label[for="creativity-slider"]').textContent = 'Creativity Required';
+                } else {
+                    document.querySelector('label[for="technical-slider"]').textContent = 'Technical Expertise';
+                    document.querySelector('label[for="creativity-slider"]').textContent = 'Creative Ability';
+                }
+                
+                // Randomize match percentages for demo purposes
+                matchCards.forEach(card => {
+                    const newPercentage = Math.floor(Math.random() * 30) + 60; // 60-90%
+                    card.querySelector('.match-percentage').textContent = `${newPercentage}%`;
+                });
+                
+                updateCompatibility();
+            });
+        });
+        
+        // Add pulse animation to connect buttons
+        const connectBtns = document.querySelectorAll('.match-card .connect-btn');
+        connectBtns.forEach(btn => {
+            btn.addEventListener('mouseover', function() {
+                this.style.animation = 'pulse 1s infinite';
+            });
+            
+            btn.addEventListener('mouseout', function() {
+                this.style.animation = 'none';
+            });
+            
+            // Add click event
+            btn.addEventListener('click', function() {
+                const card = this.closest('.match-card');
+                const name = card.querySelector('h4').textContent;
+                
+                // Show connection message
+                this.textContent = 'Connected!';
+                this.style.background = 'linear-gradient(to right, var(--primary-color), var(--secondary-color))';
+                this.disabled = true;
+                
+                // Show toast notification
+                const toast = document.createElement('div');
+                toast.className = 'toast-notification';
+                toast.innerHTML = `
+                    <div class="toast-icon">✓</div>
+                    <div class="toast-message">Connection request sent to ${name}</div>
+                `;
+                document.body.appendChild(toast);
+                
+                // Add CSS for toast
+                const toastStyle = document.createElement('style');
+                toastStyle.textContent = `
+                    .toast-notification {
+                        position: fixed;
+                        bottom: 30px;
+                        right: 30px;
+                        background: rgba(30, 30, 30, 0.9);
+                        border-left: 4px solid var(--primary-color);
+                        padding: 1rem;
+                        border-radius: 5px;
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                        z-index: 1000;
+                        animation: slideIn 0.3s forwards, slideOut 0.3s 3s forwards;
+                        transform: translateX(100%);
+                    }
+                    
+                    .toast-icon {
+                        width: 24px;
+                        height: 24px;
+                        background: var(--primary-color);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    
+                    @keyframes slideIn {
+                        to { transform: translateX(0); }
+                    }
+                    
+                    @keyframes slideOut {
+                        to { transform: translateX(110%); }
+                    }
+                    
+                    @keyframes pulse {
+                        0% { transform: scale(1); }
+                        50% { transform: scale(1.05); }
+                        100% { transform: scale(1); }
+                    }
+                `;
+                document.head.appendChild(toastStyle);
+                
+                // Remove toast after animation
+                setTimeout(() => {
+                    toast.remove();
+                }, 3500);
+            });
+        });
+    }
 }); 
