@@ -17,8 +17,8 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background-color: var(--black);
-    color: var(--white);
+    background-color: purple;
+    color: white;
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
