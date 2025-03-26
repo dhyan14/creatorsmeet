@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Add this at the beginning of your DOMContentLoaded function
+    const urlParams = new URLSearchParams(window.location.search);
+    const userType = urlParams.get('type');
+
+    if (userType) {
+        const radioButton = document.getElementById(userType);
+        if (radioButton) {
+            radioButton.checked = true;
+        }
+    }
+    
     // Toggle password visibility
     const togglePasswordButtons = document.querySelectorAll('.toggle-password');
     
