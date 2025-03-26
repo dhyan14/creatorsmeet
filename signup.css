@@ -1,0 +1,437 @@
+/* Signup Page Specific Styles */
+.signup-section {
+    padding: 60px 0;
+    min-height: calc(100vh - 80px - 300px); /* Adjust based on header and footer height */
+}
+
+.signup-section .container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+.signup-container {
+    flex: 1;
+    background: rgba(20, 20, 30, 0.8);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.signup-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.signup-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.signup-header p {
+    color: #a0a0b0;
+    font-size: 1rem;
+}
+
+.signup-options {
+    margin-bottom: 30px;
+}
+
+.social-signup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.social-signup i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.social-signup.google {
+    background-color: #ffffff;
+    color: #333;
+}
+
+.social-signup.google:hover {
+    background-color: #f1f1f1;
+}
+
+.social-signup.github {
+    background-color: #24292e;
+    color: white;
+}
+
+.social-signup.github:hover {
+    background-color: #2f363d;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.divider span {
+    padding: 0 10px;
+    color: #a0a0b0;
+    font-size: 0.9rem;
+}
+
+.signup-form .form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.signup-form .form-row .form-group {
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #d0d0e0;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(30, 30, 40, 0.6);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.3);
+}
+
+.password-input {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #a0a0b0;
+}
+
+.password-strength {
+    margin-top: 10px;
+}
+
+.strength-meter {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.strength-segment {
+    height: 4px;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.strength-segment.weak {
+    background: #ff4d4d;
+}
+
+.strength-segment.medium {
+    background: #ffaa00;
+}
+
+.strength-segment.strong {
+    background: #00cc66;
+}
+
+.strength-text {
+    font-size: 0.8rem;
+    color: #a0a0b0;
+}
+
+.user-type-options {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.user-type-option {
+    flex: 1;
+}
+
+.user-type-option input[type="radio"] {
+    display: none;
+}
+
+.user-type-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    background: rgba(30, 30, 40, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.user-type-option label i {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: #a0a0b0;
+}
+
+.user-type-option input[type="radio"]:checked + label {
+    border-color: var(--accent-color);
+    background: rgba(var(--accent-color-rgb), 0.1);
+}
+
+.user-type-option input[type="radio"]:checked + label i {
+    color: var(--accent-color);
+}
+
+.form-group.terms {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group.terms input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-color);
+}
+
+.form-group.terms label {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.form-group.terms a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.form-group.terms a:hover {
+    text-decoration: underline;
+}
+
+.signup-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.signup-submit-btn:hover {
+    background: var(--accent-color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(var(--accent-color-rgb), 0.3);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #a0a0b0;
+}
+
+.login-link a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Benefits Section */
+.signup-benefits {
+    flex: 0.8;
+    display: flex;
+    align-items: center;
+}
+
+.benefits-content {
+    background: rgba(20, 20, 30, 0.7);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.benefits-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: white;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.benefits-content h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+    border-radius: 3px;
+}
+
+.benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px 0;
+}
+
+.benefits-list li {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+.benefits-list li i {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    margin-right: 15px;
+    margin-top: 3px;
+}
+
+.benefits-list li h3 {
+    font-size: 1.1rem;
+    margin: 0 0 5px 0;
+    color: white;
+}
+
+.benefits-list li p {
+    margin: 0;
+    color: #a0a0b0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.testimonial-mini {
+    background: rgba(30, 30, 40, 0.6);
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 3px solid var(--accent-color);
+}
+
+.testimonial-mini .quote {
+    font-style: italic;
+    color: #d0d0e0;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.testimonial-mini .author {
+    display: flex;
+    align-items: center;
+}
+
+.testimonial-mini .author-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin-right: 10px;
+}
+
+.testimonial-mini .author-name {
+    font-size: 0.85rem;
+    color: #d0d0e0;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .signup-section .container {
+        flex-direction: column;
+        padding: 0 20px;
+    }
+    
+    .signup-benefits {
+        order: -1;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-type-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .signup-form .form-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .signup-container,
+    .benefits-content {
+        padding: 25px;
+    }
+    
+    .signup-header h1 {
+        font-size: 2rem;
+    }
+} 
