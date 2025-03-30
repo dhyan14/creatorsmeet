@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Successful - Creators Meet</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="confirmation.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="background-animation"></div>
+    
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html"><span class="glow-text">Creators</span><span class="accent-text">Meet</span></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#how-it-works">How It Works</a></li>
+                <li><a href="index.html#explore">Explore</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
+                <button class="signup-btn active">Sign Up</button>
+            </div>
+            <div class="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="confirmation-section">
+            <div class="container">
+                <div class="confirmation-container">
+                    <div class="confirmation-header">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h1>Welcome to <span class="glow-text">Creators</span><span class="accent-text">Meet</span>!</h1>
+                        <p>Your account has been created successfully</p>
+                    </div>
+                    
+                    <div class="profile-summary">
+                        <h2>Your Profile Summary</h2>
+                        
+                        <div class="summary-card">
+                            <div class="summary-section">
+                                <h3>Personal Information</h3>
+                                <div class="info-row">
+                                    <span class="info-label">Name:</span>
+                                    <span class="info-value" id="fullName">John Doe</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Email:</span>
+                                    <span class="info-value" id="emailDisplay">john.doe@example.com</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Account Type:</span>
+                                    <span class="info-value" id="accountType">Developer</span>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-section skills-summary" id="skillsSummarySection">
+                                <h3>Your Coding Skills</h3>
+                                <div class="skills-tags" id="skillsTags">
+                                    <!-- Skills will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <div class="summary-section next-steps">
+                                <h3>Next Steps</h3>
+                                <ul class="steps-list">
+                                    <li>
+                                        <i class="fas fa-user-circle"></i>
+                                        <div>
+                                            <h4>Complete Your Profile</h4>
+                                            <p>Add a profile picture and more details about yourself</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-search"></i>
+                                        <div>
+                                            <h4>Explore Projects</h4>
+                                            <p>Browse through ideas and projects that match your skills</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-users"></i>
+                                        <div>
+                                            <h4>Join the Community</h4>
+                                            <p>Connect with other creators and developers</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="confirmation-actions">
+                            <button class="primary-btn" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+                            <button class="secondary-btn" onclick="window.location.href='index.html'">Back to Home</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="glow-text">Creators</span><span class="accent-text">Meet</span>
+                <p>Connecting Ideas with Skills</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="index.html#how-it-works">How It Works</a></li>
+                        <li><a href="index.html#explore">Browse Ideas</a></li>
+                        <li><a href="index.html#explore">Find Developers</a></li>
+                        <li><a href="index.html#explore">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Developers</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">IP Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Creators Meet. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="confirmation.js"></script>
+</body>
+</html> 

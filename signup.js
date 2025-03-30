@@ -150,10 +150,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         console.log('Form data to be submitted:', formData);
         
-        // Show success message
-        alert('Account created successfully! Redirecting to login...');
-        // In a real application, you would submit the form data to your backend
-        // window.location.href = 'login.html';
+        // Store form data in localStorage to access it on the confirmation page
+        localStorage.setItem('signupFormData', JSON.stringify(formData));
+        
+        // Redirect to confirmation page
+        window.location.href = 'signup-confirmation.html';
     });
     
     // Mobile responsiveness for the form

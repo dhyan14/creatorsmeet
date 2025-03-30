@@ -1,0 +1,238 @@
+/* Confirmation Page Styles */
+.confirmation-section {
+    padding: 60px 0;
+    min-height: calc(100vh - 80px - 300px);
+}
+
+.confirmation-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(20, 20, 30, 0.8);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.confirmation-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: #4CAF50;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.confirmation-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.confirmation-header p {
+    color: #a0a0b0;
+    font-size: 1.1rem;
+}
+
+.profile-summary h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    text-align: center;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.profile-summary h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+    border-radius: 3px;
+}
+
+.summary-card {
+    background: rgba(30, 30, 40, 0.6);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.summary-section {
+    padding: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-section:last-child {
+    border-bottom: none;
+}
+
+.summary-section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-label {
+    flex: 0 0 120px;
+    font-weight: 500;
+    color: #a0a0b0;
+}
+
+.info-value {
+    flex: 1;
+    color: white;
+}
+
+.skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skill-tag {
+    background: rgba(var(--accent-color-rgb), 0.2);
+    color: var(--accent-color);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(var(--accent-color-rgb), 0.3);
+}
+
+.skill-tag i {
+    margin-right: 6px;
+    font-size: 0.8rem;
+}
+
+.steps-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.steps-list li {
+    display: flex;
+    margin-bottom: 15px;
+    align-items: flex-start;
+}
+
+.steps-list li:last-child {
+    margin-bottom: 0;
+}
+
+.steps-list li i {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    margin-right: 15px;
+    margin-top: 3px;
+}
+
+.steps-list li h4 {
+    font-size: 1.1rem;
+    margin: 0 0 5px 0;
+    color: white;
+}
+
+.steps-list li p {
+    margin: 0;
+    color: #a0a0b0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.confirmation-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.confirmation-actions button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.confirmation-actions .primary-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+}
+
+.confirmation-actions .primary-btn:hover {
+    background: var(--accent-color-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(var(--accent-color-rgb), 0.3);
+}
+
+.confirmation-actions .secondary-btn {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.confirmation-actions .secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .confirmation-container {
+        padding: 30px 20px;
+        margin: 0 20px;
+    }
+    
+    .confirmation-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .confirmation-actions button {
+        width: 100%;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+    
+    .info-label {
+        margin-bottom: 5px;
+    }
+} 
