@@ -74,6 +74,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const signupForm = document.querySelector('.signup-form');
     const confirmPasswordInput = document.getElementById('confirmPassword');
     
+    // Show/hide coding skills based on user type selection
+    const userTypeRadios = document.querySelectorAll('input[name="userType"]');
+    const codingSkillsSection = document.querySelector('.coding-skills-section');
+    
+    userTypeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'developer' || this.value === 'both') {
+                codingSkillsSection.style.display = 'block';
+            } else {
+                codingSkillsSection.style.display = 'none';
+            }
+        });
+    });
+    
+    // Check if developer or both is already selected (for URL parameters)
+    const selectedUserType = document.querySelector('input[name="userType"]:checked');
+    if (selectedUserType && (selectedUserType.value === 'developer' || selectedUserType.value === 'both')) {
+        codingSkillsSection.style.display = 'block';
+    }
+    
+    // Update form validation to check for skills if developer or both is selected
     signupForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -90,8 +111,46 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // If all validations pass, you can submit the form
-        // For now, just show a success message
+        // Check if at least one skill is selected for developers or both
+        if (userTypeSelected.value === 'developer' || userTypeSelected.value === 'both') {
+            const skillsSelected = document.querySelectorAll('input[name="skills"]:checked');
+            const otherSkills = document.getElementById('otherSkills').value.trim();
+            
+            if (skillsSelected.length === 0 && otherSkills === '') {
+                alert('Please select at least one coding skill or specify other skills!');
+                return;
+            }
+        }
+        
+        // If all validations pass
+        // Collect all form data
+        const formData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            userType: userTypeSelected.value,
+            skills: []
+        };
+        
+        // Add skills if developer or both
+        if (userTypeSelected.value === 'developer' || userTypeSelected.value === 'both') {
+            document.querySelectorAll('input[name="skills"]:checked').forEach(skill => {
+                formData.skills.push(skill.value);
+            });
+            
+            if (document.getElementById('otherSkills').value.trim() !== '') {
+                const otherSkillsArray = document.getElementById('otherSkills').value
+                    .split(',')
+                    .map(skill => skill.trim())
+                    .filter(skill => skill !== '');
+                
+                formData.skills = [...formData.skills, ...otherSkillsArray];
+            }
+        }
+        
+        console.log('Form data to be submitted:', formData);
+        
+        // Show success message
         alert('Account created successfully! Redirecting to login...');
         // In a real application, you would submit the form data to your backend
         // window.location.href = 'login.html';
