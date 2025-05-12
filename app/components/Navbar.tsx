@@ -42,7 +42,7 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? "bg-tech-dark/80 backdrop-blur-md shadow-lg" : "bg-transparent"
+      scrolled ? "premium-glass backdrop-blur-md shadow-lg" : "bg-transparent"
     } border-b border-tech-accent/30`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -54,7 +54,7 @@ const Navbar = () => {
                 </div>
               </div>
               <span className="ml-2 text-white font-bold text-xl">
-                <span className="cyber-gradient-text">Creators</span>Meet
+                <span className="premium-text">Creators</span>Meet
               </span>
             </Link>
           </div>
@@ -88,7 +88,7 @@ const Navbar = () => {
               </Link>
               <Link 
                 href="/signup"
-                className="btn-matrix text-sm"
+                className="btn-premium text-sm"
               >
                 Sign Up
               </Link>
@@ -114,7 +114,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden glass-effect border-t border-tech-accent/20">
+        <div className="md:hidden premium-glass border-t border-tech-accent/20">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <NavLink
               href="/about"
@@ -147,7 +147,7 @@ const Navbar = () => {
               </Link>
               <Link
                 href="/signup"
-                className="btn-matrix text-center"
+                className="btn-premium text-center"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Sign Up

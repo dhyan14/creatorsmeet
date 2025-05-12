@@ -72,7 +72,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative overflow-hidden bg-matrix-rain">
+    <div className="relative overflow-hidden bg-matrix-rain premium-tech-bg">
       {/* Matrix rain effect background */}
       <MatrixRain />
       
@@ -87,20 +87,20 @@ const Hero = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 relative z-10">
         <div className="text-center section-animate">
           <div className="inline-block mb-4 relative">
-            <span className="px-4 py-1 bg-tech-gray/50 text-tech-accent border border-tech-accent rounded-full text-sm font-semibold tracking-wide shadow-cyber">
+            <span className="px-4 py-1 premium-glass text-tech-accent rounded-full text-sm font-semibold tracking-wide">
               CONNECT • CREATE • COLLABORATE
             </span>
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4">
-            <span className="block">Where <span className="cyber-gradient-text">Ideas</span> Meet</span>
-            <span className="block"><span className="cyber-gradient-text">Code</span> Expertise</span>
+            <span className="block">Where <span className="premium-text">Ideas</span> Meet</span>
+            <span className="block"><span className="premium-text">Code</span> Expertise</span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-300">
             Connect creative minds with technical talent. Turn brilliant ideas into reality.
           </p>
           
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link href="/signup" className="btn-primary text-lg px-8 py-3 shiny-border group">
+            <Link href="/signup" className="btn-premium text-lg px-8 py-3 group">
               Get Started <FaArrowRight className="ml-2 inline-block group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link href="/about" className="btn-matrix text-lg px-8 py-3 group">
@@ -110,7 +110,7 @@ const Hero = () => {
         </div>
         
         <div className="mt-20 grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="card group animate-on-scroll">
+          <div className="card-premium group animate-on-scroll">
             <div className="card-glow"></div>
             <div className="flex items-center mb-4">
               <div className="bg-tech-dark p-3 rounded-full border border-matrix-green shadow-neon">
@@ -126,7 +126,7 @@ const Hero = () => {
             </Link>
           </div>
           
-          <div className="card group animate-on-scroll" style={{ animationDelay: '0.2s' }}>
+          <div className="card-premium group animate-on-scroll" style={{ animationDelay: '0.2s' }}>
             <div className="card-glow"></div>
             <div className="flex items-center mb-4">
               <div className="bg-tech-dark p-3 rounded-full border border-tech-accent shadow-cyber">
