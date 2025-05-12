@@ -4,8 +4,8 @@
 
 :root {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 18, 18, 18;
-  --background-end-rgb: 29, 29, 29;
+  --background-start-rgb: 15, 23, 42; /* tech-dark */
+  --background-end-rgb: 6, 78, 59; /* primary-900 */
 }
 
 @keyframes gradient-shift {
@@ -22,25 +22,28 @@
 
 @keyframes float {
   0% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-10px) rotate(2deg);
   }
   100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
 }
 
 @keyframes pulse {
   0% {
     opacity: 0.6;
+    transform: scale(1);
   }
   50% {
     opacity: 1;
+    transform: scale(1.05);
   }
   100% {
     opacity: 0.6;
+    transform: scale(1);
   }
 }
 
@@ -70,24 +73,43 @@
   }
 }
 
+@keyframes matrix-rain {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(1000%);
+    opacity: 0;
+  }
+}
+
 /* Code animation styles */
 .code-animation {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-family: monospace;
+  font-family: 'Courier New', monospace;
 }
 
 .code-line {
   white-space: nowrap;
   overflow: hidden;
-  border-right: 2px solid #00ff9d;
+  border-right: 2px solid var(--matrix-green, #00FF41);
   width: 0;
   animation: typing 4s steps(40, end) forwards, blink 1s step-end infinite;
   margin-bottom: 4px;
   opacity: 0;
   animation-delay: 0s;
+  color: var(--matrix-green, #00FF41);
+  text-shadow: 0 0 5px var(--matrix-green, #00FF41);
 }
 
 .code-line:nth-child(even) {
@@ -106,21 +128,54 @@ body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
-      transparent,
+      rgb(var(--background-start-rgb)),
       rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    );
   min-height: 100vh;
   overflow-x: hidden;
 }
 
+/* Matrix rain effect for decorative backgrounds */
+.matrix-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  opacity: 0.15;
+}
+
+.matrix-rain {
+  position: absolute;
+  color: #00FF41;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-shadow: 0 0 5px #00FF41;
+  user-select: none;
+  white-space: nowrap;
+  animation: matrix-rain 8s linear infinite;
+}
+
 .gradient-text {
-  background: linear-gradient(90deg, #22c55e, #00ff9d);
+  background: linear-gradient(90deg, #34D399, #06B6D4);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: gradient-shift 3s ease infinite;
+}
+
+.cyber-gradient-text {
+  background: linear-gradient(90deg, #00FF41, #06B6D4);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 4s ease infinite;
+  text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
 }
 
 .animate-float {
@@ -136,10 +191,56 @@ body {
 }
 
 .glass-effect {
-  background: rgba(30, 30, 30, 0.6);
+  background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(6, 182, 212, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.cyber-card {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.1);
+  backdrop-filter: blur(4px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.cyber-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent 50%, rgba(6, 182, 212, 0.5) 50%, transparent 51%);
+  z-index: -1;
+  animation: gradient-shift 3s linear infinite;
+  background-size: 400% 400%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-card:hover::before {
+  opacity: 1;
+}
+
+.cyber-card .card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.4), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-card:hover .card-glow {
+  opacity: 1;
 }
 
 .section-animate > * {
@@ -165,7 +266,7 @@ body {
   right: -15px;
   bottom: -15px;
   z-index: -1;
-  background: radial-gradient(circle, rgba(0, 255, 157, 0.2) 0%, rgba(0, 255, 157, 0) 70%);
+  background: radial-gradient(circle, rgba(0, 255, 65, 0.3) 0%, rgba(0, 255, 65, 0) 70%);
   border-radius: inherit;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -173,6 +274,21 @@ body {
 
 .glow:hover::after {
   opacity: 1;
+}
+
+.neon-border {
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+  box-shadow: 0 0 5px rgba(0, 255, 65, 0.2);
+  transition: all 0.3s ease;
+}
+
+.neon-border:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+  border-color: #00FF41;
 }
 
 .shiny-border {
@@ -191,7 +307,7 @@ body {
   background: linear-gradient(
     to right,
     transparent,
-    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.2),
     transparent
   );
   transform: skewX(-25deg);
@@ -202,16 +318,48 @@ body {
   left: 125%;
 }
 
+/* Cyber grid background */
+.cyber-grid-bg {
+  background-image: var(--cyber-grid, linear-gradient(rgba(10, 37, 64, 0.8) 1px, transparent 1px), 
+                         linear-gradient(90deg, rgba(10, 37, 64, 0.8) 1px, transparent 1px));
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+/* Tech pattern background */
+.tech-pattern-bg {
+  background-image: var(--tech-pattern, radial-gradient(#0EA5E9 1px, transparent 1px));
+  background-size: 20px 20px;
+  background-position: center center;
+}
+
 @layer components {
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-md transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/20 relative overflow-hidden;
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-md 
+           shadow-cyber hover:shadow-cyber-strong transition-all duration-300 border border-primary-400/30 
+           relative overflow-hidden;
   }
   
   .btn-secondary {
-    @apply bg-tech-light hover:bg-tech-gray border border-tech-accent text-white font-semibold py-2 px-4 rounded-md transition-all duration-300 hover:shadow-lg hover:shadow-tech-accent/20 relative overflow-hidden;
+    @apply bg-tech-gray hover:bg-tech-light border border-tech-accent text-white font-semibold 
+           py-2 px-4 rounded-md shadow-cyber hover:shadow-cyber-strong transition-all duration-300 
+           relative overflow-hidden;
+  }
+  
+  .btn-matrix {
+    @apply bg-tech-dark border border-matrix-green text-matrix-green font-semibold py-2 px-4 rounded-md 
+           shadow-neon hover:shadow-neon-strong transition-all duration-300 relative overflow-hidden;
   }
   
   .card {
-    @apply bg-tech-gray border border-tech-light rounded-lg shadow-lg p-5 transition-all duration-300 hover:shadow-xl hover:shadow-primary-900/10 hover:translate-y-[-5px];
+    @apply cyber-card p-5 transition-all duration-300 hover:translate-y-[-5px];
+  }
+  
+  .neon-text {
+    @apply text-matrix-green drop-shadow-[0_0_3px_#00FF41];
+  }
+  
+  .cyber-text {
+    @apply text-tech-accent drop-shadow-[0_0_2px_#06B6D4];
   }
 } 

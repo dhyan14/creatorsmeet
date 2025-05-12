@@ -2,7 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FaLaptopCode, FaBars, FaTimes } from 'react-icons/fa';
+import { FaLaptopCode, FaBars, FaTimes, FaCode } from 'react-icons/fa';
+
+const NavLink = ({ href, className, children, onClick = () => {} }) => (
+  <Link 
+    href={href}
+    className={`${className} relative group overflow-hidden`}
+    onClick={onClick}
+  >
+    <span className="relative z-10">{children}</span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-matrix-green group-hover:w-full transition-all duration-300"></span>
+  </Link>
+);
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,52 +35,53 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? "bg-tech-dark/90 backdrop-blur-md shadow-lg" : "bg-tech-dark"
-    } border-b border-tech-light`}>
+      scrolled ? "bg-tech-dark/80 backdrop-blur-md shadow-lg" : "bg-transparent"
+    } border-b border-tech-accent/30`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center group">
               <div className="relative">
-                <FaLaptopCode className="h-8 w-8 text-tech-accent animate-pulse-glow" />
-                <div className="absolute inset-0 bg-tech-accent rounded-full blur-md opacity-30 animate-pulse-glow"></div>
+                <div className="w-10 h-10 flex items-center justify-center bg-tech-dark border border-matrix-green rounded-md shadow-neon group-hover:shadow-neon-strong transition-all duration-300">
+                  <FaCode className="h-6 w-6 text-matrix-green" />
+                </div>
               </div>
               <span className="ml-2 text-white font-bold text-xl">
-                <span className="gradient-text">Creators</span>Meet
+                <span className="cyber-gradient-text">Creators</span>Meet
               </span>
             </Link>
           </div>
 
           {/* Desktop navigation */}
           <div className="hidden md:block">
-            <div className="flex items-center space-x-4">
-              <Link 
+            <div className="flex items-center space-x-6">
+              <NavLink 
                 href="/about"
-                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-tech-light/30 transition-all"
+                className="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium"
               >
                 About
-              </Link>
-              <Link 
+              </NavLink>
+              <NavLink 
                 href="/creators"
-                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-tech-light/30 transition-all"
+                className="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium"
               >
                 Creators
-              </Link>
-              <Link 
+              </NavLink>
+              <NavLink 
                 href="/developers"
-                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-tech-light/30 transition-all"
+                className="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium"
               >
                 Developers
-              </Link>
+              </NavLink>
               <Link 
                 href="/login"
-                className="btn-secondary text-sm shiny-border"
+                className="btn-secondary text-sm shadow-cyber"
               >
                 Login
               </Link>
               <Link 
                 href="/signup"
-                className="btn-primary text-sm shiny-border"
+                className="btn-matrix text-sm"
               >
                 Sign Up
               </Link>
@@ -95,40 +107,40 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden glass-effect">
+        <div className="md:hidden glass-effect border-t border-tech-accent/20">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link
+            <NavLink
               href="/about"
-              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-tech-light/30 transition-all"
+              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               About
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               href="/creators"
-              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-tech-light/30 transition-all"
+              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               Creators
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               href="/developers"
-              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-tech-light/30 transition-all"
+              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               Developers
-            </Link>
+            </NavLink>
             <div className="flex flex-col space-y-2 mt-4 px-3 py-2">
               <Link
                 href="/login"
-                className="btn-secondary text-center shiny-border"
+                className="btn-secondary text-center"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Login
               </Link>
               <Link
                 href="/signup"
-                className="btn-primary text-center shiny-border"
+                className="btn-matrix text-center"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Sign Up
