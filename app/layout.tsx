@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'CreatorsMeet - Connect Ideas with Skills',
   description: 'A platform connecting creative minds with technical expertise',
+  icons: {
+    icon: '/logo.svg',
+  },
 }
 
 export default function RootLayout({
