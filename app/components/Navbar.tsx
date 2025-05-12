@@ -4,7 +4,14 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FaLaptopCode, FaBars, FaTimes, FaCode } from 'react-icons/fa';
 
-const NavLink = ({ href, className, children, onClick = () => {} }) => (
+interface NavLinkProps {
+  href: string;
+  className?: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+}
+
+const NavLink = ({ href, className, children, onClick = () => {} }: NavLinkProps) => (
   <Link 
     href={href}
     className={`${className} relative group overflow-hidden`}
