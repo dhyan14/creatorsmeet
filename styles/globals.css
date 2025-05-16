@@ -8,6 +8,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  @apply bg-dark-900 text-white;
 }
 
 a {
@@ -17,4 +18,45 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.glow-text {
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+}
+
+.glow-border {
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+}
+
+.dark-radial-bg {
+  background: radial-gradient(circle at 50% 25%, rgba(34, 197, 94, 0.15), rgba(15, 23, 42, 0) 70%),
+              radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.1), rgba(15, 23, 42, 0) 50%);
+}
+
+.green-glow-point {
+  position: relative;
+}
+
+.green-glow-point::before {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, rgba(34, 197, 94, 0) 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-6 rounded-md shadow-glow-sm hover:shadow-glow-md transition-all duration-300;
+  }
+  
+  .btn-outlined {
+    @apply bg-transparent border border-primary-500 text-primary-500 hover:bg-primary-500/10 font-bold py-2 px-6 rounded-md transition-all duration-300;
+  }
+
+  .header-glow {
+    @apply text-primary-400 glow-text font-bold;
+  }
 } 
