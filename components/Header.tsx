@@ -7,11 +7,11 @@ const Header = () => {
   return (
     <header className="bg-dark-800 border-b border-dark-700 shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl header-glow">
-          CreatorsMeet
-        </Link>
+        <div className="flex flex-col">
+          <span className="text-2xl header-glow">Creative Developer</span>
+        </div>
         
-        {/* Mobile menu button */}
+        {/* Mobile menu button - keeping this for mobile layout */}
         <button 
           className="md:hidden text-white"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -24,41 +24,19 @@ const Header = () => {
             )}
           </svg>
         </button>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-8">
-          <Link href="/" className="text-gray-200 hover:text-primary-400 hover:glow-text transition-all duration-300">
-            Home
-          </Link>
-          <Link href="/about" className="text-gray-200 hover:text-primary-400 hover:glow-text transition-all duration-300">
-            About Us
-          </Link>
-          <Link href="/developers" className="text-gray-200 hover:text-primary-400 hover:glow-text transition-all duration-300">
-            Developers
-          </Link>
-          <Link href="/contact" className="text-gray-200 hover:text-primary-400 hover:glow-text transition-all duration-300">
-            Contact Us
-          </Link>
-        </nav>
       </div>
       
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - only showing bio on mobile */}
       {isMenuOpen && (
         <div className="md:hidden">
-          <nav className="flex flex-col bg-dark-700 px-4 py-2">
-            <Link href="/" className="py-2 text-gray-200 hover:text-primary-400 hover:glow-text transition-all duration-300">
-              Home
-            </Link>
-            <Link href="/about" className="py-2 text-gray-200 hover:text-primary-400 hover:glow-text transition-all duration-300">
-              About Us
-            </Link>
-            <Link href="/developers" className="py-2 text-gray-200 hover:text-primary-400 hover:glow-text transition-all duration-300">
-              Developers
-            </Link>
-            <Link href="/contact" className="py-2 text-gray-200 hover:text-primary-400 hover:glow-text transition-all duration-300">
-              Contact Us
-            </Link>
-          </nav>
+          <div className="bg-dark-700 px-4 py-4 text-gray-300">
+            <p className="mb-4">
+              Hi, I'm Dhyan Jain— a B.Tech student at UCP Institute of Technology who writes code that (usually) works.
+            </p>
+            <p>
+              I specialize in crafting modern web and mobile applications using JavaScript, React, Node.js, and MongoDB. From backend logic to user-friendly interfaces, I enjoy turning ideas into functional, full-stack solutions. Let's build something cool together.
+            </p>
+          </div>
         </div>
       )}
     </header>

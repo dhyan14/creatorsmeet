@@ -4,11 +4,11 @@ const Footer = () => {
   return (
     <footer className="bg-dark-800 border-t border-dark-700 text-white pt-12 pb-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-xl font-bold mb-4 header-glow">CreatorsMeet</h3>
+            <h3 className="text-xl font-bold mb-4 header-glow">Dhyan Jain</h3>
             <p className="text-gray-300 mb-4">
-              Connecting creative minds with technical expertise.
+              Creative Developer specializing in web and mobile applications.
             </p>
             <div className="flex space-x-4">
               <a href="https://twitter.com" className="text-gray-400 hover:text-primary-400 hover:glow-text transition-all duration-300">
@@ -30,7 +30,7 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="text-xl font-bold mb-4 text-gray-100">Quick Links</h3>
+            <h3 className="text-xl font-bold mb-4 text-gray-100">Navigation</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/" className="text-gray-300 hover:text-primary-400 hover:glow-text transition-all duration-300">
@@ -38,53 +38,22 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-300 hover:text-primary-400 hover:glow-text transition-all duration-300">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/developers" className="text-gray-300 hover:text-primary-400 hover:glow-text transition-all duration-300">
-                  Developers
+                <Link href="/portfolio" className="text-gray-300 hover:text-primary-400 hover:glow-text transition-all duration-300">
+                  Portfolio
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-gray-300 hover:text-primary-400 hover:glow-text transition-all duration-300">
-                  Contact Us
+                  Contact
                 </Link>
-              </li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-xl font-bold mb-4 text-gray-100">Resources</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-gray-300 hover:text-primary-400 hover:glow-text transition-all duration-300">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-primary-400 hover:glow-text transition-all duration-300">
-                  Documentation
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-primary-400 hover:glow-text transition-all duration-300">
-                  FAQs
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-300 hover:text-primary-400 hover:glow-text transition-all duration-300">
-                  Support
-                </a>
               </li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-xl font-bold mb-4 text-gray-100">Contact</h3>
-            <p className="text-gray-300 mb-2">Email: info@creatorsmeet.com</p>
-            <p className="text-gray-300 mb-4">Phone: +1 (555) 123-4567</p>
+            <p className="text-gray-300 mb-2">Email: dhyan.jain@example.com</p>
+            <p className="text-gray-300 mb-4">Location: UCP Institute of Technology</p>
             <form className="mt-4">
               <label htmlFor="email" className="sr-only">Email</label>
               <div className="flex">
@@ -98,7 +67,7 @@ const Footer = () => {
                   type="submit"
                   className="bg-primary-500 px-4 py-2 rounded-r hover:bg-primary-600 shadow-glow-sm hover:shadow-glow-md transition-all duration-300"
                 >
-                  Subscribe
+                  Send
                 </button>
               </div>
             </form>
@@ -106,7 +75,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-dark-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} CreatorsMeet. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Dhyan Jain. All rights reserved.</p>
         </div>
       </div>
     </footer>
