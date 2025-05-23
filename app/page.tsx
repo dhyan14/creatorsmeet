@@ -21,23 +21,28 @@ function SpaceBackground() {
 
 const fadeInUp: Variants = {
   initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 }
+  animate: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5 }
+  }
 }
 
 function FeatureCard({ title, description, delay = 0 }: FeatureCardProps) {
+  const cardVariants: Variants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: { delay, duration: 0.5 }
+    }
+  }
+
   return (
     <motion.div
       initial="initial"
       animate="animate"
-      variants={{
-        initial: { opacity: 0, y: 20 },
-        animate: { 
-          opacity: 1, 
-          y: 0,
-          transition: { delay, duration: 0.5 }
-        }
-      }}
+      variants={cardVariants}
       className="glass-effect p-6 rounded-xl border border-purple-500/20 hover:border-purple-500/40 transition-colors"
     >
       <h3 className="text-xl font-bold mb-3 text-gradient">{title}</h3>
