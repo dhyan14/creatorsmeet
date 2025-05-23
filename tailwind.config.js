@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        ancizar: ['Ancizar Serif', 'serif'],
+      },
       animation: {
         'spin-slow': 'spin 20s linear infinite',
         'float': 'float 6s ease-in-out infinite',
