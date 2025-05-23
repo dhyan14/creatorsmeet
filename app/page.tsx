@@ -1,75 +1,101 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
 import { motion } from 'framer-motion'
-import Navigation from './components/Navigation'
-import { BackgroundBeams } from '@/components/ui/background-beams'
+import { Header } from '@/components/ui/header'
+import GridBackground from '@/components/ui/grid-background'
+import { HowItWorks } from '@/components/sections/how-it-works'
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-black">
-      <Navigation />
-      <main className="relative overflow-hidden">
-        <BackgroundBeams />
-        
-        <div className="relative z-10 container mx-auto px-4 pt-32 pb-20">
-          <div className="flex flex-col items-center justify-center mb-16">
-            <Image
-              src="/logo.png"
-              alt="Creators Meet Logo"
-              width={80}
-              height={80}
-              className="mb-6"
-              priority
-            />
-            <h1 className="font-ancizar-bold text-5xl md:text-7xl text-gradient text-center mb-8">
-              Creators Meet
-            </h1>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
-          >
-            <p className="text-xl text-gray-300 mb-12 font-ancizar-regular">
-              Connecting visionary idea creators with skilled developers to build the next generation of innovative solutions.
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-6 mb-12">
+      <Header />
+      <GridBackground className="min-h-screen">
+        <main className="relative">
+          <div className="relative z-10 container mx-auto px-4 pt-32 pb-20">
+            <div className="flex flex-col items-center justify-center mb-16">
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="glass-effect p-6 rounded-xl border border-purple-500/20"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-center"
               >
-                <h3 className="text-xl font-ancizar-bold mb-3 text-gradient">For Idea Creators</h3>
-                <p className="text-gray-300 font-ancizar-regular">Have a groundbreaking idea but need technical expertise? Find skilled developers who can bring your vision to life.</p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-                className="glass-effect p-6 rounded-xl border border-purple-500/20"
-              >
-                <h3 className="text-xl font-ancizar-bold mb-3 text-gradient">For Developers</h3>
-                <p className="text-gray-300 font-ancizar-regular">Looking for exciting projects to work on? Connect with innovators who need your coding expertise.</p>
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-300 to-white pb-2">
+                  Your All-In-One Innovation Network
+                </h1>
+                <p className="mt-4 text-xl md:text-2xl text-purple-200/90 font-light">
+                  Where Skills And Ideas Come Together
+                </p>
               </motion.div>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="font-ancizar-medium bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-8 rounded-full text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/25"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center max-w-4xl mx-auto"
             >
-              Join the Community
-            </motion.button>
-          </motion.div>
-        </div>
-      </main>
+              <p className="text-xl text-gray-300 mb-12">
+                Step into a world where innovation knows no bounds. Creators Meet is your gateway to 
+                transforming visionary ideas into groundbreaking realities. Our platform seamlessly 
+                connects forward-thinking creators with skilled developers, fostering collaborations 
+                that shape the future.
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-6 mb-12">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="glass-effect p-6 rounded-xl border border-purple-500/20"
+                >
+                  <h3 className="text-xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+                    Innovate Without Limits
+                  </h3>
+                  <p className="text-gray-300">
+                    Launch your ideas into reality with our powerful collaboration tools and global network 
+                    of talented developers ready to bring your vision to life.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="glass-effect p-6 rounded-xl border border-purple-500/20"
+                >
+                  <h3 className="text-xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+                    Connect & Create
+                  </h3>
+                  <p className="text-gray-300">
+                    Join a thriving ecosystem of creators, developers, and visionaries. Find your perfect 
+                    match and build something extraordinary together.
+                  </p>
+                </motion.div>
+              </div>
+
+              <div className="flex flex-wrap gap-4 justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-8 rounded-full text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/25"
+                >
+                  Start Creating
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="border-2 border-purple-600/50 hover:border-purple-600 text-white py-4 px-8 rounded-full text-lg transition-all"
+                >
+                  Explore Projects
+                </motion.button>
+              </div>
+            </motion.div>
+          </div>
+
+          <HowItWorks />
+        </main>
+      </GridBackground>
     </div>
   )
 } 
