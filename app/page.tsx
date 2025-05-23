@@ -3,12 +3,13 @@
 import React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Stars, OrbitControls } from '@react-three/drei'
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import Navigation from './components/Navigation'
+import { FeatureCardProps } from './types'
 
 function SpaceBackground() {
   return (
-    <div className="fixed inset-0 -z-10">
+    <div className="fixed inset-0 -z-10 bg-black">
       <Canvas>
         <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} />
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
@@ -18,15 +19,28 @@ function SpaceBackground() {
   )
 }
 
-function FeatureCard({ title, description, delay = 0 }) {
+const fadeInUp: Variants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
+}
+
+function FeatureCard({ title, description, delay = 0 }: FeatureCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
-      className="bg-black bg-opacity-50 backdrop-blur-lg p-6 rounded-xl border border-purple-500/20"
+      initial="initial"
+      animate="animate"
+      variants={{
+        initial: { opacity: 0, y: 20 },
+        animate: { 
+          opacity: 1, 
+          y: 0,
+          transition: { delay, duration: 0.5 }
+        }
+      }}
+      className="glass-effect p-6 rounded-xl border border-purple-500/20 hover:border-purple-500/40 transition-colors"
     >
-      <h3 className="text-xl font-bold mb-3 text-purple-400">{title}</h3>
+      <h3 className="text-xl font-bold mb-3 text-gradient">{title}</h3>
       <p className="text-gray-300">{description}</p>
     </motion.div>
   )
@@ -34,24 +48,27 @@ function FeatureCard({ title, description, delay = 0 }) {
 
 export default function Home() {
   return (
-    <>
+    <div className="min-h-screen bg-black">
       <Navigation />
-      <main className="min-h-screen relative overflow-hidden">
+      <main className="relative overflow-hidden">
         <SpaceBackground />
         
-        <div className="relative z-10 container mx-auto px-4 py-20">
+        <div className="relative z-10 container mx-auto px-4 pt-32 pb-20">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
+            initial="initial"
+            animate="animate"
+            variants={fadeInUp}
             className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="text-6xl font-bold mb-6 animate-float bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-float text-gradient">
               Where Ideas Meet Code
             </h1>
-            <p className="text-xl text-gray-300 mb-12">
+            <motion.p 
+              variants={fadeInUp}
+              className="text-xl text-gray-300 mb-12"
+            >
               Connecting visionary idea creators with skilled developers to build the next generation of innovative solutions.
-            </p>
+            </motion.p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-12">
               <FeatureCard
@@ -69,13 +86,13 @@ export default function Home() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-8 rounded-full transition-colors text-lg"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-8 rounded-full text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/25"
             >
               Join the Community
             </motion.button>
           </motion.div>
         </div>
       </main>
-    </>
+    </div>
   )
 } 
