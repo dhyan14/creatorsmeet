@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
+import { cookies } from 'next/headers';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
 
     // Find user by email
     console.log('Finding user by email:', email);
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
       console.log('User not found:', email);
@@ -65,7 +66,7 @@ export async function POST(req: Request) {
       { expiresIn: '7d' }
     );
 
-    // Create response
+    // Create the response first
     const response = NextResponse.json(
       { 
         message: 'Login successful',
@@ -75,17 +76,13 @@ export async function POST(req: Request) {
           role: user.role
         }
       },
-      { status: 200 }
+      { 
+        status: 200,
+        headers: {
+          'Set-Cookie': `token=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${60 * 60 * 24 * 7}`
+        }
+      }
     );
-
-    // Set cookie
-    console.log('Setting auth cookie...');
-    response.cookies.set('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax', // Changed from 'strict' to 'lax' to allow redirects
-      maxAge: 60 * 60 * 24 * 7 // 7 days
-    });
 
     console.log('Login successful for user:', email);
     return response;

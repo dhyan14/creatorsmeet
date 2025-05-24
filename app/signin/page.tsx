@@ -41,11 +41,10 @@ export default function SigninPage() {
       console.log('Sign in successful, redirecting to dashboard...');
       
       // Wait a moment before redirecting to ensure cookie is set
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Redirect to dashboard on success
-      router.replace('/dashboard');
-      router.refresh(); // Refresh to update the UI with new auth state
+      // Use window.location for a full page reload
+      window.location.href = '/dashboard';
     } catch (err) {
       console.error('Sign in error:', err);
       setError(err instanceof Error ? err.message : 'Something went wrong');
