@@ -69,6 +69,26 @@ const performanceSchema = new mongoose.Schema({
   }
 });
 
+const aiMentorSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  expertise: [{
+    type: String,
+    required: true
+  }],
+  avatar: {
+    type: String,
+    required: true
+  },
+  description: String,
+  assignedAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -117,12 +137,7 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-  aiMentor: {
-    name: String,
-    expertise: [String],
-    avatar: String,
-    description: String
-  },
+  aiMentor: aiMentorSchema,
   currentProject: projectSchema,
   performance: performanceSchema,
   createdAt: {

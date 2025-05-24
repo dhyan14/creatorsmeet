@@ -37,6 +37,13 @@ interface User {
     status: string;
     progress: number;
   };
+  aiMentor?: {
+    name: string;
+    expertise: string[];
+    avatar: string;
+    description: string;
+    assignedAt: string;
+  };
 }
 
 interface AIMentor {
@@ -75,23 +82,32 @@ export default function Dashboard() {
   const [showMentorChat, setShowMentorChat] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/user/me');
-        if (!response.ok) {
+        // Fetch user data
+        const userResponse = await fetch('/api/user/me');
+        if (!userResponse.ok) {
           throw new Error('Failed to fetch user data');
         }
-        const data = await response.json();
-        setUser(data);
+        const userData = await userResponse.json();
+
+        // Fetch or assign AI mentor if not already assigned
+        const mentorResponse = await fetch('/api/user/assign-mentor');
+        if (mentorResponse.ok) {
+          const mentorData = await mentorResponse.json();
+          userData.aiMentor = mentorData;
+        }
+
+        setUser(userData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
-        console.error('Error fetching user data:', err);
+        console.error('Error fetching data:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserData();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -255,7 +271,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* AI Mentor Section */}
-        {user.role === 'innovator' && (
+        {user.aiMentor && (
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -275,29 +291,15 @@ export default function Dashboard() {
             <div className="space-y-4">
               <div className="flex items-center space-x-4 p-4 bg-white/5 rounded-lg border border-white/5 hover:border-purple-500/20 transition-colors">
                 <Image
-                  src={selectedMentor.avatar}
-                  alt={selectedMentor.name}
+                  src={user.aiMentor.avatar}
+                  alt={user.aiMentor.name}
                   width={48}
                   height={48}
                   className="rounded-full"
                 />
                 <div className="flex-1">
-                  <h3 className="font-medium">{selectedMentor.name}</h3>
-                  <p className="text-sm text-gray-400">{selectedMentor.expertise.join(' • ')}</p>
-                </div>
-                <div className="flex space-x-2">
-                  {aiMentors.map((mentor, index) => (
-                    <button
-                      key={mentor.name}
-                      onClick={() => setSelectedMentor(mentor)}
-                      className={cn(
-                        "w-2 h-2 rounded-full transition-colors",
-                        selectedMentor.name === mentor.name
-                          ? "bg-purple-500"
-                          : "bg-white/20 hover:bg-white/40"
-                      )}
-                    />
-                  ))}
+                  <h3 className="font-medium">{user.aiMentor.name}</h3>
+                  <p className="text-sm text-gray-400">{user.aiMentor.expertise.join(' • ')}</p>
                 </div>
               </div>
 
@@ -329,7 +331,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-400 text-sm">{selectedMentor.description}</p>
+                <p className="text-gray-400 text-sm">{user.aiMentor.description}</p>
               )}
             </div>
           </motion.div>
