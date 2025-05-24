@@ -1,16 +1,18 @@
 import React from 'react'
 import './globals.css'
 import type { Metadata } from 'next'
-import { Space_Grotesk } from "next/font/google"
+import { Inter } from 'next/font/google'
 
-const spaceGrotesk = Space_Grotesk({ 
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-})
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Creators Meet - Your All-In-One Innovation Network',
-  description: 'Connect, collaborate, and create with innovators worldwide. Join Creators Meet to transform your ideas into reality.',
+  title: 'CreatorsMeet',
+  description: 'Connect innovators with coders to build amazing projects',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export default function RootLayout({
@@ -19,8 +21,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={spaceGrotesk.variable}>
-      <body className="font-space-grotesk antialiased">
+    <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      </head>
+      <body className={inter.className}>
         {children}
       </body>
     </html>
