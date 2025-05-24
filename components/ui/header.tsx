@@ -56,10 +56,9 @@ export function Header() {
           <AnimatePresence mode="wait">
             <motion.div
               key={isScrolled ? "scrolled" : "top"}
-              initial={{ opacity: 0, y: 0, scale: 0.9 }}
+              initial={{ opacity: 0 }}
               animate={{ 
                 opacity: 1,
-                y: isScrolled ? 8 : 0,
                 scale: isScrolled ? 0.9 : 1
               }}
               exit={{ opacity: 0 }}
@@ -83,17 +82,17 @@ export function Header() {
               )}>
                 <div className="flex items-center justify-between">
                   {/* Logo and Title */}
-                  <Link href="/" className="flex items-center space-x-3">
+                  <Link href="/" className="flex items-center space-x-2 min-w-0">
                     <Image
                       src="/logo.png"
                       alt="CreatorsMeet Logo"
-                      width={isScrolled ? 40 : 48}
-                      height={isScrolled ? 40 : 48}
-                      className="rounded-lg"
+                      width={isScrolled ? 32 : 36}
+                      height={isScrolled ? 32 : 36}
+                      className="rounded-lg flex-shrink-0"
                     />
                     <span className={cn(
-                      "font-semibold text-white transition-all duration-300",
-                      isScrolled ? "text-xl" : "text-2xl"
+                      "font-semibold text-white transition-all duration-300 truncate",
+                      isScrolled ? "text-lg" : "text-xl"
                     )}>
                       Creators Meet
                     </span>
@@ -120,11 +119,11 @@ export function Header() {
                     <AnimatedButton
                       href="/auth"
                       className={cn(
-                        "transition-transform duration-300",
+                        "transition-transform duration-300 text-sm",
                         isScrolled ? "scale-90" : "scale-100"
                       )}
                     >
-                      Login  / Sign Up
+                      Login / Sign Up
                     </AnimatedButton>
                   </div>
                 </div>
