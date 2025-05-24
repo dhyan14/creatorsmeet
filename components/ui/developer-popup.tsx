@@ -24,15 +24,15 @@ export function DeveloperPopup({ developer, isOpen, onClose, clickPosition }: De
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[100] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[99999] flex items-center justify-center p-4"
           >
             {/* Popup */}
             <motion.div
               initial={{ 
                 opacity: 0,
                 scale: 0.5,
-                x: clickPosition.x - window.innerWidth / 2,
-                y: clickPosition.y - window.innerHeight / 2
+                x: window.innerWidth <= 768 ? 0 : clickPosition.x - window.innerWidth / 2,
+                y: window.innerWidth <= 768 ? 0 : clickPosition.y - window.innerHeight / 2
               }}
               animate={{ 
                 opacity: 1,
@@ -43,8 +43,8 @@ export function DeveloperPopup({ developer, isOpen, onClose, clickPosition }: De
               exit={{ 
                 opacity: 0,
                 scale: 0.5,
-                x: clickPosition.x - window.innerWidth / 2,
-                y: clickPosition.y - window.innerHeight / 2
+                x: window.innerWidth <= 768 ? 0 : clickPosition.x - window.innerWidth / 2,
+                y: window.innerWidth <= 768 ? 0 : clickPosition.y - window.innerHeight / 2
               }}
               transition={{ type: "spring", duration: 0.5 }}
               className="relative w-full max-w-lg bg-black/95 backdrop-blur-sm rounded-2xl p-6 max-h-[90vh] overflow-y-auto border border-white/10 shadow-xl"
@@ -53,9 +53,9 @@ export function DeveloperPopup({ developer, isOpen, onClose, clickPosition }: De
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute right-4 top-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-50"
+                className="absolute right-4 top-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-[10000]"
               >
-                <IoClose className="w-6 h-6" />
+                <IoClose className="w-7 h-7" />
               </button>
 
               {/* Content */}
