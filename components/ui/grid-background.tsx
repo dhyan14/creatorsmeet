@@ -8,7 +8,7 @@ interface GridBackgroundProps {
 
 export default function GridBackground({ children, className }: GridBackgroundProps) {
   return (
-    <div className={cn("relative w-full", className)}>
+    <div className={cn("relative w-full overflow-x-hidden", className)}>
       {/* Grid background */}
       <div
         className={cn(
@@ -21,7 +21,10 @@ export default function GridBackground({ children, className }: GridBackgroundPr
       />
       
       {/* Radial gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-gradient-to-r from-black via-transparent to-black dark:from-black dark:via-transparent dark:to-black opacity-80"></div>
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black opacity-80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-50"></div>
+      </div>
       
       {/* Content */}
       {children}
