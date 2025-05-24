@@ -60,8 +60,11 @@ export function HowItWorks() {
                 src="/how-it-works.png"
                 alt="Collaborative Development Process"
                 fill
-                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 1200px"
+                quality={100}
                 priority
+                className="object-contain"
+                unoptimized
               />
             </div>
           </motion.div>
