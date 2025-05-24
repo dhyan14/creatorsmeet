@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 interface AuthPopupProps {
   isOpen: boolean;
@@ -10,21 +11,31 @@ const authOptions = [
   {
     title: 'For Creators',
     description: 'Join as a creator to bring your ideas to life',
-    gradient: 'from-purple-500 to-pink-500'
+    gradient: 'from-purple-500 to-pink-500',
+    href: '/signup/creators'
   },
   {
     title: 'For Mentors',
     description: 'Guide and support innovative projects',
-    gradient: 'from-blue-500 to-cyan-500'
+    gradient: 'from-blue-500 to-cyan-500',
+    href: '/signup/mentors'
   },
   {
     title: 'For Company',
     description: 'Connect with talented creators and innovators',
-    gradient: 'from-emerald-500 to-teal-500'
+    gradient: 'from-emerald-500 to-teal-500',
+    href: '/signup/company'
   }
 ];
 
 export function AuthPopup({ isOpen, onClose }: AuthPopupProps) {
+  const router = useRouter();
+
+  const handleOptionClick = (href: string) => {
+    onClose();
+    router.push(href);
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -82,6 +93,7 @@ export function AuthPopup({ isOpen, onClose }: AuthPopupProps) {
                       transition={{ delay: index * 0.1 }}
                       className={`w-full p-4 rounded-xl bg-gradient-to-r ${option.gradient} 
                         hover:scale-[1.02] transition-transform duration-200 text-left group`}
+                      onClick={() => handleOptionClick(option.href)}
                     >
                       <div className="flex items-center justify-between">
                         <div>

@@ -6,6 +6,8 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { AnimatedButton } from "./animated-button";
 import { AuthPopup } from "./auth-popup";
+import { MobileAuthMenu } from "./mobile-auth-menu";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -17,6 +19,7 @@ const menuItems = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const { scrollY } = useScroll();
 
   useEffect(() => {
@@ -27,6 +30,27 @@ export function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleAuthClick = () => {
+    setIsAuthOpen(true);
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const element = document.querySelector(href);
+      if (element) {
+        const headerOffset = isScrolled ? 80 : 100;
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
 
   return (
     <>
@@ -43,103 +67,111 @@ export function Header() {
       />
 
       <motion.header
-        className={cn(
-          "fixed left-0 right-0 z-50 transition-all duration-500",
-          isScrolled ? "top-4" : "top-0"
-        )}
+        className="fixed left-0 right-0 z-50"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <div className={cn(
-          "mx-auto",
-          isScrolled ? "px-4" : ""
-        )}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={isScrolled ? "scrolled" : "top"}
-              initial={{ opacity: 0 }}
-              animate={{ 
-                opacity: 1,
-                scale: isScrolled ? 0.9 : 1
-              }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{
-                background: isScrolled ? "rgba(0, 0, 0, 0.7)" : "rgba(0, 0, 0, 0.4)",
-                backdropFilter: "blur(16px)",
-              }}
-              className={cn(
-                "w-full transition-all duration-500",
-                isScrolled 
-                  ? "rounded-2xl shadow-[0_0_15px_rgba(255,255,255,0.15)] max-w-6xl mx-auto border border-white/[0.08]" 
-                  : ""
-              )}
-            >
-              <div className={cn(
-                "mx-auto transition-all duration-300",
-                isScrolled 
-                  ? "py-3 px-6" 
-                  : "py-4 px-4"
-              )}>
-                <div className="flex items-center justify-between">
-                  {/* Logo and Title */}
-                  <Link href="/" className="flex items-center space-x-2 min-w-0">
-                    <Image
-                      src="/logo.png"
-                      alt="CreatorsMeet Logo"
-                      width={isScrolled ? 44 : 52}
-                      height={isScrolled ? 44 : 52}
-                      className="rounded-lg flex-shrink-0"
-                    />
-                    <span className={cn(
-                      "font-semibold text-white transition-all duration-300 truncate",
-                      isScrolled ? "text-xl" : "text-2xl"
-                    )}>
-                      Creators Meet
-                    </span>
-                  </Link>
+        <motion.div 
+          className="mx-auto px-4"
+          initial={{ scale: 1, y: 0 }}
+          animate={{ 
+            scale: isScrolled ? 0.9 : 1,
+            y: isScrolled ? 16 : 0
+          }}
+          transition={{ 
+            duration: 0.4,
+            ease: [0.23, 1, 0.32, 1]
+          }}
+        >
+          <motion.div
+            initial={{ 
+              opacity: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.4)",
+              borderColor: "rgba(255, 255, 255, 0)",
+              boxShadow: "none"
+            }}
+            animate={{ 
+              opacity: 1,
+              backgroundColor: isScrolled ? "rgba(0, 0, 0, 0.7)" : "rgba(0, 0, 0, 0.4)",
+              borderColor: isScrolled ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0)",
+              boxShadow: isScrolled ? "0 0 15px rgba(255, 255, 255, 0.15)" : "none"
+            }}
+            transition={{ duration: 0.3 }}
+            style={{
+              backdropFilter: "blur(16px)",
+            }}
+            className="w-full border rounded-2xl transition-all duration-300"
+          >
+            <div className={cn(
+              "mx-auto transition-all duration-300",
+              isScrolled ? "py-3 px-6" : "py-4 px-4"
+            )}>
+              <div className="flex items-center justify-between">
+                {/* Logo and Title */}
+                <Link href="/" className="flex items-center space-x-2 min-w-0">
+                  <Image
+                    src="/logo.png"
+                    alt="CreatorsMeet Logo"
+                    width={isScrolled ? 44 : 52}
+                    height={isScrolled ? 44 : 52}
+                    className="rounded-lg flex-shrink-0 transition-all duration-300"
+                  />
+                  <span className={cn(
+                    "font-semibold text-white transition-all duration-300 truncate",
+                    isScrolled ? "text-xl" : "text-2xl"
+                  )}>
+                    Creators Meet
+                  </span>
+                </Link>
 
-                  {/* Navigation Menu */}
-                  <nav className="hidden md:flex items-center space-x-8">
-                    {menuItems.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={cn(
-                          "text-gray-200 hover:text-white transition-colors duration-300",
-                          isScrolled ? "text-[15px]" : "text-base"
-                        )}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </nav>
-
-                  {/* Right Section - Login/Sign Up Combined */}
-                  <div className="flex items-center">
-                    <AnimatedButton
-                      onClick={() => setIsAuthOpen(true)}
+                {/* Navigation Menu */}
+                <nav className="hidden md:flex items-center space-x-8">
+                  {menuItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={(e) => handleNavClick(e, item.href)}
                       className={cn(
-                        "transition-transform duration-300",
-                        isScrolled ? "scale-90" : "scale-100"
+                        "text-gray-200 hover:text-white transition-all duration-300",
+                        isScrolled ? "text-[15px]" : "text-base"
                       )}
                     >
-                      Login / Sign Up
-                    </AnimatedButton>
-                  </div>
+                      {item.name}
+                    </Link>
+                  ))}
+                </nav>
+
+                {/* Right Section - Login/Sign Up Combined */}
+                <div className="flex items-center relative">
+                  <AnimatedButton
+                    onClick={handleAuthClick}
+                    className="transition-all duration-300"
+                  >
+                    Login / Sign Up
+                  </AnimatedButton>
+
+                  {/* Mobile Auth Menu */}
+                  {isMobile && (
+                    <MobileAuthMenu 
+                      isOpen={isAuthOpen}
+                      onClose={() => setIsAuthOpen(false)}
+                    />
+                  )}
                 </div>
               </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+            </div>
+          </motion.div>
+        </motion.div>
       </motion.header>
 
-      {/* Auth Popup */}
-      <AuthPopup 
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-      />
+      {/* Desktop Auth Popup */}
+      {!isMobile && (
+        <AuthPopup 
+          isOpen={isAuthOpen}
+          onClose={() => setIsAuthOpen(false)}
+        />
+      )}
     </>
   );
 } 
