@@ -53,7 +53,7 @@ export function DeveloperPopup({ developer, isOpen, onClose, clickPosition }: De
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute right-4 top-4 p-2 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors"
+                className="absolute right-4 top-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-50"
               >
                 <IoClose className="w-6 h-6" />
               </button>
