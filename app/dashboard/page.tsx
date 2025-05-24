@@ -33,6 +33,10 @@ interface User {
       preferredStack: string;
     };
   };
+  activeProject?: {
+    status: string;
+    progress: number;
+  };
 }
 
 interface AIMentor {
@@ -66,26 +70,28 @@ const aiMentors: AIMentor[] = [
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedMentor, setSelectedMentor] = useState<AIMentor>(aiMentors[0]);
   const [showMentorChat, setShowMentorChat] = useState(false);
 
   useEffect(() => {
-    // Fetch user data
-    const fetchUser = async () => {
+    const fetchUserData = async () => {
       try {
         const response = await fetch('/api/user/me');
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
         }
-      } catch (error) {
-        console.error('Error fetching user:', error);
+        const data = await response.json();
+        setUser(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('Error fetching user data:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
+    fetchUserData();
   }, []);
 
   if (loading) {
@@ -96,11 +102,11 @@ export default function Dashboard() {
     );
   }
 
-  if (!user) {
+  if (error || !user) {
     return (
       <div className="text-center">
         <h1 className="text-2xl font-bold text-red-500">Error loading dashboard</h1>
-        <p className="text-gray-400 mt-2">Please try refreshing the page</p>
+        <p className="text-gray-400 mt-2">{error || 'Please try refreshing the page'}</p>
       </div>
     );
   }
@@ -109,7 +115,7 @@ export default function Dashboard() {
     {
       icon: <IconRocket className="w-5 h-5 text-purple-400" />,
       label: "Project Status",
-      value: user.matchedWith ? "In Progress" : "Matching Phase",
+      value: user.activeProject ? user.activeProject.status : "No Active Project",
       color: "text-purple-400"
     },
     {
@@ -122,14 +128,14 @@ export default function Dashboard() {
       icon: <IconCode className="w-5 h-5 text-blue-400" />,
       label: "Technologies",
       value: user.role === 'innovator' 
-        ? user.projectRequirements?.technologies.length || 0
-        : user.developerStack?.technologies.length || 0,
+        ? user.projectRequirements?.technologies?.length || 0
+        : user.developerStack?.technologies?.length || 0,
       color: "text-blue-400"
     },
     {
       icon: <IconBrain className="w-5 h-5 text-green-400" />,
-      label: "AI Sessions",
-      value: "3",
+      label: "Project Progress",
+      value: user.activeProject ? `${user.activeProject.progress}%` : "0%",
       color: "text-green-400"
     }
   ];

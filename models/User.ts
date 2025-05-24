@@ -129,6 +129,14 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  },
+  activeProject: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project'
+  },
 });
 
 // Add indexes for better query performance
@@ -136,4 +144,12 @@ userSchema.index({ role: 1 });
 userSchema.index({ 'developerStack.technologies': 1 });
 userSchema.index({ 'currentProject.tasks.status': 1 });
 
-export default mongoose.models.User || mongoose.model('User', userSchema); 
+// Update timestamps on save
+userSchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
+
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+
+export default User; 

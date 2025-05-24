@@ -21,33 +21,56 @@ interface Performance {
 
 export default function PerformancePage() {
   const [performance, setPerformance] = useState<Performance>({
-    projectProgress: 45,
-    tasksCompleted: 12,
-    totalTasks: 20,
-    milestones: [
-      {
-        name: "Project Setup & Planning",
-        status: "completed",
-        date: "2024-03-01"
-      },
-      {
-        name: "Core Features Development",
-        status: "in-progress",
-        date: "2024-03-15"
-      },
-      {
-        name: "Testing & Refinement",
-        status: "upcoming",
-        date: "2024-03-30"
-      }
-    ],
+    projectProgress: 0,
+    tasksCompleted: 0,
+    totalTasks: 0,
+    milestones: [],
     teamMetrics: {
-      communicationScore: 92,
-      collaborationScore: 88,
-      deliverySpeed: 85,
-      codeQuality: 90
+      communicationScore: 0,
+      collaborationScore: 0,
+      deliverySpeed: 0,
+      codeQuality: 0
     }
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPerformanceData = async () => {
+      try {
+        const response = await fetch('/api/user/performance');
+        if (!response.ok) {
+          throw new Error('Failed to fetch performance data');
+        }
+        const data = await response.json();
+        setPerformance(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('Error fetching performance data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPerformanceData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <h1 className="text-2xl font-bold text-red-500">Error</h1>
+        <p className="text-gray-400 mt-2">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
