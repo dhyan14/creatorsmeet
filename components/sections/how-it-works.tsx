@@ -56,7 +56,7 @@ export function HowItWorks() {
           >
             <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden flex items-center justify-center bg-black/20">
               <img
-                src="/@HOW-IT-WORKS.png"
+                src="/HOW-IT-WORKS.png"
                 alt="Collaborative Development Process"
                 className="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl"
               />
