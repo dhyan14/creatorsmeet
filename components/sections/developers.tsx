@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
@@ -60,6 +60,23 @@ const developers: Developer[] = [
 export default function DevelopersSection() {
   const [selectedDeveloper, setSelectedDeveloper] = useState<Developer | null>(null);
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+
+  // Effect to toggle body scroll and hide header
+  useEffect(() => {
+    const header = document.querySelector('header');
+    if (selectedDeveloper) {
+      document.body.style.overflow = 'hidden';
+      if (header) header.style.display = 'none';
+    } else {
+      document.body.style.overflow = 'unset';
+      if (header) header.style.display = 'block';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      if (header) header.style.display = 'block';
+    };
+  }, [selectedDeveloper]);
 
   const handleDeveloperClick = (developer: Developer, event: React.MouseEvent) => {
     const rect = event.currentTarget.getBoundingClientRect();
