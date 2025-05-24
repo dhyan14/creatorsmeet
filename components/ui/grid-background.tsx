@@ -8,26 +8,27 @@ interface GridBackgroundProps {
 
 export default function GridBackground({ children, className }: GridBackgroundProps) {
   return (
-    <div className={cn("relative w-full overflow-x-hidden", className)}>
+    <div className={cn("relative w-full overflow-x-hidden min-h-screen", className)}>
       {/* Grid background */}
       <div
         className={cn(
-          "absolute inset-0",
+          "absolute inset-0 z-0",
           "[background-size:40px_40px]",
-          "[background-image:linear-gradient(to_right,#e4e4e7_1px,transparent_1px),linear-gradient(to_bottom,#e4e4e7_1px,transparent_1px)]",
-          "dark:[background-image:linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)]",
-          "opacity-50"
+          "[background-image:linear-gradient(to_right,rgba(255,255,255,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.2)_1px,transparent_1px)]",
+          "opacity-100"
         )}
       />
       
       {/* Radial gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="absolute inset-0 bg-black opacity-80"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-50"></div>
+      <div className="pointer-events-none absolute inset-0 z-10">
+        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70"></div>
       </div>
       
       {/* Content */}
-      {children}
+      <div className="relative z-20">
+        {children}
+      </div>
     </div>
   );
 } 

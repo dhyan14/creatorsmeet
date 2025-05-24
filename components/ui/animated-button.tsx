@@ -5,20 +5,15 @@ import Link from "next/link";
 import React from "react";
 
 interface AnimatedButtonProps {
-  href: string;
+  href?: string;
   className?: string;
   children: React.ReactNode;
+  onClick?: () => void;
 }
 
-export function AnimatedButton({ href, className, children }: AnimatedButtonProps) {
-  return (
-    <Link 
-      href={href} 
-      className={cn(
-        "group relative inline-block h-[40px] w-[160px]",
-        className
-      )}
-    >
+export function AnimatedButton({ href, className, children, onClick }: AnimatedButtonProps) {
+  const ButtonContent = () => (
+    <>
       <div className="absolute inset-0 rounded-[30px] border-2 border-white/20 transition-all duration-300 group-hover:border-transparent" />
       
       {/* Background animation element */}
@@ -39,6 +34,25 @@ export function AnimatedButton({ href, className, children }: AnimatedButtonProp
           {children}
         </span>
       </div>
+    </>
+  );
+
+  const baseClassName = cn(
+    "group relative inline-block h-[40px] w-[160px]",
+    className
+  );
+
+  if (onClick) {
+    return (
+      <button onClick={onClick} className={baseClassName}>
+        <ButtonContent />
+      </button>
+    );
+  }
+
+  return (
+    <Link href={href || "/"} className={baseClassName}>
+      <ButtonContent />
     </Link>
   );
 } 

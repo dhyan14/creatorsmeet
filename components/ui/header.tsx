@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { AnimatedButton } from "./animated-button";
+import { AuthPopup } from "./auth-popup";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -15,6 +16,7 @@ const menuItems = [
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { scrollY } = useScroll();
 
   useEffect(() => {
@@ -86,13 +88,13 @@ export function Header() {
                     <Image
                       src="/logo.png"
                       alt="CreatorsMeet Logo"
-                      width={isScrolled ? 32 : 36}
-                      height={isScrolled ? 32 : 36}
+                      width={isScrolled ? 44 : 52}
+                      height={isScrolled ? 44 : 52}
                       className="rounded-lg flex-shrink-0"
                     />
                     <span className={cn(
                       "font-semibold text-white transition-all duration-300 truncate",
-                      isScrolled ? "text-lg" : "text-xl"
+                      isScrolled ? "text-xl" : "text-2xl"
                     )}>
                       Creators Meet
                     </span>
@@ -117,9 +119,9 @@ export function Header() {
                   {/* Right Section - Login/Sign Up Combined */}
                   <div className="flex items-center">
                     <AnimatedButton
-                      href="/auth"
+                      onClick={() => setIsAuthOpen(true)}
                       className={cn(
-                        "transition-transform duration-300 text-sm",
+                        "transition-transform duration-300",
                         isScrolled ? "scale-90" : "scale-100"
                       )}
                     >
@@ -132,6 +134,12 @@ export function Header() {
           </AnimatePresence>
         </div>
       </motion.header>
+
+      {/* Auth Popup */}
+      <AuthPopup 
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+      />
     </>
   );
 } 

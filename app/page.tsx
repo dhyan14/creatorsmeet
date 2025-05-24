@@ -8,10 +8,10 @@ import { HowItWorks } from '@/components/sections/how-it-works'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black text-white">
       <Header />
-      <GridBackground className="min-h-screen">
-        <main className="relative">
+      <GridBackground>
+        <main className="relative w-full">
           <div className="relative z-10 container mx-auto px-4 pt-32 pb-20">
             <div className="flex flex-col items-center justify-center mb-16">
               <motion.div
