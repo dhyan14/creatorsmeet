@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
-export default function LoginPage() {
+export default function SigninPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
@@ -20,7 +21,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,6 +37,7 @@ export default function LoginPage() {
 
       // Redirect to dashboard on success
       router.push('/dashboard');
+      router.refresh(); // Refresh to update the UI with new auth state
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -55,6 +57,15 @@ export default function LoginPage() {
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
+          <Link href="/" className="inline-block">
+            <Image
+              src="/logo.png"
+              alt="CreatorsMeet Logo"
+              width={60}
+              height={60}
+              className="mx-auto rounded-xl"
+            />
+          </Link>
           <h2 className="mt-6 text-3xl font-bold text-white">
             Sign in to your account
           </h2>
@@ -75,7 +86,9 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             <div>
+              <label htmlFor="email" className="sr-only">Email address</label>
               <input
+                id="email"
                 type="email"
                 name="email"
                 placeholder="Email address"
@@ -88,7 +101,9 @@ export default function LoginPage() {
             </div>
 
             <div>
+              <label htmlFor="password" className="sr-only">Password</label>
               <input
+                id="password"
                 type="password"
                 name="password"
                 placeholder="Password"

@@ -6,14 +6,14 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Public paths that don't require authentication
-  const publicPaths = ['/', '/login', '/signup'];
+  const publicPaths = ['/', '/signin', '/signup'];
 
   // Check if the path is public
   const isPublicPath = publicPaths.includes(pathname);
 
   // If no token and trying to access protected route
   if (!token && !isPublicPath) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL('/signin', request.url));
   }
 
   // If has token and trying to access auth pages
@@ -26,5 +26,5 @@ export function middleware(request: NextRequest) {
 
 // Configure which paths the middleware should run on
 export const config = {
-  matcher: ['/', '/login', '/signup', '/dashboard/:path*']
+  matcher: ['/', '/signin', '/signup', '/dashboard/:path*']
 }; 
