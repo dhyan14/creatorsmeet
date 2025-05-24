@@ -4,11 +4,14 @@ import { cn } from "@/lib/utils";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMenu2, IconX } from "@tabler/icons-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface Links {
   label: string;
-  href: string;
-  icon: React.JSX.Element | React.ReactNode;
+  href?: string;
+  icon: React.ReactNode;
+  onClick?: () => void;
 }
 
 interface SidebarContextProps {
@@ -136,12 +139,12 @@ export const MobileSidebar = ({
                 ease: "easeInOut",
               }}
               className={cn(
-                "fixed h-full w-full inset-0 bg-white dark:bg-neutral-900 p-10 z-[100] flex flex-col justify-between",
+                "fixed h-full w-full inset-0 bg-black dark:bg-black p-10 z-[100] flex flex-col justify-between",
                 className
               )}
             >
               <div
-                className="absolute right-10 top-10 z-50 text-neutral-800 dark:text-neutral-200"
+                className="absolute right-10 top-10 z-50 text-white dark:text-white"
                 onClick={() => setOpen(!open)}
               >
                 <IconX />
@@ -155,35 +158,37 @@ export const MobileSidebar = ({
   );
 };
 
-export const SidebarLink = ({
-  link,
-  className,
-  ...props
-}: {
-  link: Links;
-  className?: string;
-}) => {
-  const { open, animate } = useSidebar();
-  return (
-    <a
-      href={link.href}
+export const SidebarLink = ({ link }: { link: Links }) => {
+  const pathname = usePathname();
+  const isActive = pathname === link.href;
+
+  const content = (
+    <div
       className={cn(
-        "flex items-center justify-start gap-2 group/sidebar py-2",
-        className
+        "flex items-center gap-2 rounded-lg px-3 py-2 text-neutral-700 transition-all hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100",
+        isActive && "bg-neutral-100 dark:bg-neutral-800/50 dark:text-neutral-100",
+        !link.href && "cursor-pointer"
       )}
-      {...props}
+      onClick={link.onClick}
     >
       {link.icon}
-
       <motion.span
-        animate={{
-          display: animate ? (open ? "inline-block" : "none") : "inline-block",
-          opacity: animate ? (open ? 1 : 0) : 1,
-        }}
-        className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-sm font-medium whitespace-pre"
       >
         {link.label}
       </motion.span>
-    </a>
+    </div>
   );
+
+  if (link.href) {
+    return (
+      <Link href={link.href} className="block">
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 }; 

@@ -14,60 +14,77 @@ import {
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function CreatorsSidebar() {
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        router.push('/');
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
   const links = [
     {
       label: "Dashboard",
       href: "/dashboard",
-      icon: (
-        <IconDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
+      icon: <IconDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
     },
     {
       label: "Profile",
       href: "/profile",
-      icon: (
-        <IconUser className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
+      icon: <IconUser className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
     },
     {
       label: "Messages",
       href: "/messages",
-      icon: (
-        <IconMessage className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
+      icon: <IconMessage className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
     },
     {
       label: "Projects",
       href: "/projects",
-      icon: (
-        <IconBriefcase className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
+      icon: <IconBriefcase className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
     },
     {
       label: "Code Editor",
       href: "/editor",
-      icon: (
-        <IconCode className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
+      icon: <IconCode className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
     },
     {
       label: "Settings",
       href: "/settings",
-      icon: (
-        <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
+      icon: <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
     },
     {
-      label: "Logout",
-      href: "/api/auth/signout",
+      label: isLoggingOut ? "Logging out..." : "Logout",
+      onClick: handleLogout,
       icon: (
-        <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
-    },
+        <IconArrowLeft 
+          className={`h-5 w-5 shrink-0 ${isLoggingOut ? 'animate-pulse' : ''} text-neutral-700 dark:text-neutral-200`}
+        />
+      )
+    }
   ];
-  const [open, setOpen] = useState(false);
+
   return (
     <div className="h-screen">
       <Sidebar open={open} setOpen={setOpen}>

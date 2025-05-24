@@ -15,19 +15,19 @@ export default function Home() {
       <GridBackground>
         <main className="relative w-full">
           {/* Hero Section */}
-          <section className="relative z-10 min-h-screen flex items-center justify-center">
-            <div className="container mx-auto px-4">
-              <div className="flex flex-col items-center justify-center mb-16">
+          <section className="relative z-10 min-h-screen flex items-center justify-center py-20 md:py-0">
+            <div className="container mx-auto px-4 mt-16 md:mt-0">
+              <div className="flex flex-col items-center justify-center mb-8 md:mb-16">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
-                  className="text-center"
+                  className="text-center w-full"
                 >
-                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-300 to-white pb-2">
+                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white pb-2 [text-wrap:balance] leading-tight">
                     Your All-In-One Innovation Network
                   </h1>
-                  <p className="mt-4 text-xl md:text-2xl text-purple-200/90 font-light">
+                  <p className="mt-4 text-xl md:text-2xl text-purple-200 font-light [text-wrap:balance]">
                     Where Skills And Ideas Come Together
                   </p>
                 </motion.div>
@@ -106,7 +106,7 @@ export default function Home() {
                 repeat: Infinity,
                 repeatType: "reverse",
               }}
-              className="absolute bottom-8 left-1/2 -translate-x-1/2"
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block"
             >
               <div className="w-6 h-10 rounded-full border-2 border-purple-500/50 flex items-start justify-center p-2">
                 <motion.div

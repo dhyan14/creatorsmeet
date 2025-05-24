@@ -59,6 +59,16 @@ const developers: Developer[] = [
 
 export default function DevelopersSection() {
   const [selectedDeveloper, setSelectedDeveloper] = useState<Developer | null>(null);
+  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+
+  const handleDeveloperClick = (developer: Developer, event: React.MouseEvent) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    setClickPosition({
+      x: rect.x + rect.width / 2,
+      y: rect.y + rect.height / 2
+    });
+    setSelectedDeveloper(developer);
+  };
 
   return (
     <section id="developers" className="relative py-24">
@@ -91,7 +101,7 @@ export default function DevelopersSection() {
               {/* Mobile View */}
               <div 
                 className="lg:hidden w-full cursor-pointer"
-                onClick={() => setSelectedDeveloper(developer)}
+                onClick={(e) => handleDeveloperClick(developer, e)}
               >
                 <div className="glass-effect bg-zinc-900/40 backdrop-blur-sm rounded-xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                   <div className="flex items-center space-x-4">
@@ -120,7 +130,7 @@ export default function DevelopersSection() {
               </div>
 
               {/* Desktop View */}
-              <div className="hidden lg:block">
+              <div className="hidden lg:block cursor-pointer" onClick={(e) => handleDeveloperClick(developer, e)}>
                 <CardContainer containerClassName="py-12">
                   <CardBody className="glass-effect bg-zinc-900/40 backdrop-blur-sm relative group/card hover:shadow-2xl hover:shadow-purple-500/10 border-purple-500/20 hover:border-purple-500/40 w-full max-w-[30rem] h-auto rounded-xl p-8 border transition-all duration-300">
                     <div className="relative w-full">
@@ -246,6 +256,7 @@ export default function DevelopersSection() {
         developer={selectedDeveloper!}
         isOpen={selectedDeveloper !== null}
         onClose={() => setSelectedDeveloper(null)}
+        clickPosition={clickPosition}
       />
     </section>
   );
