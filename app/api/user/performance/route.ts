@@ -3,9 +3,38 @@ import { cookies } from 'next/headers';
 import { verify } from 'jsonwebtoken';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
-import Project from '@/models/Project';
+import { Types } from 'mongoose';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
+interface Task {
+  status: 'todo' | 'in-progress' | 'completed';
+}
+
+interface Milestone {
+  name: string;
+  status: 'completed' | 'in-progress' | 'upcoming';
+  date: Date;
+}
+
+interface Project {
+  _id: Types.ObjectId;
+  tasks: Task[];
+  milestones: Milestone[];
+}
+
+interface Performance {
+  communicationScore: number;
+  collaborationScore: number;
+  deliverySpeed: number;
+  codeQuality: number;
+}
+
+interface UserDocument {
+  _id: Types.ObjectId;
+  activeProject?: Project;
+  performance?: Performance;
+}
 
 export async function GET() {
   try {
@@ -28,8 +57,9 @@ export async function GET() {
 
     // Find the current user and their active project
     const user = await User.findById(decoded.userId)
-      .populate('activeProject')
-      .lean();
+      .populate<{ activeProject: Project }>('activeProject')
+      .select('activeProject performance')
+      .lean() as UserDocument;
     
     if (!user) {
       return NextResponse.json(
@@ -38,9 +68,7 @@ export async function GET() {
       );
     }
 
-    const project = user.activeProject;
-    
-    if (!project) {
+    if (!user.activeProject) {
       return NextResponse.json(
         { message: 'No active project found' },
         { status: 404 }
@@ -48,8 +76,8 @@ export async function GET() {
     }
 
     // Calculate project progress
-    const totalTasks = project.tasks.length;
-    const completedTasks = project.tasks.filter(task => task.status === 'completed').length;
+    const totalTasks = user.activeProject.tasks.length;
+    const completedTasks = user.activeProject.tasks.filter((task: Task) => task.status === 'completed').length;
     const projectProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
     // Get team metrics from the user's performance data
@@ -64,7 +92,7 @@ export async function GET() {
       projectProgress,
       tasksCompleted: completedTasks,
       totalTasks,
-      milestones: project.milestones,
+      milestones: user.activeProject.milestones,
       teamMetrics
     };
 
