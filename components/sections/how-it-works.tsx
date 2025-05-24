@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 
 export function HowItWorks() {
   const steps = [
@@ -55,16 +54,11 @@ export function HowItWorks() {
             transition={{ duration: 0.6 }}
             className="relative w-full"
           >
-            <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden">
-              <Image
+            <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden flex items-center justify-center bg-black/20">
+              <img
                 src="/how-it-works.png"
                 alt="Collaborative Development Process"
-                fill
-                sizes="(max-width: 768px) 100vw, 1200px"
-                quality={100}
-                priority
-                className="object-contain"
-                unoptimized
+                className="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl"
               />
             </div>
           </motion.div>
