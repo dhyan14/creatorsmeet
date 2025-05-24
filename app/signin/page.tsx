@@ -19,6 +19,7 @@ export default function SigninPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    console.log('Attempting to sign in...', { email: formData.email });
 
     try {
       const response = await fetch('/api/auth/signin', {
@@ -27,18 +28,26 @@ export default function SigninPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: 'include', // Important: This ensures cookies are sent/received
       });
 
       const data = await response.json();
+      console.log('Sign in response:', { status: response.status, data });
 
       if (!response.ok) {
         throw new Error(data.message || 'Something went wrong');
       }
 
+      console.log('Sign in successful, redirecting to dashboard...');
+      
+      // Wait a moment before redirecting to ensure cookie is set
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       // Redirect to dashboard on success
-      router.push('/dashboard');
+      router.replace('/dashboard');
       router.refresh(); // Refresh to update the UI with new auth state
     } catch (err) {
+      console.error('Sign in error:', err);
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
