@@ -8,7 +8,7 @@ interface GridBackgroundProps {
 
 export default function GridBackground({ children, className }: GridBackgroundProps) {
   return (
-    <div className={cn("relative w-full overflow-x-hidden min-h-screen", className)}>
+    <div className={cn("relative w-full overflow-x-hidden min-h-screen", className)} data-grid-background>
       {/* Grid background */}
       <div
         className={cn(

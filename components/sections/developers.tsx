@@ -64,17 +64,18 @@ export default function DevelopersSection() {
   // Effect to toggle body scroll and hide header
   useEffect(() => {
     const header = document.querySelector('header');
+    
     if (selectedDeveloper) {
       document.body.style.overflow = 'hidden';
-      if (header) header.style.display = 'none';
+      if (header) (header as HTMLElement).style.display = 'none';
     } else {
       document.body.style.overflow = 'unset';
-      if (header) header.style.display = 'block';
+      if (header) (header as HTMLElement).style.display = 'block';
     }
 
     return () => {
       document.body.style.overflow = 'unset';
-      if (header) header.style.display = 'block';
+      if (header) (header as HTMLElement).style.display = 'block';
     };
   }, [selectedDeveloper]);
 

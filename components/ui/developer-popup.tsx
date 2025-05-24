@@ -24,7 +24,7 @@ export function DeveloperPopup({ developer, isOpen, onClose, clickPosition }: De
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[100] flex items-center justify-center p-4"
           >
             {/* Popup */}
             <motion.div
@@ -47,7 +47,7 @@ export function DeveloperPopup({ developer, isOpen, onClose, clickPosition }: De
                 y: clickPosition.y - window.innerHeight / 2
               }}
               transition={{ type: "spring", duration: 0.5 }}
-              className="relative w-full max-w-lg bg-zinc-900/95 backdrop-blur-sm rounded-2xl p-6 max-h-[90vh] overflow-y-auto border border-white/10"
+              className="relative w-full max-w-lg bg-black/95 backdrop-blur-sm rounded-2xl p-6 max-h-[90vh] overflow-y-auto border border-white/10 shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
