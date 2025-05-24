@@ -29,12 +29,16 @@ export default function CreatorsSidebar() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include'
       });
 
       if (response.ok) {
-        router.push('/');
+        localStorage.removeItem('user');
+        sessionStorage.clear();
+        
+        window.location.href = '/';
       } else {
-        console.error('Logout failed');
+        console.error('Logout failed:', await response.text());
       }
     } catch (error) {
       console.error('Logout error:', error);
