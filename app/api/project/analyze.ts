@@ -17,6 +17,13 @@ interface ZeroShotClassificationOutput {
 }
 
 async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[]) {
+  console.log('Making Hugging Face request with:', {
+    inputs,
+    candidateLabels,
+    apiKeyPresent: !!process.env.HUGGINGFACE_API_KEY,
+    apiKeyFirstChars: process.env.HUGGINGFACE_API_KEY?.substring(0, 5),
+  });
+
   const response = await fetch('https://api-inference.huggingface.co/models/facebook/bart-large-mnli', {
     method: 'POST',
     headers: {
@@ -31,13 +38,26 @@ async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[])
     })
   });
 
+  const responseText = await response.text();
+  console.log('Raw API Response:', {
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers.entries()),
+    body: responseText,
+  });
+
   if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Hugging Face API Error:', errorText);
-    throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+    throw new Error(`API request failed with status ${response.status}: ${responseText}`);
   }
 
-  const result = await response.json();
+  let result;
+  try {
+    result = JSON.parse(responseText);
+  } catch (e) {
+    console.error('Failed to parse JSON response:', e);
+    throw new Error('Invalid JSON response from API');
+  }
+
   if (!result || typeof result !== 'object' || !result.sequence || !Array.isArray(result.labels) || !Array.isArray(result.scores)) {
     console.error('Unexpected response format:', result);
     throw new Error('Invalid response format from Hugging Face API');
@@ -48,9 +68,20 @@ async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[])
 
 export async function POST(req: Request) {
   try {
-    const { projectIdea } = await req.json();
+    console.log('Starting project analysis...');
+    const body = await req.json();
+    console.log('Request body:', body);
+
+    const { projectIdea } = body;
+    if (!projectIdea) {
+      return NextResponse.json(
+        { error: 'Project idea is required' },
+        { status: 400 }
+      );
+    }
 
     // Use Hugging Face's zero-shot classification to analyze project requirements
+    console.log('Analyzing tech stack...');
     const techStackAnalysis = await makeHuggingFaceRequest(
       projectIdea,
       Object.values(techCategories).flat()
@@ -66,6 +97,7 @@ export async function POST(req: Request) {
       .slice(0, 5);
 
     // Determine project complexity and required expertise
+    console.log('Analyzing complexity...');
     const complexityAnalysis = await makeHuggingFaceRequest(
       projectIdea,
       ['Simple', 'Moderate', 'Complex', 'Very Complex']
@@ -73,6 +105,7 @@ export async function POST(req: Request) {
     const projectComplexity = complexityAnalysis.labels[0];
 
     // Find suitable mentor based on project requirements
+    console.log('Analyzing expertise requirements...');
     const mentorAnalysis = await makeHuggingFaceRequest(
       projectIdea,
       [
@@ -85,15 +118,27 @@ export async function POST(req: Request) {
     );
     const requiredExpertise = mentorAnalysis.labels[0];
 
-    return NextResponse.json({
+    const result = {
       technologies: recommendedTech,
       complexity: projectComplexity,
       expertise: requiredExpertise,
-    });
+    };
+    console.log('Analysis complete:', result);
+
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Project analysis error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to analyze project requirements';
+    const errorDetails = error instanceof Error ? {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    } : error;
+    
+    console.error('Error details:', errorDetails);
+    
     return NextResponse.json(
-      { error: 'Failed to analyze project requirements' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
