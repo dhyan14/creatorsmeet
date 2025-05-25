@@ -17,12 +17,11 @@ export async function GET() {
     // Initialize Hugging Face client
     const hf = new HfInference(apiKey);
 
-    // Try zero-shot classification with direct request
+    // Try zero-shot classification
     console.log('Attempting zero-shot classification...');
-    const response = await hf.request({
+    const response = await hf.zeroShotClassification({
       model: 'facebook/bart-large-mnli',
       inputs: 'This is a test message.',
-      task: 'zero-shot-classification',
       parameters: {
         candidate_labels: ['test', 'production'],
       },
