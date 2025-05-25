@@ -24,32 +24,25 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
     setIsAnalyzing(true);
     setError(null);
 
-    if (!session?.user?.email) {
-      setError('Please sign in to submit your project idea');
-      setIsAnalyzing(false);
-      return;
-    }
-
     try {
       console.log('Submitting project idea...');
-      // Update project requirements (which includes analysis)
-      const updateResponse = await fetch('/api/project-requirements/update', {
+      // First, analyze the project
+      const analysisResponse = await fetch('/api/project/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: session.user.email,
-          projectDescription: projectIdea,
+          projectIdea: projectIdea,
         }),
       });
 
-      const result = await updateResponse.json();
-      console.log('Server response:', result);
+      const result = await analysisResponse.json();
+      console.log('Analysis response:', result);
 
-      if (!updateResponse.ok) {
+      if (!analysisResponse.ok) {
         console.error('Error response:', result);
-        throw new Error(result.error || 'Failed to analyze and save project requirements');
+        throw new Error(result.error || 'Failed to analyze project requirements');
       }
 
       if (!result.technologies || !Array.isArray(result.technologies)) {
@@ -57,18 +50,29 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
         throw new Error('Invalid response from server: missing or invalid technologies');
       }
 
-      console.log('Analysis result:', result);
-
-      if (onAnalysisComplete) {
-        onAnalysisComplete({
-          technologies: result.technologies,
+      // Update project requirements with analysis results
+      const updateResponse = await fetch('/api/user/update-requirements', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          description: projectIdea,
+          technologies: result.technologies.map((tech: any) => tech.name),
           complexity: result.complexity,
           expertise: result.expertise,
-        });
+          preferredStack: result.technologies[0]?.name || '',
+        }),
+      });
+
+      if (!updateResponse.ok) {
+        const updateError = await updateResponse.json();
+        throw new Error(updateError.message || 'Failed to save project requirements');
       }
 
-      // Only redirect if onAnalysisComplete is not provided
-      if (!onAnalysisComplete) {
+      if (onAnalysisComplete) {
+        onAnalysisComplete(result);
+      } else {
         router.refresh(); // Refresh the current page data
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for refresh
         router.push('/dashboard');
@@ -109,7 +113,7 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
 
         <motion.button
           type="submit"
-          disabled={isAnalyzing || !session?.user?.email}
+          disabled={isAnalyzing}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -123,12 +127,6 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
             <span>Analyze Project</span>
           )}
         </motion.button>
-
-        {!session?.user?.email && (
-          <p className="text-sm text-red-400 text-center">
-            Please sign in to submit your project idea.
-          </p>
-        )}
 
         <p className="text-sm text-gray-400 text-center">
           Our AI will analyze your idea to recommend technologies and find the perfect team.

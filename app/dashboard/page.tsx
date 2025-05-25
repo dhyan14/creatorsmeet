@@ -134,9 +134,11 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          description: analysis.complexity,
+          description: user?.projectRequirements?.description || '',
           technologies: analysis.technologies.map(tech => tech.name),
-          preferredStack: analysis.expertise,
+          complexity: analysis.complexity,
+          expertise: analysis.expertise,
+          preferredStack: analysis.technologies[0]?.name || '',
         }),
       });
 
