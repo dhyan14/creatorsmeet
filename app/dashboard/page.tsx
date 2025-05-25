@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { IconBrain, IconRocket, IconUsers, IconCode, IconMessage } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import ProjectIdeaForm from '../components/ProjectIdeaForm';
+import ProjectRequirements from '../components/ProjectRequirements';
 
 interface User {
   _id: string;
@@ -199,65 +200,38 @@ export default function Dashboard() {
         <ProjectIdeaForm onAnalysisComplete={handleProjectAnalysis} />
       ) : (
         <>
-          {/* Project Requirements Section for Innovators */}
-          {user.role === 'innovator' && user.projectRequirements && (
-            <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-              <h2 className="text-xl font-semibold mb-4">Project Requirements</h2>
-              
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-medium text-purple-400 mb-2">Project Description</h3>
-                  <p className="text-gray-300">{user.projectRequirements.description}</p>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-medium text-purple-400 mb-2">Required Technologies</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {user.projectRequirements.technologies?.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <h3 className="text-lg font-medium text-purple-400 mb-2">Project Complexity</h3>
-                    <p className="text-gray-300">{user.projectRequirements.complexity}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-purple-400 mb-2">Required Expertise</h3>
-                    <p className="text-gray-300">{user.projectRequirements.expertise}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Stats Grid */}
+          {/* Stats Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {stats.map((stat, index) => (
               <motion.div
-                key={index}
+                key={stat.label}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
                     {stat.icon}
-                    <h3 className="text-gray-400">{stat.label}</h3>
                   </div>
-                  <span className={cn("font-semibold", stat.color)}>{stat.value}</span>
+                  <div>
+                    <p className="text-sm text-gray-400">{stat.label}</p>
+                    <p className={cn("text-xl font-semibold", stat.color)}>{stat.value}</p>
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
+
+          {/* Project Requirements Section */}
+          {user.role === 'innovator' && user.projectRequirements && (
+            <ProjectRequirements
+              description={user.projectRequirements.description}
+              technologies={user.projectRequirements.technologies}
+              complexity={user.projectRequirements.complexity}
+              expertise={user.projectRequirements.expertise}
+            />
+          )}
 
           {/* AI Mentor Section */}
           <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
