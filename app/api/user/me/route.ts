@@ -20,11 +20,14 @@ interface UserDocument {
 
 export async function GET() {
   try {
+    console.log('Fetching user data...');
+    
     // Get the token from cookies
     const cookieStore = cookies();
     const token = cookieStore.get('token');
 
     if (!token) {
+      console.log('No auth token found');
       return NextResponse.json(
         { message: 'Unauthorized' },
         { status: 401 }
@@ -33,6 +36,7 @@ export async function GET() {
 
     // Verify the token
     const decoded = verify(token.value, JWT_SECRET) as { userId: string };
+    console.log('User ID from token:', decoded.userId);
 
     // Connect to MongoDB
     await clientPromise;
@@ -44,41 +48,63 @@ export async function GET() {
       .exec() as unknown as UserDocument;
 
     if (!user) {
+      console.log('User not found:', decoded.userId);
       return NextResponse.json(
         { message: 'User not found' },
         { status: 404 }
       );
     }
 
-    // If user is an innovator and has no analyzed requirements, analyze them
-    if (user.role === 'innovator' && user.projectRequirements?.description && !user.projectRequirements.technologies) {
+    console.log('Found user:', {
+      id: user._id,
+      role: user.role,
+      hasProjectRequirements: !!user.projectRequirements,
+      projectRequirements: user.projectRequirements
+    });
+
+    // If user is an innovator and has description but no technologies, analyze them
+    if (
+      user.role === 'innovator' && 
+      user.projectRequirements?.description && 
+      (!user.projectRequirements.technologies || user.projectRequirements.technologies.length === 0)
+    ) {
+      console.log('Project requirements need analysis. Analyzing...');
       try {
-        const response = await fetch(new URL('/api/project/analyze', 'https://creatorsmeet-njfrz26nf-dhyan14s-projects.vercel.app').toString(), {
+        const analysisResponse = await fetch('/api/project/analyze', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Cookie': `token=${token.value}` // Pass the auth token
           },
-          body: JSON.stringify({ projectIdea: user.projectRequirements.description }),
+          body: JSON.stringify({ 
+            projectIdea: user.projectRequirements.description 
+          }),
         });
 
-        if (response.ok) {
-          const analysis = await response.json();
-          
-          // Update user's project requirements
-          await User.findByIdAndUpdate(user._id, {
+        if (!analysisResponse.ok) {
+          console.error('Analysis failed:', await analysisResponse.text());
+          throw new Error('Failed to analyze project requirements');
+        }
+
+        const analysis = await analysisResponse.json();
+        console.log('Analysis results:', analysis);
+        
+        // Update user's project requirements
+        const updatedUser = await User.findByIdAndUpdate(
+          user._id,
+          {
             $set: {
               'projectRequirements.technologies': analysis.technologies.map((tech: any) => tech.name),
               'projectRequirements.complexity': analysis.complexity,
               'projectRequirements.expertise': analysis.expertise,
             }
-          });
+          },
+          { new: true, select: '-password' }
+        ).populate('matchedWith', '-password');
 
-          // Update the user object to be returned
-          if (user.projectRequirements) {
-            user.projectRequirements.technologies = analysis.technologies.map((tech: any) => tech.name);
-            user.projectRequirements.complexity = analysis.complexity;
-            user.projectRequirements.expertise = analysis.expertise;
-          }
+        if (updatedUser) {
+          console.log('Updated user with analysis results');
+          return NextResponse.json(updatedUser);
         }
       } catch (error) {
         console.error('Failed to analyze project requirements:', error);

@@ -28,7 +28,6 @@ async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[])
       inputs,
       candidateLabels,
       apiKeyPresent: !!process.env.HUGGINGFACE_API_KEY,
-      apiKeyFirstChars: process.env.HUGGINGFACE_API_KEY?.substring(0, 5),
     });
 
     const response = await fetch('https://api-inference.huggingface.co/models/facebook/bart-large-mnli', {
@@ -45,28 +44,19 @@ async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[])
       })
     });
 
-    const responseText = await response.text();
-    console.log('Raw API Response:', {
-      status: response.status,
-      statusText: response.statusText,
-      headers: Object.fromEntries(response.headers.entries()),
-      body: responseText,
-    });
-
     if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}: ${responseText}`);
+      console.error('Hugging Face API error:', {
+        status: response.status,
+        statusText: response.statusText,
+      });
+      throw new Error(`API request failed with status ${response.status}`);
     }
 
-    let result;
-    try {
-      result = JSON.parse(responseText);
-    } catch (e) {
-      console.error('Failed to parse JSON response:', e);
-      throw new Error('Invalid JSON response from API');
-    }
+    const result = await response.json();
+    console.log('Hugging Face API response:', result);
 
     if (!result || typeof result !== 'object' || !result.sequence || !Array.isArray(result.labels) || !Array.isArray(result.scores)) {
-      console.error('Unexpected response format:', result);
+      console.error('Invalid response format:', result);
       throw new Error('Invalid response format from Hugging Face API');
     }
 
@@ -74,6 +64,7 @@ async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[])
   } catch (error) {
     console.error('Hugging Face API error:', error);
     // Return a mock response for development/testing
+    console.log('Using fallback mock response');
     return {
       sequence: inputs,
       labels: ['Next.js', 'React', 'Node.js', 'MongoDB', 'Express'],
@@ -83,7 +74,7 @@ async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[])
 }
 
 async function analyzeProject(projectIdea: string) {
-  console.log('Starting project analysis...');
+  console.log('Starting project analysis for:', projectIdea);
 
   if (!projectIdea) {
     throw new Error('Project idea is required');
@@ -138,18 +129,7 @@ async function analyzeProject(projectIdea: string) {
     return result;
   } catch (error) {
     console.error('Project analysis error:', error);
-    // Return a default analysis for development/testing
-    return {
-      technologies: [
-        { name: 'Next.js', confidence: 0.95 },
-        { name: 'React', confidence: 0.9 },
-        { name: 'Node.js', confidence: 0.85 },
-        { name: 'MongoDB', confidence: 0.8 },
-        { name: 'Express', confidence: 0.75 },
-      ],
-      complexity: 'Moderate',
-      expertise: 'Web Development',
-    };
+    throw error;
   }
 }
 

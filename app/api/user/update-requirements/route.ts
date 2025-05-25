@@ -56,11 +56,13 @@ export async function POST(req: Request) {
           decoded.userId,
           {
             $set: {
-              'projectRequirements.description': description,
-              'projectRequirements.technologies': technologies,
-              'projectRequirements.complexity': complexity,
-              'projectRequirements.expertise': expertise,
-              'projectRequirements.preferredStack': preferredStack || technologies[0],
+              projectRequirements: {
+                description,
+                technologies,
+                complexity,
+                expertise,
+                preferredStack: preferredStack || technologies[0],
+              }
             }
           },
           { 
@@ -68,7 +70,7 @@ export async function POST(req: Request) {
             runValidators: true,
             select: '-password'
           }
-        );
+        ).populate('matchedWith', '-password');
 
         if (!user) {
           console.error('User not found:', decoded.userId);
