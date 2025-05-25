@@ -4,16 +4,31 @@ import { HfInference } from '@huggingface/inference';
 export async function GET() {
   try {
     console.log('Testing Hugging Face API connection...');
-    console.log('API Key:', process.env.HUGGINGFACE_API_KEY?.slice(0, 5) + '...');
-
+    
+    // Check if API key is set
     if (!process.env.HUGGINGFACE_API_KEY) {
       throw new Error('HUGGINGFACE_API_KEY is not set');
     }
 
-    const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+    // Log first and last few characters of API key for verification
+    const apiKey = process.env.HUGGINGFACE_API_KEY;
+    console.log('API Key format:', `${apiKey.slice(0, 5)}...${apiKey.slice(-5)}`);
 
-    // Try a simple classification
-    const response = await hf.zeroShotClassification({
+    // Initialize Hugging Face client
+    const hf = new HfInference(apiKey);
+
+    // Try a simple text classification first
+    console.log('Attempting text classification...');
+    const response = await hf.textClassification({
+      model: 'distilbert-base-uncased-finetuned-sst-2-english',
+      inputs: 'This is a test message.',
+    });
+
+    console.log('Test response:', response);
+
+    // If successful, try zero-shot classification
+    console.log('Attempting zero-shot classification...');
+    const zeroShotResponse = await hf.zeroShotClassification({
       model: 'facebook/bart-large-mnli',
       inputs: 'This is a test message.',
       parameters: {
@@ -21,19 +36,40 @@ export async function GET() {
       },
     });
 
-    console.log('Test response:', response);
+    console.log('Zero-shot response:', zeroShotResponse);
 
     return NextResponse.json({
       success: true,
       message: 'Hugging Face API connection successful',
-      testResult: response,
+      testResult: {
+        textClassification: response,
+        zeroShotClassification: zeroShotResponse
+      },
     });
 
   } catch (error) {
     console.error('Hugging Face API test error:', error);
+    
+    // Get detailed error information
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    const errorDetails = error instanceof Error ? {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      // @ts-ignore
+      cause: error.cause,
+      // @ts-ignore
+      status: error.status,
+      // @ts-ignore
+      response: error.response
+    } : error;
+
+    console.error('Detailed error:', errorDetails);
+
     return NextResponse.json({
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
+      error: errorMessage,
+      details: errorDetails
     }, { status: 500 });
   }
 } 
