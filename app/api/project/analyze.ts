@@ -1,7 +1,4 @@
 import { NextResponse } from 'next/server';
-import { HfInference } from '@huggingface/inference';
-
-const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
 // Technology stack categories
 const techCategories = {
@@ -19,21 +16,45 @@ interface ZeroShotClassificationOutput {
   scores: number[];
 }
 
+async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[]) {
+  const response = await fetch('https://api-inference.huggingface.co/models/facebook/bart-large-mnli', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      inputs,
+      parameters: {
+        candidate_labels: candidateLabels,
+      }
+    })
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Hugging Face API Error:', errorText);
+    throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+  }
+
+  const result = await response.json();
+  if (!result || typeof result !== 'object' || !result.sequence || !Array.isArray(result.labels) || !Array.isArray(result.scores)) {
+    console.error('Unexpected response format:', result);
+    throw new Error('Invalid response format from Hugging Face API');
+  }
+
+  return result as ZeroShotClassificationOutput;
+}
+
 export async function POST(req: Request) {
   try {
     const { projectIdea } = await req.json();
 
     // Use Hugging Face's zero-shot classification to analyze project requirements
-    const response = await hf.zeroShotClassification({
-      model: 'facebook/bart-large-mnli',
-      inputs: projectIdea,
-      parameters: {
-        candidate_labels: Object.values(techCategories).flat(),
-        multi_label: true
-      },
-    });
-
-    const techStackAnalysis = response as unknown as ZeroShotClassificationOutput;
+    const techStackAnalysis = await makeHuggingFaceRequest(
+      projectIdea,
+      Object.values(techCategories).flat()
+    );
 
     // Get top 5 most relevant technologies
     const recommendedTech = techStackAnalysis.labels
@@ -45,33 +66,23 @@ export async function POST(req: Request) {
       .slice(0, 5);
 
     // Determine project complexity and required expertise
-    const complexityResponse = await hf.zeroShotClassification({
-      model: 'facebook/bart-large-mnli',
-      inputs: projectIdea,
-      parameters: {
-        candidate_labels: ['Simple', 'Moderate', 'Complex', 'Very Complex'],
-      },
-    });
-
-    const complexityAnalysis = complexityResponse as unknown as ZeroShotClassificationOutput;
+    const complexityAnalysis = await makeHuggingFaceRequest(
+      projectIdea,
+      ['Simple', 'Moderate', 'Complex', 'Very Complex']
+    );
     const projectComplexity = complexityAnalysis.labels[0];
 
     // Find suitable mentor based on project requirements
-    const mentorResponse = await hf.zeroShotClassification({
-      model: 'facebook/bart-large-mnli',
-      inputs: projectIdea,
-      parameters: {
-        candidate_labels: [
-          'Technical Architecture',
-          'Product Development',
-          'AI/ML Development',
-          'Mobile Development',
-          'Web Development',
-        ],
-      },
-    });
-
-    const mentorAnalysis = mentorResponse as unknown as ZeroShotClassificationOutput;
+    const mentorAnalysis = await makeHuggingFaceRequest(
+      projectIdea,
+      [
+        'Technical Architecture',
+        'Product Development',
+        'AI/ML Development',
+        'Mobile Development',
+        'Web Development',
+      ]
+    );
     const requiredExpertise = mentorAnalysis.labels[0];
 
     return NextResponse.json({
