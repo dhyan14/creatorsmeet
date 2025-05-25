@@ -13,29 +13,39 @@ const techCategories = {
   cloud: ['AWS', 'Google Cloud', 'Azure', 'Vercel', 'Heroku'],
 };
 
+interface ZeroShotClassificationOutput {
+  sequence: string;
+  labels: string[];
+  scores: number[];
+}
+
 export async function POST(req: Request) {
   try {
     const { projectIdea } = await req.json();
 
     // Use Hugging Face's zero-shot classification to analyze project requirements
-    const techStackAnalysis = await hf.zeroShotClassification({
+    const response = await hf.zeroShotClassification({
       model: 'facebook/bart-large-mnli',
       inputs: projectIdea,
       parameters: {
         candidate_labels: Object.values(techCategories).flat(),
+        multi_label: true
       },
     });
 
+    const techStackAnalysis = response as unknown as ZeroShotClassificationOutput;
+
     // Get top 5 most relevant technologies
     const recommendedTech = techStackAnalysis.labels
-      .slice(0, 5)
       .map((tech, index) => ({
         name: tech,
         confidence: techStackAnalysis.scores[index],
-      }));
+      }))
+      .sort((a, b) => b.confidence - a.confidence)
+      .slice(0, 5);
 
     // Determine project complexity and required expertise
-    const complexityAnalysis = await hf.zeroShotClassification({
+    const complexityResponse = await hf.zeroShotClassification({
       model: 'facebook/bart-large-mnli',
       inputs: projectIdea,
       parameters: {
@@ -43,10 +53,11 @@ export async function POST(req: Request) {
       },
     });
 
+    const complexityAnalysis = complexityResponse as unknown as ZeroShotClassificationOutput;
     const projectComplexity = complexityAnalysis.labels[0];
 
     // Find suitable mentor based on project requirements
-    const mentorAnalysis = await hf.zeroShotClassification({
+    const mentorResponse = await hf.zeroShotClassification({
       model: 'facebook/bart-large-mnli',
       inputs: projectIdea,
       parameters: {
@@ -60,6 +71,7 @@ export async function POST(req: Request) {
       },
     });
 
+    const mentorAnalysis = mentorResponse as unknown as ZeroShotClassificationOutput;
     const requiredExpertise = mentorAnalysis.labels[0];
 
     return NextResponse.json({
