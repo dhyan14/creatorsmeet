@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { IconBrain, IconRocket, IconUsers, IconCode, IconMessage, IconChevronRight } from '@tabler/icons-react';
+import { IconBrain, IconRocket, IconUsers, IconCode, IconMessage } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import ProjectIdeaForm from '../components/ProjectIdeaForm';
 
@@ -96,13 +96,6 @@ export default function Dashboard() {
           throw new Error('Failed to fetch user data');
         }
         const userData = await userResponse.json();
-
-        // Fetch or assign AI mentor if not already assigned
-        const mentorResponse = await fetch('/api/user/assign-mentor');
-        if (mentorResponse.ok) {
-          const mentorData = await mentorResponse.json();
-          userData.aiMentor = mentorData;
-        }
 
         // Show project form for innovators without requirements
         if (userData.role === 'innovator' && !userData.projectRequirements?.description) {
