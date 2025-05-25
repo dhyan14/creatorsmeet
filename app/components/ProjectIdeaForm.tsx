@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { IconBrain, IconLoader2 } from '@tabler/icons-react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface ProjectIdeaFormProps {
-  onAnalysisComplete: (analysis: {
+  onAnalysisComplete?: (analysis: {
     technologies: Array<{ name: string; confidence: number }>;
     complexity: string;
     expertise: string;
@@ -14,6 +16,8 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
   const [projectIdea, setProjectIdea] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +25,8 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
     setError(null);
 
     try {
-      const response = await fetch('/api/project/analyze', {
+      // First analyze the project
+      const analysisResponse = await fetch('/api/project/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,12 +34,36 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
         body: JSON.stringify({ projectIdea }),
       });
 
-      if (!response.ok) {
+      if (!analysisResponse.ok) {
         throw new Error('Failed to analyze project');
       }
 
-      const analysis = await response.json();
-      onAnalysisComplete(analysis);
+      const analysis = await analysisResponse.json();
+
+      // Then update the user's project requirements
+      const updateResponse = await fetch('/api/project-requirements/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: session?.user?.email,
+          projectDescription: projectIdea,
+        }),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error('Failed to save project requirements');
+      }
+
+      if (onAnalysisComplete) {
+        onAnalysisComplete(analysis);
+      }
+
+      // Only redirect if onAnalysisComplete is not provided
+      if (!onAnalysisComplete) {
+        router.push('/dashboard');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -68,7 +97,7 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
 
         <motion.button
           type="submit"
-          disabled={isAnalyzing}
+          disabled={isAnalyzing || !session?.user?.email}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -82,6 +111,12 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
             <span>Analyze Project</span>
           )}
         </motion.button>
+
+        {!session?.user?.email && (
+          <p className="text-sm text-red-400 text-center">
+            Please sign in to submit your project idea.
+          </p>
+        )}
 
         <p className="text-sm text-gray-400 text-center">
           Our AI will analyze your idea to recommend technologies and find the perfect team.
