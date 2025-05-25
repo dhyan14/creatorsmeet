@@ -30,15 +30,18 @@ export async function GET() {
     });
 
     if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}: ${await response.text()}`);
+      const errorText = await response.text();
+      console.error('API Error Response:', errorText);
+      throw new Error(`API request failed with status ${response.status}: ${errorText}`);
     }
 
     const result = await response.json();
     console.log('Raw API response:', result);
 
-    // Validate response format
-    if (!Array.isArray(result)) {
-      throw new Error('Invalid response format: expected an array');
+    // Validate response format - expecting an object with sequence, labels, and scores
+    if (!result || typeof result !== 'object' || !result.sequence || !Array.isArray(result.labels) || !Array.isArray(result.scores)) {
+      console.error('Unexpected response format:', result);
+      throw new Error('Invalid response format from Hugging Face API');
     }
 
     return NextResponse.json({
