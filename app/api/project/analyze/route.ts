@@ -66,65 +66,67 @@ async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[])
   return result as ZeroShotClassificationOutput;
 }
 
-export async function POST(req: Request) {
+async function analyzeProject(projectIdea: string) {
+  console.log('Starting project analysis...');
+
+  if (!projectIdea) {
+    throw new Error('Project idea is required');
+  }
+
+  // Use Hugging Face's zero-shot classification to analyze project requirements
+  console.log('Analyzing tech stack...');
+  const techStackAnalysis = await makeHuggingFaceRequest(
+    projectIdea,
+    Object.values(techCategories).flat()
+  );
+
+  // Get top 5 most relevant technologies
+  const recommendedTech = techStackAnalysis.labels
+    .map((tech, index) => ({
+      name: tech,
+      confidence: techStackAnalysis.scores[index],
+    }))
+    .sort((a, b) => b.confidence - a.confidence)
+    .slice(0, 5);
+
+  // Determine project complexity and required expertise
+  console.log('Analyzing complexity...');
+  const complexityAnalysis = await makeHuggingFaceRequest(
+    projectIdea,
+    ['Simple', 'Moderate', 'Complex', 'Very Complex']
+  );
+  const projectComplexity = complexityAnalysis.labels[0];
+
+  // Find suitable mentor based on project requirements
+  console.log('Analyzing expertise requirements...');
+  const mentorAnalysis = await makeHuggingFaceRequest(
+    projectIdea,
+    [
+      'Technical Architecture',
+      'Product Development',
+      'AI/ML Development',
+      'Mobile Development',
+      'Web Development',
+    ]
+  );
+  const requiredExpertise = mentorAnalysis.labels[0];
+
+  const result = {
+    technologies: recommendedTech,
+    complexity: projectComplexity,
+    expertise: requiredExpertise,
+  };
+  console.log('Analysis complete:', result);
+
+  return result;
+}
+
+export async function POST(request: Request) {
   try {
-    console.log('Starting project analysis...');
-    const body = await req.json();
+    const body = await request.json();
     console.log('Request body:', body);
 
-    const { projectIdea } = body;
-    if (!projectIdea) {
-      return NextResponse.json(
-        { error: 'Project idea is required' },
-        { status: 400 }
-      );
-    }
-
-    // Use Hugging Face's zero-shot classification to analyze project requirements
-    console.log('Analyzing tech stack...');
-    const techStackAnalysis = await makeHuggingFaceRequest(
-      projectIdea,
-      Object.values(techCategories).flat()
-    );
-
-    // Get top 5 most relevant technologies
-    const recommendedTech = techStackAnalysis.labels
-      .map((tech, index) => ({
-        name: tech,
-        confidence: techStackAnalysis.scores[index],
-      }))
-      .sort((a, b) => b.confidence - a.confidence)
-      .slice(0, 5);
-
-    // Determine project complexity and required expertise
-    console.log('Analyzing complexity...');
-    const complexityAnalysis = await makeHuggingFaceRequest(
-      projectIdea,
-      ['Simple', 'Moderate', 'Complex', 'Very Complex']
-    );
-    const projectComplexity = complexityAnalysis.labels[0];
-
-    // Find suitable mentor based on project requirements
-    console.log('Analyzing expertise requirements...');
-    const mentorAnalysis = await makeHuggingFaceRequest(
-      projectIdea,
-      [
-        'Technical Architecture',
-        'Product Development',
-        'AI/ML Development',
-        'Mobile Development',
-        'Web Development',
-      ]
-    );
-    const requiredExpertise = mentorAnalysis.labels[0];
-
-    const result = {
-      technologies: recommendedTech,
-      complexity: projectComplexity,
-      expertise: requiredExpertise,
-    };
-    console.log('Analysis complete:', result);
-
+    const result = await analyzeProject(body.projectIdea);
     return NextResponse.json(result);
   } catch (error) {
     console.error('Project analysis error:', error);
