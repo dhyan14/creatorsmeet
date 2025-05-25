@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { HfInference } from '@huggingface/inference';
 
+interface ZeroShotClassificationOutput {
+  sequence: string;
+  labels: string[];
+  scores: number[];
+}
+
 const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
 export async function POST(req: Request) {
@@ -45,8 +51,9 @@ export async function POST(req: Request) {
         candidate_labels: developerProfiles.map(dev => 
           `${dev.name} - ${dev.technologies.join(', ')} - ${dev.expertise}`
         ),
+        multi_label: true
       },
-    });
+    }) as unknown as ZeroShotClassificationOutput;
 
     // Get the best match
     const bestMatchIndex = matchingResults.scores.indexOf(Math.max(...matchingResults.scores));
