@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { HfInference } from '@huggingface/inference';
+import { hash } from 'bcryptjs';
+import { connectToDatabase } from '@/lib/mongodb';
 
 const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
@@ -13,16 +15,34 @@ const techCategories = {
   cloud: ['AWS', 'Google Cloud', 'Azure', 'Vercel', 'Heroku'],
 };
 
-interface ZeroShotResponse {
+interface ZeroShotClassificationOutput {
   sequence: string;
   labels: string[];
   scores: number[];
 }
 
-interface ZeroShotClassificationOutput {
-  sequence: string;
-  labels: string[];
-  scores: number[];
+interface DeveloperStack {
+  name: string;
+  technologies: string[];
+  experience?: string;
+}
+
+interface ProjectRequirements {
+  description: string;
+  technologies?: string[];
+  analyzedAt?: string;
+}
+
+interface UserData {
+  name: string;
+  email: string;
+  password: string;
+  country: string;
+  role: 'innovator' | 'coder';
+  createdAt: Date;
+  projectRequirements?: ProjectRequirements;
+  developerStack?: DeveloperStack;
+  potentialMatches?: any[];
 }
 
 export async function POST(req: Request) {
@@ -36,6 +56,30 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    // Connect to database
+    const { db } = await connectToDatabase();
+
+    // Check if user already exists
+    const existingUser = await db.collection('users').findOne({ email });
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'Email already registered' },
+        { status: 409 }
+      );
+    }
+
+    // Hash password
+    const hashedPassword = await hash(password, 12);
+
+    let userData: UserData = {
+      name,
+      email,
+      password: hashedPassword,
+      country,
+      role,
+      createdAt: new Date(),
+    };
 
     if (role === 'innovator' && projectRequirements?.description) {
       // Analyze project idea using Hugging Face
@@ -60,75 +104,53 @@ export async function POST(req: Request) {
         .slice(0, 5);
 
       // Find suitable developers
-      // This is a placeholder - replace with your actual database query
-      const availableCoders = [
-        {
-          id: '1',
-          name: 'John Doe',
-          technologies: ['React', 'Node.js', 'MongoDB'],
-        },
-        // Add more coders from your database
-      ];
+      const availableCoders = await db.collection('users')
+        .find({ 
+          role: 'coder',
+          'developerStack.technologies': {
+            $in: recommendedTech.map(tech => tech.name)
+          }
+        })
+        .project({
+          name: 1,
+          developerStack: 1,
+          country: 1
+        })
+        .toArray();
 
-      // Match with developers who have the required skills
-      const matchedCoders = availableCoders.filter(coder => 
-        coder.technologies.some(tech => 
-          recommendedTech.map(t => t.name).includes(tech)
-        )
-      );
-
-      // For initial analysis, return just the technologies and matches
-      if (!password) {
-        return NextResponse.json({
-          technologies: recommendedTech,
-          potentialMatches: matchedCoders,
-        });
-      }
-
-      // Create user with analyzed requirements
-      const newUser = {
-        name,
-        email,
-        country,
-        role,
+      userData = {
+        ...userData,
         projectRequirements: {
           ...projectRequirements,
           technologies: recommendedTech.map(tech => tech.name),
           analyzedAt: new Date().toISOString(),
         },
-        potentialMatches: matchedCoders,
+        potentialMatches: availableCoders,
       };
-
-      // Save user to database
-      // This is a placeholder - replace with your actual database call
-      
-      return NextResponse.json({
-        user: newUser,
-        message: 'Account created successfully',
-      });
     }
 
-    if (role === 'coder' && (!developerStack?.name || !developerStack?.technologies)) {
-      return NextResponse.json(
-        { error: 'Developer stack information is required' },
-        { status: 400 }
-      );
-    }
+    if (role === 'coder') {
+      if (!developerStack?.name || !developerStack?.technologies) {
+        return NextResponse.json(
+          { error: 'Developer stack information is required' },
+          { status: 400 }
+        );
+      }
 
-    // Create coder account
-    const newUser = {
-      name,
-      email,
-      country,
-      role,
-      developerStack,
-    };
+      userData = {
+        ...userData,
+        developerStack,
+      };
+    }
 
     // Save user to database
-    // This is a placeholder - replace with your actual database call
+    const result = await db.collection('users').insertOne(userData);
+
+    // Remove password from response
+    const { password: _, ...userWithoutPassword } = userData;
 
     return NextResponse.json({
-      user: newUser,
+      user: userWithoutPassword,
       message: 'Account created successfully',
     });
 
