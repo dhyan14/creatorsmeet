@@ -264,15 +264,37 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Project Requirements Section */}
-          {user.role === 'innovator' && user.projectRequirements && (
+          {/* Project Requirements or Developer Stack Section */}
+          {user.role === 'innovator' && user.projectRequirements ? (
             <ProjectRequirements
               description={user.projectRequirements.description}
               technologies={user.projectRequirements.technologies}
               complexity={user.projectRequirements.complexity}
               expertise={user.projectRequirements.expertise}
             />
-          )}
+          ) : user.role === 'coder' && user.developerStack ? (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-semibold text-white">Developer Profile</h2>
+              <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center">
+                    <IconCode className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-white">Tech Stack</h3>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {user.developerStack.technologies.map((tech, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-purple-500/10 text-purple-300 rounded-full text-sm"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : null}
 
           {/* AI Mentor Section */}
           <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
