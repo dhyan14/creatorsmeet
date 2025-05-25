@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { IconBrain, IconLoader2 } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 interface ProjectIdeaFormProps {
@@ -16,7 +15,6 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
   const [projectIdea, setProjectIdea] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { data: session } = useSession();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
