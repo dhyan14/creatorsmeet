@@ -6,6 +6,8 @@ import Link from 'next/link';
 
 export default function SignupPage() {
   const router = useRouter();
+  const [step, setStep] = useState<'idea' | 'analysis' | 'registration'>('idea');
+  const [projectIdea, setProjectIdea] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -30,6 +32,47 @@ export default function SignupPage() {
     potentialMatches?: Array<{ id: string; name: string; technologies: string[] }>;
   } | null>(null);
 
+  const analyzeIdea = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          role: 'innovator',
+          projectRequirements: {
+            description: projectIdea
+          }
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to analyze project');
+      }
+
+      setAnalysisResults(data);
+      setStep('analysis');
+      setFormData(prev => ({
+        ...prev,
+        projectRequirements: {
+          ...prev.projectRequirements,
+          description: projectIdea,
+          technologies: data.technologies.map((tech: { name: string }) => tech.name)
+        }
+      }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to analyze project');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -50,18 +93,7 @@ export default function SignupPage() {
         throw new Error(data.error || 'Something went wrong');
       }
 
-      if (data.user.role === 'innovator' && data.user.projectRequirements) {
-        setAnalysisResults({
-          technologies: data.user.projectRequirements.technologies.map((tech: string) => ({
-            name: tech,
-            confidence: 1, // This would come from the actual analysis
-          })),
-          potentialMatches: data.user.potentialMatches,
-        });
-      } else {
-        // Redirect to dashboard for coders
-        router.push('/dashboard');
-      }
+      router.push('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -82,17 +114,50 @@ export default function SignupPage() {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-bold text-white">
-            Create your account
+            {step === 'idea' ? 'Describe Your Project' : 
+             step === 'analysis' ? 'Project Analysis' : 
+             'Create Your Account'}
           </h2>
           <p className="mt-2 text-sm text-gray-400">
-            Or{' '}
-            <Link href="/signin" className="font-medium text-purple-500 hover:text-purple-400">
-              sign in to your account
-            </Link>
+            {step === 'registration' && (
+              <>
+                Or{' '}
+                <Link href="/signin" className="font-medium text-purple-500 hover:text-purple-400">
+                  sign in to your account
+                </Link>
+              </>
+            )}
           </p>
         </div>
 
-        {analysisResults ? (
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
+
+        {step === 'idea' && (
+          <div className="space-y-6">
+            <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+              <textarea
+                value={projectIdea}
+                onChange={(e) => setProjectIdea(e.target.value)}
+                placeholder="Describe your project idea in detail. Include features, target users, and any specific requirements..."
+                className="w-full h-40 bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50"
+                required
+              />
+              <button
+                onClick={analyzeIdea}
+                disabled={loading || !projectIdea.trim()}
+                className="mt-4 w-full py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? 'Analyzing...' : 'Analyze Project'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === 'analysis' && analysisResults && (
           <div className="space-y-6">
             <div className="bg-purple-500/10 border border-purple-500/50 rounded-lg p-6">
               <h3 className="text-xl font-semibold text-white mb-4">Project Analysis Results</h3>
@@ -106,7 +171,7 @@ export default function SignupPage() {
                         key={tech.name}
                         className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm"
                       >
-                        {tech.name}
+                        {tech.name} ({Math.round(tech.confidence * 100)}%)
                       </span>
                     ))}
                   </div>
@@ -114,7 +179,7 @@ export default function SignupPage() {
 
                 {analysisResults.potentialMatches && analysisResults.potentialMatches.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-2">Potential Team Members</h4>
+                    <h4 className="text-sm font-medium text-gray-400 mb-2">Available Team Members</h4>
                     <div className="space-y-2">
                       {analysisResults.potentialMatches.map((coder) => (
                         <div
@@ -134,22 +199,18 @@ export default function SignupPage() {
                 )}
 
                 <button
-                  onClick={() => router.push('/dashboard')}
+                  onClick={() => setStep('registration')}
                   className="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors"
                 >
-                  Continue to Dashboard
+                  Continue with Registration
                 </button>
               </div>
             </div>
           </div>
-        ) : (
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded-lg text-sm">
-                {error}
-              </div>
-            )}
+        )}
 
+        {step === 'registration' && (
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
                 <input

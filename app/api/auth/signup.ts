@@ -13,6 +13,18 @@ const techCategories = {
   cloud: ['AWS', 'Google Cloud', 'Azure', 'Vercel', 'Heroku'],
 };
 
+interface ZeroShotResponse {
+  sequence: string;
+  labels: string[];
+  scores: number[];
+}
+
+interface ZeroShotClassificationOutput {
+  sequence: string;
+  labels: string[];
+  scores: number[];
+}
+
 export async function POST(req: Request) {
   try {
     const { name, email, password, country, role, projectRequirements, developerStack } = await req.json();
@@ -27,21 +39,25 @@ export async function POST(req: Request) {
 
     if (role === 'innovator' && projectRequirements?.description) {
       // Analyze project idea using Hugging Face
-      const techStackAnalysis = await hf.zeroShotClassification({
+      const response = await hf.zeroShotClassification({
         model: 'facebook/bart-large-mnli',
         inputs: projectRequirements.description,
         parameters: {
           candidate_labels: Object.values(techCategories).flat(),
+          multi_label: true
         },
       });
 
+      const techStackAnalysis = response as unknown as ZeroShotClassificationOutput;
+
       // Get top 5 most relevant technologies
       const recommendedTech = techStackAnalysis.labels
-        .slice(0, 5)
         .map((tech, index) => ({
           name: tech,
           confidence: techStackAnalysis.scores[index],
-        }));
+        }))
+        .sort((a, b) => b.confidence - a.confidence)
+        .slice(0, 5);
 
       // Find suitable developers
       // This is a placeholder - replace with your actual database query
@@ -60,6 +76,14 @@ export async function POST(req: Request) {
           recommendedTech.map(t => t.name).includes(tech)
         )
       );
+
+      // For initial analysis, return just the technologies and matches
+      if (!password) {
+        return NextResponse.json({
+          technologies: recommendedTech,
+          potentialMatches: matchedCoders,
+        });
+      }
 
       // Create user with analyzed requirements
       const newUser = {
@@ -98,7 +122,6 @@ export async function POST(req: Request) {
       country,
       role,
       developerStack,
-      // Add any other necessary fields
     };
 
     // Save user to database
