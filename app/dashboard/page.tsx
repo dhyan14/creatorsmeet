@@ -7,6 +7,7 @@ import { IconBrain, IconRocket, IconUsers, IconCode, IconMessage } from '@tabler
 import { cn } from '@/lib/utils';
 import ProjectIdeaForm from '../components/ProjectIdeaForm';
 import ProjectRequirements from '../components/ProjectRequirements';
+import { useRouter } from 'next/navigation';
 
 interface User {
   _id: string;
@@ -87,6 +88,8 @@ export default function Dashboard() {
   const [selectedMentor, setSelectedMentor] = useState<AIMentor>(aiMentors[0]);
   const [showMentorChat, setShowMentorChat] = useState(false);
   const [showProjectForm, setShowProjectForm] = useState(false);
+  const [projectIdea, setProjectIdea] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,7 +122,7 @@ export default function Dashboard() {
     technologies: Array<{ name: string; confidence: number }>;
     complexity: string;
     expertise: string;
-  }) => {
+  }, description: string) => {
     try {
       // Update user's project requirements
       const response = await fetch('/api/user/update-requirements', {
@@ -128,7 +131,7 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          description: user?.projectRequirements?.description || '',
+          description: description,
           technologies: analysis.technologies.map(tech => tech.name),
           complexity: analysis.complexity,
           expertise: analysis.expertise,
@@ -141,8 +144,23 @@ export default function Dashboard() {
       }
 
       const updatedUser = await response.json();
-      setUser(updatedUser);
+      
+      // Update the user state with the new data
+      setUser(prevUser => ({
+        ...prevUser!,
+        projectRequirements: {
+          description: description,
+          technologies: analysis.technologies.map(tech => tech.name),
+          complexity: analysis.complexity,
+          expertise: analysis.expertise,
+          preferredStack: analysis.technologies[0]?.name || '',
+        }
+      }));
+      
       setShowProjectForm(false);
+      
+      // Force a refresh of the page data
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update project requirements');
     }

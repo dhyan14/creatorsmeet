@@ -8,7 +8,7 @@ interface ProjectIdeaFormProps {
     technologies: Array<{ name: string; confidence: number }>;
     complexity: string;
     expertise: string;
-  }) => void;
+  }, description: string) => void;
 }
 
 export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormProps) {
@@ -48,29 +48,29 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
         throw new Error('Invalid response from server: missing or invalid technologies');
       }
 
-      // Update project requirements with analysis results
-      const updateResponse = await fetch('/api/user/update-requirements', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          description: projectIdea,
-          technologies: result.technologies.map((tech: any) => tech.name),
-          complexity: result.complexity,
-          expertise: result.expertise,
-          preferredStack: result.technologies[0]?.name || '',
-        }),
-      });
-
-      if (!updateResponse.ok) {
-        const updateError = await updateResponse.json();
-        throw new Error(updateError.message || 'Failed to save project requirements');
-      }
-
       if (onAnalysisComplete) {
-        onAnalysisComplete(result);
+        onAnalysisComplete(result, projectIdea);
       } else {
+        // Update project requirements with analysis results
+        const updateResponse = await fetch('/api/user/update-requirements', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            description: projectIdea,
+            technologies: result.technologies.map((tech: any) => tech.name),
+            complexity: result.complexity,
+            expertise: result.expertise,
+            preferredStack: result.technologies[0]?.name || '',
+          }),
+        });
+
+        if (!updateResponse.ok) {
+          const updateError = await updateResponse.json();
+          throw new Error(updateError.message || 'Failed to save project requirements');
+        }
+
         router.refresh(); // Refresh the current page data
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for refresh
         router.push('/dashboard');
