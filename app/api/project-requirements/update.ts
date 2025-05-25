@@ -55,6 +55,59 @@ export async function POST(req: Request) {
       .sort((a, b) => b.confidence - a.confidence)
       .slice(0, 5);
 
+    // Determine project complexity
+    const complexityResponse = await hf.zeroShotClassification({
+      model: 'facebook/bart-large-mnli',
+      inputs: projectDescription,
+      parameters: {
+        candidate_labels: ['Simple', 'Moderate', 'Complex', 'Very Complex'],
+      },
+    });
+
+    const complexityAnalysis = complexityResponse as unknown as ZeroShotClassificationOutput;
+    const projectComplexity = complexityAnalysis.labels[0];
+
+    // Find suitable expertise
+    const expertiseResponse = await hf.zeroShotClassification({
+      model: 'facebook/bart-large-mnli',
+      inputs: projectDescription,
+      parameters: {
+        candidate_labels: [
+          'Technical Architecture',
+          'Product Development',
+          'AI/ML Development',
+          'Mobile Development',
+          'Web Development',
+        ],
+      },
+    });
+
+    const expertiseAnalysis = expertiseResponse as unknown as ZeroShotClassificationOutput;
+    const requiredExpertise = expertiseAnalysis.labels[0];
+
+    // Update user's project requirements
+    const updateResult = await db.collection('users').updateOne(
+      { email },
+      {
+        $set: {
+          projectRequirements: {
+            description: projectDescription,
+            technologies: recommendedTech.map(tech => tech.name),
+            complexity: projectComplexity,
+            expertise: requiredExpertise,
+            analyzedAt: new Date().toISOString(),
+          },
+        }
+      }
+    );
+
+    if (!updateResult.matchedCount) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
     // Find suitable developers
     const availableCoders = await db.collection('users')
       .find({ 
@@ -70,30 +123,10 @@ export async function POST(req: Request) {
       })
       .toArray();
 
-    // Update user's project requirements
-    const updateResult = await db.collection('users').updateOne(
-      { email },
-      {
-        $set: {
-          projectRequirements: {
-            description: projectDescription,
-            technologies: recommendedTech.map(tech => tech.name),
-            analyzedAt: new Date().toISOString(),
-          },
-          potentialMatches: availableCoders,
-        }
-      }
-    );
-
-    if (!updateResult.matchedCount) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
-    }
-
     return NextResponse.json({
-      technologies: recommendedTech.map(tech => tech.name),
+      technologies: recommendedTech,
+      complexity: projectComplexity,
+      expertise: requiredExpertise,
       potentialMatches: availableCoders,
       message: 'Project requirements updated successfully',
     });

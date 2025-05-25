@@ -25,22 +25,7 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
     setError(null);
 
     try {
-      // First analyze the project
-      const analysisResponse = await fetch('/api/project/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ projectIdea }),
-      });
-
-      if (!analysisResponse.ok) {
-        throw new Error('Failed to analyze project');
-      }
-
-      const analysis = await analysisResponse.json();
-
-      // Then update the user's project requirements
+      // Update project requirements (which includes analysis)
       const updateResponse = await fetch('/api/project-requirements/update', {
         method: 'POST',
         headers: {
@@ -53,19 +38,27 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
       });
 
       if (!updateResponse.ok) {
-        throw new Error('Failed to save project requirements');
+        throw new Error('Failed to analyze and save project requirements');
       }
 
+      const result = await updateResponse.json();
+
       if (onAnalysisComplete) {
-        onAnalysisComplete(analysis);
+        onAnalysisComplete({
+          technologies: result.technologies,
+          complexity: result.complexity,
+          expertise: result.expertise,
+        });
       }
 
       // Only redirect if onAnalysisComplete is not provided
       if (!onAnalysisComplete) {
+        router.refresh(); // Refresh the current page data
         router.push('/dashboard');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Project analysis error:', err);
     } finally {
       setIsAnalyzing(false);
     }
