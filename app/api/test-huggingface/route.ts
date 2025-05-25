@@ -17,34 +17,28 @@ export async function GET() {
     // Initialize Hugging Face client
     const hf = new HfInference(apiKey);
 
-    // Try a simple text classification first
-    console.log('Attempting text classification...');
-    const response = await hf.textClassification({
-      model: 'distilbert-base-uncased-finetuned-sst-2-english',
-      inputs: 'This is a test message.',
-    });
-
-    console.log('Test response:', response);
-
-    // If successful, try zero-shot classification
+    // Try zero-shot classification with direct request
     console.log('Attempting zero-shot classification...');
-    const zeroShotResponse = await hf.zeroShotClassification({
+    const response = await hf.request({
       model: 'facebook/bart-large-mnli',
       inputs: 'This is a test message.',
+      task: 'zero-shot-classification',
       parameters: {
         candidate_labels: ['test', 'production'],
       },
     });
 
-    console.log('Zero-shot response:', zeroShotResponse);
+    console.log('Raw API response:', response);
+
+    // Validate response format
+    if (!response || typeof response !== 'object') {
+      throw new Error('Invalid response format from Hugging Face API');
+    }
 
     return NextResponse.json({
       success: true,
       message: 'Hugging Face API connection successful',
-      testResult: {
-        textClassification: response,
-        zeroShotClassification: zeroShotResponse
-      },
+      testResult: response,
     });
 
   } catch (error) {
