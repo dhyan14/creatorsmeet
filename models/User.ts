@@ -127,6 +127,20 @@ const userSchema = new mongoose.Schema({
     type: {
       description: String,
       technologies: [String],
+      complexity: {
+        type: String,
+        enum: ['Simple', 'Moderate', 'Complex', 'Very Complex'],
+      },
+      expertise: {
+        type: String,
+        enum: [
+          'Technical Architecture',
+          'Product Development',
+          'AI/ML Development',
+          'Mobile Development',
+          'Web Development',
+        ],
+      },
       preferredStack: String,
     },
     required: function(this: any) {
@@ -158,6 +172,9 @@ const userSchema = new mongoose.Schema({
 userSchema.index({ role: 1 });
 userSchema.index({ 'developerStack.technologies': 1 });
 userSchema.index({ 'currentProject.tasks.status': 1 });
+userSchema.index({ 'projectRequirements.technologies': 1 });
+userSchema.index({ 'projectRequirements.complexity': 1 });
+userSchema.index({ 'projectRequirements.expertise': 1 });
 
 // Update timestamps on save
 userSchema.pre('save', function(next) {
