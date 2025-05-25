@@ -155,11 +155,14 @@ async function analyzeProject(projectIdea: string) {
 
 export async function POST(request: Request) {
   try {
+    console.log('Starting project analysis API...');
+    
     // Get the token from cookies
     const cookieStore = cookies();
     const token = cookieStore.get('token');
 
     if (!token) {
+      console.log('No auth token found');
       return NextResponse.json(
         { message: 'Unauthorized' },
         { status: 401 }
@@ -168,64 +171,73 @@ export async function POST(request: Request) {
 
     // Verify the token
     const decoded = verify(token.value, JWT_SECRET) as { userId: string };
+    console.log('User ID from token:', decoded.userId);
 
     // Connect to MongoDB
     await dbConnect();
-    console.log('MongoDB connection status:', getConnectionStatus());
+    const dbStatus = getConnectionStatus();
+    console.log('MongoDB connection status:', dbStatus);
 
     const body = await request.json();
     console.log('Request body:', body);
 
     if (!body.projectIdea) {
+      console.log('Missing project idea in request');
       return NextResponse.json(
         { error: 'Project idea is required' },
         { status: 400 }
       );
     }
 
+    console.log('Analyzing project idea:', body.projectIdea);
     const result = await analyzeProject(body.projectIdea);
+    console.log('Analysis result:', result);
 
     // Update user's project requirements in the database
     try {
-      await User.findByIdAndUpdate(
+      console.log('Updating user project requirements...');
+      const updatedUser = await User.findByIdAndUpdate(
         decoded.userId,
         {
           $set: {
+            'projectRequirements.description': body.projectIdea,
             'projectRequirements.technologies': result.technologies.map(tech => tech.name),
             'projectRequirements.complexity': result.complexity,
             'projectRequirements.expertise': result.expertise,
           }
         },
-        { runValidators: true }
+        { 
+          new: true,
+          runValidators: true,
+          select: '-password'
+        }
       );
-      console.log('Successfully updated user project requirements');
+
+      if (!updatedUser) {
+        console.error('User not found for update:', decoded.userId);
+        return NextResponse.json(
+          { error: 'User not found' },
+          { status: 404 }
+        );
+      }
+
+      console.log('Successfully updated user project requirements:', {
+        userId: decoded.userId,
+        technologies: result.technologies.map(tech => tech.name),
+        complexity: result.complexity,
+        expertise: result.expertise
+      });
+
+      return NextResponse.json(result);
     } catch (updateError) {
       console.error('Failed to update user project requirements:', updateError);
+      throw updateError;
     }
-
-    return NextResponse.json(result);
   } catch (error) {
     console.error('Project analysis error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Failed to analyze project requirements';
-    const errorDetails = error instanceof Error ? {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    } : error;
-    
-    console.error('Error details:', errorDetails);
-    
-    // Return a default analysis for development/testing
-    return NextResponse.json({
-      technologies: [
-        { name: 'Next.js', confidence: 0.95 },
-        { name: 'React', confidence: 0.9 },
-        { name: 'Node.js', confidence: 0.85 },
-        { name: 'MongoDB', confidence: 0.8 },
-        { name: 'Express', confidence: 0.75 },
-      ],
-      complexity: 'Moderate',
-      expertise: 'Web Development',
-    });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to analyze project requirements' },
+      { status: 500 }
+    );
   }
 } 

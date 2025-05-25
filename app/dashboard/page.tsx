@@ -94,22 +94,34 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('Fetching user data...');
         // Fetch user data
         const userResponse = await fetch('/api/user/me');
+        
         if (!userResponse.ok) {
-          throw new Error('Failed to fetch user data');
+          const errorData = await userResponse.json();
+          console.error('Failed to fetch user data:', errorData);
+          throw new Error(errorData.message || 'Failed to fetch user data');
         }
+        
         const userData = await userResponse.json();
+        console.log('User data received:', {
+          role: userData.role,
+          hasProjectRequirements: !!userData.projectRequirements,
+          projectRequirements: userData.projectRequirements
+        });
 
         // Show project form for innovators without requirements
         if (userData.role === 'innovator' && !userData.projectRequirements?.description) {
+          console.log('Showing project form for innovator without requirements');
           setShowProjectForm(true);
         }
 
         setUser(userData);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        const errorMessage = err instanceof Error ? err.message : 'An error occurred';
         console.error('Error fetching data:', err);
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -124,6 +136,8 @@ export default function Dashboard() {
     expertise: string;
   }, description: string) => {
     try {
+      console.log('Handling project analysis:', { analysis, description });
+      
       // Update user's project requirements
       const response = await fetch('/api/user/update-requirements', {
         method: 'POST',
@@ -140,29 +154,38 @@ export default function Dashboard() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update project requirements');
+        const errorData = await response.json();
+        console.error('Failed to update project requirements:', errorData);
+        throw new Error(errorData.message || 'Failed to update project requirements');
       }
 
       const updatedUser = await response.json();
+      console.log('Project requirements updated:', updatedUser);
       
       // Update the user state with the new data
-      setUser(prevUser => ({
-        ...prevUser!,
-        projectRequirements: {
-          description: description,
-          technologies: analysis.technologies.map(tech => tech.name),
-          complexity: analysis.complexity,
-          expertise: analysis.expertise,
-          preferredStack: analysis.technologies[0]?.name || '',
-        }
-      }));
+      setUser(prevUser => {
+        const newUser = {
+          ...prevUser!,
+          projectRequirements: {
+            description: description,
+            technologies: analysis.technologies.map(tech => tech.name),
+            complexity: analysis.complexity,
+            expertise: analysis.expertise,
+            preferredStack: analysis.technologies[0]?.name || '',
+          }
+        };
+        console.log('Updated user state:', newUser);
+        return newUser;
+      });
       
       setShowProjectForm(false);
       
       // Force a refresh of the page data
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update project requirements');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update project requirements';
+      console.error('Error updating project requirements:', err);
+      setError(errorMessage);
     }
   };
 
