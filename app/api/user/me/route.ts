@@ -6,6 +6,18 @@ import clientPromise from '@/lib/db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
+interface UserDocument {
+  _id: string;
+  role: 'innovator' | 'coder';
+  projectRequirements?: {
+    description: string;
+    technologies: string[];
+    complexity: string;
+    expertise: string;
+    preferredStack: string;
+  };
+}
+
 export async function GET() {
   try {
     // Get the token from cookies
@@ -29,7 +41,7 @@ export async function GET() {
     const user = await User.findById(decoded.userId)
       .populate('matchedWith', '-password')
       .select('-password')
-      .lean();
+      .exec() as unknown as UserDocument;
 
     if (!user) {
       return NextResponse.json(
@@ -62,9 +74,11 @@ export async function GET() {
           });
 
           // Update the user object to be returned
-          user.projectRequirements.technologies = analysis.technologies.map((tech: any) => tech.name);
-          user.projectRequirements.complexity = analysis.complexity;
-          user.projectRequirements.expertise = analysis.expertise;
+          if (user.projectRequirements) {
+            user.projectRequirements.technologies = analysis.technologies.map((tech: any) => tech.name);
+            user.projectRequirements.complexity = analysis.complexity;
+            user.projectRequirements.expertise = analysis.expertise;
+          }
         }
       } catch (error) {
         console.error('Failed to analyze project requirements:', error);

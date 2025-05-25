@@ -1,4 +1,10 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import { verify } from 'jsonwebtoken';
+import User from '@/models/User';
+import dbConnect, { getConnectionStatus } from '@/lib/db';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // Technology stack categories
 const techCategories = {
@@ -149,6 +155,24 @@ async function analyzeProject(projectIdea: string) {
 
 export async function POST(request: Request) {
   try {
+    // Get the token from cookies
+    const cookieStore = cookies();
+    const token = cookieStore.get('token');
+
+    if (!token) {
+      return NextResponse.json(
+        { message: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // Verify the token
+    const decoded = verify(token.value, JWT_SECRET) as { userId: string };
+
+    // Connect to MongoDB
+    await dbConnect();
+    console.log('MongoDB connection status:', getConnectionStatus());
+
     const body = await request.json();
     console.log('Request body:', body);
 
@@ -160,6 +184,25 @@ export async function POST(request: Request) {
     }
 
     const result = await analyzeProject(body.projectIdea);
+
+    // Update user's project requirements in the database
+    try {
+      await User.findByIdAndUpdate(
+        decoded.userId,
+        {
+          $set: {
+            'projectRequirements.technologies': result.technologies.map(tech => tech.name),
+            'projectRequirements.complexity': result.complexity,
+            'projectRequirements.expertise': result.expertise,
+          }
+        },
+        { runValidators: true }
+      );
+      console.log('Successfully updated user project requirements');
+    } catch (updateError) {
+      console.error('Failed to update user project requirements:', updateError);
+    }
+
     return NextResponse.json(result);
   } catch (error) {
     console.error('Project analysis error:', error);
