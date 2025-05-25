@@ -45,10 +45,16 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
       });
 
       const result = await updateResponse.json();
+      console.log('Server response:', result);
 
       if (!updateResponse.ok) {
         console.error('Error response:', result);
         throw new Error(result.error || 'Failed to analyze and save project requirements');
+      }
+
+      if (!result.technologies || !Array.isArray(result.technologies)) {
+        console.error('Invalid response format:', result);
+        throw new Error('Invalid response from server: missing or invalid technologies');
       }
 
       console.log('Analysis result:', result);
@@ -64,6 +70,7 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
       // Only redirect if onAnalysisComplete is not provided
       if (!onAnalysisComplete) {
         router.refresh(); // Refresh the current page data
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for refresh
         router.push('/dashboard');
       }
     } catch (err) {

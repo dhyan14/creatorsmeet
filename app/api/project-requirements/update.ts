@@ -2,7 +2,17 @@ import { NextResponse } from 'next/server';
 import { HfInference } from '@huggingface/inference';
 import { connectToDatabase } from '@/lib/mongodb';
 
-const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+// Initialize Hugging Face with error handling
+let hf: HfInference;
+try {
+  if (!process.env.HUGGINGFACE_API_KEY) {
+    throw new Error('HUGGINGFACE_API_KEY is not set');
+  }
+  hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+} catch (error) {
+  console.error('Error initializing Hugging Face:', error);
+  // We'll handle this in the route handler
+}
 
 // Technology stack categories
 const techCategories = {
@@ -22,6 +32,10 @@ interface ZeroShotClassificationOutput {
 
 export async function POST(req: Request) {
   try {
+    if (!hf) {
+      throw new Error('Hugging Face client not initialized');
+    }
+
     console.log('Starting project requirements update...');
     const { email, projectDescription } = await req.json();
     console.log('Received data:', { email, projectDescription });
@@ -42,6 +56,19 @@ export async function POST(req: Request) {
     console.log('API Key present:', !!process.env.HUGGINGFACE_API_KEY);
     
     try {
+      // First, try a simple classification to test the API
+      console.log('Testing Hugging Face API connection...');
+      const testResponse = await hf.zeroShotClassification({
+        model: 'facebook/bart-large-mnli',
+        inputs: 'Test input',
+        parameters: {
+          candidate_labels: ['test'],
+        },
+      });
+      console.log('Test response successful:', testResponse);
+
+      // Proceed with actual analysis
+      console.log('Starting technology stack analysis...');
       const response = await hf.zeroShotClassification({
         model: 'facebook/bart-large-mnli',
         inputs: projectDescription,
@@ -50,7 +77,7 @@ export async function POST(req: Request) {
           multi_label: true
         },
       });
-      console.log('Hugging Face analysis response:', response);
+      console.log('Technology stack analysis complete:', response);
 
       const techStackAnalysis = response as unknown as ZeroShotClassificationOutput;
 
@@ -66,6 +93,7 @@ export async function POST(req: Request) {
       console.log('Recommended technologies:', recommendedTech);
 
       // Determine project complexity
+      console.log('Starting complexity analysis...');
       const complexityResponse = await hf.zeroShotClassification({
         model: 'facebook/bart-large-mnli',
         inputs: projectDescription,
@@ -73,11 +101,13 @@ export async function POST(req: Request) {
           candidate_labels: ['Simple', 'Moderate', 'Complex', 'Very Complex'],
         },
       });
+      console.log('Complexity analysis complete:', complexityResponse);
 
       const complexityAnalysis = complexityResponse as unknown as ZeroShotClassificationOutput;
       const projectComplexity = complexityAnalysis.labels[0];
 
       // Find suitable expertise
+      console.log('Starting expertise analysis...');
       const expertiseResponse = await hf.zeroShotClassification({
         model: 'facebook/bart-large-mnli',
         inputs: projectDescription,
@@ -91,6 +121,7 @@ export async function POST(req: Request) {
           ],
         },
       });
+      console.log('Expertise analysis complete:', expertiseResponse);
 
       const expertiseAnalysis = expertiseResponse as unknown as ZeroShotClassificationOutput;
       const requiredExpertise = expertiseAnalysis.labels[0];
@@ -130,13 +161,16 @@ export async function POST(req: Request) {
 
     } catch (hfError) {
       console.error('Hugging Face API error:', hfError);
-      throw hfError;
+      return NextResponse.json(
+        { error: 'Failed to analyze project with Hugging Face API: ' + (hfError as Error).message },
+        { status: 500 }
+      );
     }
 
   } catch (error) {
     console.error('Update project requirements error:', error);
     return NextResponse.json(
-      { error: 'Failed to update project requirements' },
+      { error: 'Failed to update project requirements: ' + (error as Error).message },
       { status: 500 }
     );
   }
