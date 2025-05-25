@@ -70,11 +70,19 @@ export async function GET() {
     ) {
       console.log('Project requirements need analysis. Analyzing...');
       try {
-        const analysisResponse = await fetch('/api/project/analyze', {
+        // Get the request headers to extract the host
+        const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+        const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
+          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+          : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
+        console.log('Using API base URL:', baseUrl);
+        
+        const analysisResponse = await fetch(`${baseUrl}/api/project/analyze`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Cookie': `token=${token.value}` // Pass the auth token
+            'Cookie': `token=${token.value}`
           },
           body: JSON.stringify({ 
             projectIdea: user.projectRequirements.description 
@@ -82,13 +90,23 @@ export async function GET() {
         });
 
         if (!analysisResponse.ok) {
-          console.error('Analysis failed:', await analysisResponse.text());
-          throw new Error('Failed to analyze project requirements');
+          const errorText = await analysisResponse.text();
+          console.error('Analysis failed:', {
+            status: analysisResponse.status,
+            error: errorText
+          });
+          throw new Error(`Failed to analyze project requirements: ${errorText}`);
         }
 
         const analysis = await analysisResponse.json();
         console.log('Analysis results:', analysis);
         
+        // Ensure we have valid technologies
+        if (!analysis.technologies || analysis.technologies.length === 0) {
+          console.error('No technologies detected in analysis');
+          throw new Error('Failed to detect technologies from project description');
+        }
+
         // Update user's project requirements
         const updatedUser = await User.findByIdAndUpdate(
           user._id,
@@ -97,15 +115,26 @@ export async function GET() {
               'projectRequirements.technologies': analysis.technologies.map((tech: any) => tech.name),
               'projectRequirements.complexity': analysis.complexity,
               'projectRequirements.expertise': analysis.expertise,
+              'projectRequirements.categories': analysis.categories?.map((cat: any) => cat.category) || [],
+              'projectRequirements.lastAnalyzed': new Date()
             }
           },
           { new: true, select: '-password' }
         ).populate('matchedWith', '-password');
 
-        if (updatedUser) {
-          console.log('Updated user with analysis results');
-          return NextResponse.json(updatedUser);
+        if (!updatedUser) {
+          console.error('Failed to update user with analysis results');
+          throw new Error('Failed to update user with analysis results');
         }
+
+        console.log('Updated user project requirements:', {
+          technologies: updatedUser.projectRequirements.technologies,
+          complexity: updatedUser.projectRequirements.complexity,
+          expertise: updatedUser.projectRequirements.expertise,
+          categories: updatedUser.projectRequirements.categories
+        });
+
+        return NextResponse.json(updatedUser);
       } catch (error) {
         console.error('Failed to analyze project requirements:', error);
       }

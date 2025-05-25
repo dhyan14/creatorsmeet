@@ -8,12 +8,14 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // Technology stack categories
 const techCategories = {
-  frontend: ['React', 'Vue', 'Angular', 'Next.js', 'Tailwind CSS', 'TypeScript'],
-  backend: ['Node.js', 'Python', 'Java', 'Go', 'Ruby', 'PHP', 'Django', 'Express'],
-  database: ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Firebase'],
-  mobile: ['React Native', 'Flutter', 'iOS', 'Android'],
-  ai: ['TensorFlow', 'PyTorch', 'scikit-learn', 'OpenAI', 'Hugging Face'],
-  cloud: ['AWS', 'Google Cloud', 'Azure', 'Vercel', 'Heroku'],
+  frontend: ['React', 'Vue', 'Angular', 'Next.js', 'Tailwind CSS', 'TypeScript', 'HTML', 'CSS', 'JavaScript', 'jQuery', 'Bootstrap', 'Material UI', 'Svelte'],
+  backend: ['Node.js', 'Python', 'Java', 'Go', 'Ruby', 'PHP', 'Django', 'Express', 'Flask', 'Spring Boot', 'Laravel', 'ASP.NET', 'FastAPI'],
+  database: ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Firebase', 'DynamoDB', 'SQLite', 'Cassandra', 'Neo4j'],
+  mobile: ['React Native', 'Flutter', 'iOS', 'Android', 'Swift', 'Kotlin', 'Xamarin', 'Ionic'],
+  ai: ['TensorFlow', 'PyTorch', 'scikit-learn', 'OpenAI', 'Hugging Face', 'NLTK', 'Pandas', 'NumPy', 'Keras'],
+  cloud: ['AWS', 'Google Cloud', 'Azure', 'Vercel', 'Heroku', 'DigitalOcean', 'Netlify', 'Docker', 'Kubernetes'],
+  testing: ['Jest', 'Mocha', 'Cypress', 'Selenium', 'PyTest', 'JUnit'],
+  tools: ['Git', 'Webpack', 'Babel', 'ESLint', 'Prettier', 'npm', 'Yarn']
 };
 
 interface ZeroShotClassificationOutput {
@@ -25,10 +27,16 @@ interface ZeroShotClassificationOutput {
 async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[]) {
   try {
     console.log('Making Hugging Face request with:', {
-      inputs,
+      inputs: inputs.substring(0, 100) + '...',
       candidateLabels,
       apiKeyPresent: !!process.env.HUGGINGFACE_API_KEY,
+      environment: process.env.NODE_ENV,
+      isVercel: !!process.env.VERCEL
     });
+
+    // Add timeout to prevent Vercel serverless function timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
 
     const response = await fetch('https://api-inference.huggingface.co/models/facebook/bart-large-mnli', {
       method: 'POST',
@@ -41,19 +49,28 @@ async function makeHuggingFaceRequest(inputs: string, candidateLabels: string[])
         parameters: {
           candidate_labels: candidateLabels,
         }
-      })
+      }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       console.error('Hugging Face API error:', {
         status: response.status,
         statusText: response.statusText,
+        environment: process.env.NODE_ENV,
+        isVercel: !!process.env.VERCEL
       });
       throw new Error(`API request failed with status ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('Hugging Face API response:', result);
+    console.log('Hugging Face API response:', {
+      sequence: result.sequence?.substring(0, 100) + '...',
+      labels: result.labels,
+      scores: result.scores
+    });
 
     if (!result || typeof result !== 'object' || !result.sequence || !Array.isArray(result.labels) || !Array.isArray(result.scores)) {
       console.error('Invalid response format:', result);
@@ -81,23 +98,73 @@ async function analyzeProject(projectIdea: string) {
   }
 
   try {
-    // Use Hugging Face's zero-shot classification to analyze project requirements
-    console.log('Analyzing tech stack...');
-    const techStackAnalysis = await makeHuggingFaceRequest(
+    // First, analyze for general tech categories
+    console.log('Analyzing tech categories...');
+    const categoryAnalysis = await makeHuggingFaceRequest(
       projectIdea,
-      Object.values(techCategories).flat()
+      Object.keys(techCategories)
     );
 
-    // Get top 5 most relevant technologies
+    console.log('Category analysis results:', categoryAnalysis);
+
+    // Get top 3 most relevant categories
+    const topCategories = categoryAnalysis.labels
+      .map((category, index) => ({
+        category,
+        score: categoryAnalysis.scores[index]
+      }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    console.log('Top categories:', topCategories);
+
+    // Collect all technologies from top categories
+    const relevantTechnologies = topCategories.reduce((techs: string[], cat) => {
+      return [...techs, ...techCategories[cat.category as keyof typeof techCategories]];
+    }, []);
+
+    console.log('Analyzing specific technologies from categories:', relevantTechnologies);
+
+    // Use Hugging Face to analyze specific technologies
+    const techStackAnalysis = await makeHuggingFaceRequest(
+      projectIdea,
+      relevantTechnologies
+    );
+
+    // Get top 5 most relevant technologies with scores above 0.1
     const recommendedTech = techStackAnalysis.labels
       .map((tech, index) => ({
         name: tech,
         confidence: techStackAnalysis.scores[index],
       }))
+      .filter(tech => tech.confidence > 0.1)
       .sort((a, b) => b.confidence - a.confidence)
       .slice(0, 5);
 
-    // Determine project complexity and required expertise
+    console.log('Recommended technologies:', recommendedTech);
+
+    // If no technologies were found with high confidence, try a direct analysis
+    if (recommendedTech.length === 0) {
+      console.log('No high-confidence technologies found, trying direct analysis...');
+      const allTechsList = Object.values(techCategories).flat();
+      const directAnalysis = await makeHuggingFaceRequest(
+        projectIdea,
+        allTechsList
+      );
+
+      recommendedTech.push(...directAnalysis.labels
+        .map((tech, index) => ({
+          name: tech,
+          confidence: directAnalysis.scores[index],
+        }))
+        .filter(tech => tech.confidence > 0.05)
+        .sort((a, b) => b.confidence - a.confidence)
+        .slice(0, 5));
+
+      console.log('Direct analysis results:', recommendedTech);
+    }
+
+    // Determine project complexity
     console.log('Analyzing complexity...');
     const complexityAnalysis = await makeHuggingFaceRequest(
       projectIdea,
@@ -105,27 +172,30 @@ async function analyzeProject(projectIdea: string) {
     );
     const projectComplexity = complexityAnalysis.labels[0];
 
-    // Find suitable mentor based on project requirements
+    // Analyze expertise requirements
     console.log('Analyzing expertise requirements...');
-    const mentorAnalysis = await makeHuggingFaceRequest(
+    const expertiseAnalysis = await makeHuggingFaceRequest(
       projectIdea,
       [
         'Technical Architecture',
-        'Product Development',
+        'Full Stack Development',
+        'Frontend Development',
+        'Backend Development',
         'AI/ML Development',
         'Mobile Development',
-        'Web Development',
+        'DevOps Engineering'
       ]
     );
-    const requiredExpertise = mentorAnalysis.labels[0];
+    const requiredExpertise = expertiseAnalysis.labels[0];
 
     const result = {
-      technologies: recommendedTech,
+      technologies: recommendedTech.length > 0 ? recommendedTech : [{ name: 'JavaScript', confidence: 0.8 }], // Fallback
       complexity: projectComplexity,
       expertise: requiredExpertise,
+      categories: topCategories
     };
-    console.log('Analysis complete:', result);
 
+    console.log('Final analysis result:', result);
     return result;
   } catch (error) {
     console.error('Project analysis error:', error);
@@ -165,6 +235,18 @@ export async function POST(request: Request) {
       console.log('Missing project idea in request');
       return NextResponse.json(
         { error: 'Project idea is required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate that project idea is not just an email or very short text
+    if (
+      body.projectIdea.includes('@') || 
+      body.projectIdea.length < 20
+    ) {
+      console.log('Invalid project idea format:', body.projectIdea);
+      return NextResponse.json(
+        { error: 'Please provide a detailed project description, not just an email or short text' },
         { status: 400 }
       );
     }
