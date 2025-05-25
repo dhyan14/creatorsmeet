@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { HfInference } from '@huggingface/inference';
 
 export async function GET() {
   try {
@@ -14,30 +13,38 @@ export async function GET() {
     const apiKey = process.env.HUGGINGFACE_API_KEY;
     console.log('API Key format:', `${apiKey.slice(0, 5)}...${apiKey.slice(-5)}`);
 
-    // Initialize Hugging Face client
-    const hf = new HfInference(apiKey);
-
-    // Try zero-shot classification
-    console.log('Attempting zero-shot classification...');
-    const response = await hf.zeroShotClassification({
-      model: 'facebook/bart-large-mnli',
-      inputs: 'This is a test message.',
-      parameters: {
-        candidate_labels: ['test', 'production'],
+    // Make direct API request
+    console.log('Making direct API request...');
+    const response = await fetch('https://api-inference.huggingface.co/models/facebook/bart-large-mnli', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        inputs: 'This is a test message.',
+        parameters: {
+          candidate_labels: ['test', 'production']
+        }
+      })
     });
 
-    console.log('Raw API response:', response);
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}: ${await response.text()}`);
+    }
+
+    const result = await response.json();
+    console.log('Raw API response:', result);
 
     // Validate response format
-    if (!response || typeof response !== 'object') {
-      throw new Error('Invalid response format from Hugging Face API');
+    if (!Array.isArray(result)) {
+      throw new Error('Invalid response format: expected an array');
     }
 
     return NextResponse.json({
       success: true,
       message: 'Hugging Face API connection successful',
-      testResult: response,
+      testResult: result,
     });
 
   } catch (error) {
