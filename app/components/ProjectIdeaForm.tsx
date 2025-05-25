@@ -24,7 +24,14 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
     setIsAnalyzing(true);
     setError(null);
 
+    if (!session?.user?.email) {
+      setError('Please sign in to submit your project idea');
+      setIsAnalyzing(false);
+      return;
+    }
+
     try {
+      console.log('Submitting project idea...');
       // Update project requirements (which includes analysis)
       const updateResponse = await fetch('/api/project-requirements/update', {
         method: 'POST',
@@ -32,16 +39,19 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: session?.user?.email,
+          email: session.user.email,
           projectDescription: projectIdea,
         }),
       });
 
+      const result = await updateResponse.json();
+
       if (!updateResponse.ok) {
-        throw new Error('Failed to analyze and save project requirements');
+        console.error('Error response:', result);
+        throw new Error(result.error || 'Failed to analyze and save project requirements');
       }
 
-      const result = await updateResponse.json();
+      console.log('Analysis result:', result);
 
       if (onAnalysisComplete) {
         onAnalysisComplete({
@@ -57,8 +67,8 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
         router.push('/dashboard');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Project analysis error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while analyzing your project');
     } finally {
       setIsAnalyzing(false);
     }
@@ -85,7 +95,9 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
         </div>
 
         {error && (
-          <div className="text-red-400 text-sm">{error}</div>
+          <div className="text-red-400 text-sm bg-red-500/10 p-3 rounded-lg">
+            {error}
+          </div>
         )}
 
         <motion.button
