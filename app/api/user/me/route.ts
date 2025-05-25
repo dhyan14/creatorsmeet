@@ -27,14 +27,48 @@ export async function GET() {
 
     // Find user and populate matched user data
     const user = await User.findById(decoded.userId)
-      .populate('matchedWith')
-      .select('-password');
+      .populate('matchedWith', '-password')
+      .select('-password')
+      .lean();
 
     if (!user) {
       return NextResponse.json(
         { message: 'User not found' },
         { status: 404 }
       );
+    }
+
+    // If user is an innovator and has no analyzed requirements, analyze them
+    if (user.role === 'innovator' && user.projectRequirements?.description && !user.projectRequirements.technologies) {
+      try {
+        const response = await fetch(new URL('/api/project/analyze', 'https://creatorsmeet-njfrz26nf-dhyan14s-projects.vercel.app').toString(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ projectIdea: user.projectRequirements.description }),
+        });
+
+        if (response.ok) {
+          const analysis = await response.json();
+          
+          // Update user's project requirements
+          await User.findByIdAndUpdate(user._id, {
+            $set: {
+              'projectRequirements.technologies': analysis.technologies.map((tech: any) => tech.name),
+              'projectRequirements.complexity': analysis.complexity,
+              'projectRequirements.expertise': analysis.expertise,
+            }
+          });
+
+          // Update the user object to be returned
+          user.projectRequirements.technologies = analysis.technologies.map((tech: any) => tech.name);
+          user.projectRequirements.complexity = analysis.complexity;
+          user.projectRequirements.expertise = analysis.expertise;
+        }
+      } catch (error) {
+        console.error('Failed to analyze project requirements:', error);
+      }
     }
 
     return NextResponse.json(user);
