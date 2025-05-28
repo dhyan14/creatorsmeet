@@ -8,28 +8,28 @@ import { IconSquareRoundedX } from "@tabler/icons-react";
 
 const loadingStates = [
   {
-    text: "Creating your project...",
+    text: "Initializing AI analysis...",
   },
   {
-    text: "Analyzing project requirements...",
+    text: "Processing your project description...",
   },
   {
-    text: "Identifying required technologies...",
+    text: "Identifying core technologies needed...",
   },
   {
-    text: "Determining project complexity...",
+    text: "Evaluating technical requirements...",
   },
   {
-    text: "Calculating expertise needed...",
+    text: "Assessing project scope and complexity...",
   },
   {
-    text: "Setting up project profile...",
+    text: "Determining skill requirements...",
   },
   {
-    text: "Almost there...",
+    text: "Generating development recommendations...",
   },
   {
-    text: "Welcome to CreatorsMeet!",
+    text: "Finalizing project analysis...",
   },
 ];
 
