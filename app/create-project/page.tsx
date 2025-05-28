@@ -36,24 +36,14 @@ const loadingStates = [
 export default function CreateProject() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const placeholders = [
-    "Describe your project idea...",
-    "I want to build a social media platform for pet owners",
-    "An AI-powered recipe recommendation app",
-    "A marketplace for handmade crafts",
-    "A fitness tracking app with social features",
-  ];
+  const [projectIdea, setProjectIdea] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
+    setProjectIdea(e.target.value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const projectIdea = formData.get("projectIdea")?.toString();
-
     if (!projectIdea) return;
 
     setIsSubmitting(true);
@@ -75,7 +65,6 @@ export default function CreateProject() {
       router.push("/dashboard");
     } catch (error) {
       console.error("Error creating project:", error);
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -92,11 +81,19 @@ export default function CreateProject() {
           </p>
 
           <div className="space-y-8">
-            <PlaceholdersAndVanishInput
-              placeholders={placeholders}
-              onChange={handleChange}
-              onSubmit={handleSubmit}
-            />
+            <form onSubmit={handleSubmit} className="w-full">
+              <PlaceholdersAndVanishInput
+                placeholders={[
+                  "Describe your project idea...",
+                  "I want to build a social media platform for pet owners",
+                  "An AI-powered recipe recommendation app",
+                  "A marketplace for handmade crafts",
+                  "A fitness tracking app with social features",
+                ]}
+                onChange={handleChange}
+                onSubmit={handleSubmit}
+              />
+            </form>
 
             <MultiStepLoader
               loadingStates={loadingStates}
