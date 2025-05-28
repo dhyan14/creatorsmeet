@@ -218,64 +218,81 @@ export default function Dashboard() {
             </div>
           </motion.div>
 
-          {/* Active Projects Box */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-white">Active Projects</h2>
-              <span className="text-sm text-purple-400">
-                {user.projects?.filter(p => p.status === 'active').length || 0} Active
-              </span>
-            </div>
-            <div className="space-y-4">
-              {user.projects?.filter(p => p.status === 'active').map((project) => (
-                <motion.div
-                  key={project._id}
-                  whileHover={{ scale: 1.01 }}
-                  className="bg-white/5 rounded-xl p-4 border border-white/10"
+          {/* Project Requirements Section */}
+          {user.role === 'innovator' && user.projectRequirements && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-white">Project Requirements</h2>
+                <button
+                  onClick={() => user.projectRequirements?.description && analyzeProject(user.projectRequirements.description)}
+                  disabled={isAnalyzing}
+                  className="flex items-center space-x-2 px-4 py-2 bg-purple-500/10 text-purple-400 rounded-lg hover:bg-purple-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <div className="flex justify-between items-center mb-3">
-                    <h3 className="font-medium text-white">{project.title}</h3>
-                    <span className="text-sm px-3 py-1 bg-purple-500/20 rounded-full text-purple-400">
-                      Due {new Date(project.dueDate).toLocaleDateString()}
-                    </span>
+                  <IconRefresh className={`w-5 h-5 ${isAnalyzing ? 'animate-spin' : ''}`} />
+                  <span>Reanalyze</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Project Description */}
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <IconBrain className="w-5 h-5 text-purple-400" />
+                    <h3 className="text-sm font-medium text-gray-400">Project Description</h3>
                   </div>
-                  <div className="w-full bg-black/50 rounded-full h-2 mb-3">
-                    <div
-                      className="bg-gradient-to-r from-purple-400 to-pink-400 h-2 rounded-full"
-                      style={{ width: `${project.progress}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div className="flex -space-x-2">
-                      {project.team.slice(0, 3).map((member) => (
-                        <div
-                          key={member._id}
-                          className="w-8 h-8 rounded-full bg-purple-500/20 border-2 border-black flex items-center justify-center"
-                        >
-                          {member.avatar ? (
-                            <img src={member.avatar} alt={member.name} className="w-full h-full rounded-full" />
-                          ) : (
-                            <span className="text-sm text-purple-400">{member.name[0]}</span>
-                          )}
-                        </div>
-                      ))}
-                      {project.team.length > 3 && (
-                        <div className="w-8 h-8 rounded-full bg-purple-500/20 border-2 border-black flex items-center justify-center">
-                          <span className="text-sm text-purple-400">+{project.team.length - 3}</span>
-                        </div>
-                      )}
+                  <p className="text-gray-300">{user.projectRequirements.description}</p>
+                </div>
+
+                {/* Required Technologies */}
+                {user.projectRequirements.technologies && user.projectRequirements.technologies.length > 0 && (
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <IconCode className="w-5 h-5 text-purple-400" />
+                      <h3 className="text-sm font-medium text-gray-400">Required Technologies</h3>
                     </div>
-                    <span className="text-sm text-gray-400">{project.progress}% Complete</span>
+                    <div className="flex flex-wrap gap-2">
+                      {user.projectRequirements.technologies.map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm border border-purple-500/20"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                )}
+
+                {/* Project Complexity */}
+                {user.projectRequirements.complexity && (
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <h3 className="text-sm font-medium text-gray-400 mb-2">Project Complexity</h3>
+                    <p className="text-gray-300">{user.projectRequirements.complexity}</p>
+                  </div>
+                )}
+
+                {/* Required Expertise */}
+                {user.projectRequirements.expertise && (
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <h3 className="text-sm font-medium text-gray-400 mb-2">Required Expertise</h3>
+                    <p className="text-gray-300">{user.projectRequirements.expertise}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Last Analyzed */}
+              {user.projectRequirements.lastAnalyzed && (
+                <div className="mt-4 text-sm text-gray-500">
+                  Last analyzed: {new Date(user.projectRequirements.lastAnalyzed).toLocaleString()}
+                </div>
+              )}
+            </motion.div>
+          )}
         </div>
 
         {/* Right Column */}
@@ -377,71 +394,6 @@ export default function Dashboard() {
           </motion.div>
         </div>
       </div>
-
-      {/* Project Requirements Section (if user is innovator) */}
-      {user.role === 'innovator' && user.projectRequirements && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl"
-        >
-          <h2 className="text-xl font-semibold mb-6 text-white">Project Requirements</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Project Description */}
-            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <div className="flex items-center space-x-2 mb-3">
-                <IconBrain className="w-5 h-5 text-purple-400" />
-                <h3 className="text-sm font-medium text-gray-400">Project Description</h3>
-              </div>
-              <p className="text-gray-300">{user.projectRequirements.description}</p>
-            </div>
-
-            {/* Required Technologies */}
-            {user.projectRequirements.technologies && user.projectRequirements.technologies.length > 0 && (
-              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                <div className="flex items-center space-x-2 mb-3">
-                  <IconCode className="w-5 h-5 text-purple-400" />
-                  <h3 className="text-sm font-medium text-gray-400">Required Technologies</h3>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {user.projectRequirements.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm border border-purple-500/20"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Project Complexity */}
-            {user.projectRequirements.complexity && (
-              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                <h3 className="text-sm font-medium text-gray-400 mb-2">Project Complexity</h3>
-                <p className="text-gray-300">{user.projectRequirements.complexity}</p>
-              </div>
-            )}
-
-            {/* Required Expertise */}
-            {user.projectRequirements.expertise && (
-              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                <h3 className="text-sm font-medium text-gray-400 mb-2">Required Expertise</h3>
-                <p className="text-gray-300">{user.projectRequirements.expertise}</p>
-              </div>
-            )}
-          </div>
-
-          {/* Last Analyzed */}
-          {user.projectRequirements.lastAnalyzed && (
-            <div className="mt-4 text-sm text-gray-500">
-              Last analyzed: {new Date(user.projectRequirements.lastAnalyzed).toLocaleString()}
-            </div>
-          )}
-        </motion.div>
-      )}
     </div>
   );
 } 
