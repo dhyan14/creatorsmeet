@@ -11,7 +11,11 @@ interface User {
   projectRequirements?: {
     description: string;
     technologies: string[];
-    preferredStack: string;
+    complexity: string;
+    expertise: string;
+    preferredStack?: string;
+    categories?: string[];
+    lastAnalyzed?: Date;
   };
 }
 
@@ -28,6 +32,7 @@ export default function Dashboard() {
           throw new Error('Failed to fetch user data');
         }
         const userData = await userResponse.json();
+        console.log('Fetched user data:', userData);
         setUser(userData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -99,22 +104,40 @@ export default function Dashboard() {
             </div>
 
             {/* Required Technologies */}
-            <div className="p-4 bg-white/5 rounded-lg border border-white/5">
-              <div className="flex items-center space-x-2 mb-2">
-                <IconCode className="w-5 h-5 text-purple-400" />
-                <h3 className="text-sm font-medium text-gray-400">Required Technologies</h3>
+            {user.projectRequirements.technologies && user.projectRequirements.technologies.length > 0 && (
+              <div className="p-4 bg-white/5 rounded-lg border border-white/5">
+                <div className="flex items-center space-x-2 mb-2">
+                  <IconCode className="w-5 h-5 text-purple-400" />
+                  <h3 className="text-sm font-medium text-gray-400">Required Technologies</h3>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {user.projectRequirements.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {user.projectRequirements.technologies.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm"
-                  >
-                    {tech}
-                  </span>
-                ))}
+            )}
+
+            {/* Project Complexity */}
+            {user.projectRequirements.complexity && (
+              <div className="p-4 bg-white/5 rounded-lg border border-white/5">
+                <h3 className="text-sm font-medium text-gray-400 mb-2">Project Complexity</h3>
+                <p className="text-gray-300">{user.projectRequirements.complexity}</p>
               </div>
-            </div>
+            )}
+
+            {/* Required Expertise */}
+            {user.projectRequirements.expertise && (
+              <div className="p-4 bg-white/5 rounded-lg border border-white/5">
+                <h3 className="text-sm font-medium text-gray-400 mb-2">Required Expertise</h3>
+                <p className="text-gray-300">{user.projectRequirements.expertise}</p>
+              </div>
+            )}
 
             {/* Preferred Stack */}
             {user.projectRequirements.preferredStack && (
