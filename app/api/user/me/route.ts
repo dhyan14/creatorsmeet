@@ -26,20 +26,38 @@ export async function GET() {
     const cookieStore = cookies();
     const token = cookieStore.get('token');
 
-    if (!token) {
-      console.log('No auth token found');
+    if (!token || !token.value) {
+      console.log('No auth token found in cookies');
       return NextResponse.json(
-        { message: 'Unauthorized' },
+        { message: 'Unauthorized - No token found' },
         { status: 401 }
       );
     }
 
     // Verify the token
-    const decoded = verify(token.value, JWT_SECRET) as { userId: string };
-    console.log('User ID from token:', decoded.userId);
+    let decoded;
+    try {
+      decoded = verify(token.value, JWT_SECRET) as { userId: string };
+      console.log('Token verified successfully for user:', decoded.userId);
+    } catch (tokenError) {
+      console.error('Token verification failed:', tokenError);
+      return NextResponse.json(
+        { message: 'Unauthorized - Invalid token' },
+        { status: 401 }
+      );
+    }
 
     // Connect to MongoDB
-    await dbConnect();
+    try {
+      await dbConnect();
+      console.log('Connected to MongoDB successfully');
+    } catch (dbError) {
+      console.error('Database connection failed:', dbError);
+      return NextResponse.json(
+        { message: 'Database connection failed' },
+        { status: 500 }
+      );
+    }
 
     // Find user and populate matched user data
     const user = await User.findById(decoded.userId)

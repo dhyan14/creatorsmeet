@@ -19,6 +19,10 @@ interface User {
   };
 }
 
+interface ErrorResponse {
+  message: string;
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,11 +31,20 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userResponse = await fetch('/api/user/me');
-        if (!userResponse.ok) {
-          throw new Error('Failed to fetch user data');
+        const response = await fetch('/api/user/me', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json() as ErrorResponse;
+          throw new Error(errorData.message || 'Failed to fetch user data');
         }
-        const userData = await userResponse.json();
+        
+        const userData = await response.json() as User;
         console.log('Fetched user data:', userData);
         setUser(userData);
       } catch (err) {
