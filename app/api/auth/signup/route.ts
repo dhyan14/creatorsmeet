@@ -25,10 +25,34 @@ async function analyzeProjectRequirements(description: string) {
     }
 
     const analysis = await response.json();
+
+    // Map expertise to allowed enum values
+    const expertiseMap: { [key: string]: string } = {
+      'Full Stack Development': 'Web Development',
+      'Frontend Development': 'Web Development',
+      'Backend Development': 'Web Development',
+      'DevOps Engineering': 'Technical Architecture',
+      'System Architecture': 'Technical Architecture',
+      'Product Management': 'Product Development',
+      'Machine Learning': 'AI/ML Development',
+      'App Development': 'Mobile Development',
+    };
+
+    const mappedExpertise = expertiseMap[analysis.expertise] || analysis.expertise;
+
+    // Validate that the expertise is one of the allowed values
+    const allowedExpertise = [
+      'Technical Architecture',
+      'Product Development',
+      'AI/ML Development',
+      'Mobile Development',
+      'Web Development'
+    ];
+
     return {
       technologies: analysis.technologies.map((tech: any) => tech.name),
       complexity: analysis.complexity,
-      expertise: analysis.expertise,
+      expertise: allowedExpertise.includes(mappedExpertise) ? mappedExpertise : 'Web Development', // Default to Web Development if not in allowed list
     };
   } catch (error) {
     console.error('Project analysis error:', error);

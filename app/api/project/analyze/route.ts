@@ -178,12 +178,10 @@ async function analyzeProject(projectIdea: string) {
       projectIdea,
       [
         'Technical Architecture',
-        'Full Stack Development',
-        'Frontend Development',
-        'Backend Development',
+        'Product Development',
         'AI/ML Development',
         'Mobile Development',
-        'DevOps Engineering'
+        'Web Development'
       ]
     );
     const requiredExpertise = expertiseAnalysis.labels[0];
