@@ -29,47 +29,9 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const fetchUserData = async () => {
+  const analyzeProject = async (description: string) => {
     try {
-      const response = await fetch('/api/user/me', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          // Redirect to login if unauthorized
-          router.push('/login');
-          return;
-        }
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch user data');
-      }
-
-      const userData = await response.json();
-      console.log('Fetched user data:', userData);
-      setUser(userData);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching user data:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserData();
-  }, [router]);
-
-  const handleReanalyze = async () => {
-    if (!user?.projectRequirements?.description) return;
-
-    setIsAnalyzing(true);
-    try {
+      setIsAnalyzing(true);
       const response = await fetch('/api/project/analyze', {
         method: 'POST',
         credentials: 'include',
@@ -77,7 +39,7 @@ export default function Dashboard() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          projectIdea: user.projectRequirements.description
+          projectIdea: description
         })
       });
 
@@ -96,10 +58,78 @@ export default function Dashboard() {
     }
   };
 
-  if (loading) {
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch('/api/user/me', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          router.push('/login');
+          return;
+        }
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch user data');
+      }
+
+      const userData = await response.json();
+      console.log('Fetched user data:', userData);
+      
+      // Check if analysis is needed
+      if (
+        userData.role === 'innovator' &&
+        userData.projectRequirements?.description &&
+        (!userData.projectRequirements.technologies || userData.projectRequirements.technologies.length === 0)
+      ) {
+        setUser(userData); // Set initial user data to show loading state
+        await analyzeProject(userData.projectRequirements.description);
+      } else {
+        setUser(userData);
+      }
+      
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [router]);
+
+  if (loading || isAnalyzing) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="relative">
+          <div className="w-20 h-20 border-4 border-purple-200 rounded-full"></div>
+          <div className="w-20 h-20 border-4 border-purple-500 rounded-full border-t-transparent animate-spin absolute top-0"></div>
+        </div>
+        <p className="mt-4 text-gray-400">
+          {isAnalyzing ? 'Analyzing your project requirements...' : 'Loading your dashboard...'}
+        </p>
+        {isAnalyzing && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8 max-w-md mx-auto p-4 bg-white/5 rounded-lg text-sm text-gray-400"
+          >
+            <p className="mb-2">We're using AI to analyze your project and determine:</p>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Required technologies</li>
+              <li>Project complexity</li>
+              <li>Required expertise</li>
+              <li>Best practices and recommendations</li>
+            </ul>
+          </motion.div>
+        )}
       </div>
     );
   }
@@ -149,7 +179,7 @@ export default function Dashboard() {
           </h2>
           {user.role === 'innovator' && user.projectRequirements && (
             <button
-              onClick={handleReanalyze}
+              onClick={() => user.projectRequirements?.description && analyzeProject(user.projectRequirements.description)}
               disabled={isAnalyzing}
               className="flex items-center space-x-2 px-4 py-2 bg-purple-500/10 text-purple-400 rounded-lg hover:bg-purple-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
