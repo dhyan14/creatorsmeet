@@ -43,7 +43,7 @@ export async function GET() {
     // 2. Verify token
     let userId: string;
     try {
-      const decoded = verify(token.value, JWT_SECRET) as { userId: string };
+    const decoded = verify(token.value, JWT_SECRET) as { userId: string };
       userId = decoded.userId;
       console.log('Token verified for user:', userId);
     } catch (error) {
@@ -74,8 +74,8 @@ export async function GET() {
 
     // 5. Check if project requirements need analysis
     if (
-      user.role === 'innovator' &&
-      user.projectRequirements?.description &&
+      user.role === 'innovator' && 
+      user.projectRequirements?.description && 
       (!user.projectRequirements.technologies || user.projectRequirements.technologies.length === 0)
     ) {
       console.log('Project requirements need analysis');
@@ -84,15 +84,15 @@ export async function GET() {
         const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
           ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
           : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
+        
         const analysisResponse = await fetch(`${baseUrl}/api/project/analyze`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Cookie': `token=${token.value}`
           },
-          body: JSON.stringify({
-            projectIdea: user.projectRequirements.description
+          body: JSON.stringify({ 
+            projectIdea: user.projectRequirements.description 
           })
         });
 
@@ -122,7 +122,7 @@ export async function GET() {
 
         if (updatedUser) {
           console.log('User updated with analysis results');
-          return NextResponse.json(updatedUser);
+        return NextResponse.json(updatedUser);
         }
       } catch (error) {
         console.error('Project analysis failed:', error);
