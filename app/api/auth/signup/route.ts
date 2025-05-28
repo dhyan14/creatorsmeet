@@ -122,15 +122,31 @@ export async function POST(req: Request) {
 
     // Create response
     const response = NextResponse.json(
-      { message: 'User created successfully' },
+      { 
+        message: 'User created successfully',
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          projectRequirements: user.projectRequirements
+        }
+      },
       { status: 201 }
     );
 
-    // Set cookie
+    // Set cookie with more permissive settings for development
+    const isProduction = process.env.NODE_ENV === 'production';
+    console.log('Setting cookie with environment:', {
+      isProduction,
+      domain: req.headers.get('host')
+    });
+
     response.cookies.set('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProduction,
+      sameSite: isProduction ? 'strict' : 'lax',
+      path: '/',
       maxAge: 60 * 60 * 24 * 7 // 7 days
     });
 
