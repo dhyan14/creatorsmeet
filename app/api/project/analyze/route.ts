@@ -281,14 +281,20 @@ export async function POST(request: Request) {
         );
       }
 
+      // Transform the result to match the expected format
+      const transformedResult = {
+        ...result,
+        technologies: result.technologies.map(tech => tech.name)
+      };
+
       console.log('Successfully updated user project requirements:', {
         userId: decoded.userId,
-        technologies: result.technologies.map(tech => tech.name),
+        technologies: transformedResult.technologies,
         complexity: result.complexity,
         expertise: result.expertise
       });
 
-      return NextResponse.json(result);
+      return NextResponse.json(transformedResult);
     } catch (updateError) {
       console.error('Failed to update user project requirements:', updateError);
       throw updateError;

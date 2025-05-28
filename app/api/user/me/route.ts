@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verify } from 'jsonwebtoken';
 import User from '@/models/User';
-import clientPromise from '@/lib/db';
+import dbConnect from '@/lib/db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
@@ -20,7 +20,7 @@ interface UserDocument {
 
 export async function GET() {
   try {
-    console.log('Fetching user data...');
+    console.log('Starting /api/user/me endpoint...');
     
     // Get the token from cookies
     const cookieStore = cookies();
@@ -39,13 +39,13 @@ export async function GET() {
     console.log('User ID from token:', decoded.userId);
 
     // Connect to MongoDB
-    await clientPromise;
+    await dbConnect();
 
     // Find user and populate matched user data
     const user = await User.findById(decoded.userId)
       .populate('matchedWith', '-password')
       .select('-password')
-      .exec() as unknown as UserDocument;
+      .exec();
 
     if (!user) {
       console.log('User not found:', decoded.userId);
@@ -55,11 +55,18 @@ export async function GET() {
       );
     }
 
-    console.log('Found user:', {
+    console.log('Found user data:', {
       id: user._id,
       role: user.role,
       hasProjectRequirements: !!user.projectRequirements,
-      projectRequirements: user.projectRequirements
+      projectRequirements: user.projectRequirements ? {
+        description: user.projectRequirements.description,
+        hasTechnologies: !!user.projectRequirements.technologies,
+        technologiesLength: user.projectRequirements.technologies?.length,
+        technologies: user.projectRequirements.technologies,
+        complexity: user.projectRequirements.complexity,
+        expertise: user.projectRequirements.expertise
+      } : null
     });
 
     // If user is an innovator and has description but no technologies, analyze them
@@ -68,10 +75,8 @@ export async function GET() {
       user.projectRequirements?.description && 
       (!user.projectRequirements.technologies || user.projectRequirements.technologies.length === 0)
     ) {
-      console.log('Project requirements need analysis. Analyzing...');
+      console.log('Project requirements need analysis. Starting analysis...');
       try {
-        // Get the request headers to extract the host
-        const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
         const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
           ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
           : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
@@ -112,10 +117,9 @@ export async function GET() {
           user._id,
           {
             $set: {
-              'projectRequirements.technologies': analysis.technologies.map((tech: any) => tech.name),
+              'projectRequirements.technologies': analysis.technologies ? analysis.technologies.map((tech: any) => typeof tech === 'string' ? tech : tech.name) : [],
               'projectRequirements.complexity': analysis.complexity,
               'projectRequirements.expertise': analysis.expertise,
-              'projectRequirements.categories': analysis.categories?.map((cat: any) => cat.category) || [],
               'projectRequirements.lastAnalyzed': new Date()
             }
           },
@@ -130,8 +134,7 @@ export async function GET() {
         console.log('Updated user project requirements:', {
           technologies: updatedUser.projectRequirements.technologies,
           complexity: updatedUser.projectRequirements.complexity,
-          expertise: updatedUser.projectRequirements.expertise,
-          categories: updatedUser.projectRequirements.categories
+          expertise: updatedUser.projectRequirements.expertise
         });
 
         return NextResponse.json(updatedUser);
