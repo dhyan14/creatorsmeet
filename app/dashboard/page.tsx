@@ -14,12 +14,41 @@ interface ProjectRequirements {
   lastAnalyzed?: Date;
 }
 
+interface TeamMember {
+  _id: string;
+  name: string;
+  role: string;
+  avatar: string;
+}
+
+interface Project {
+  _id: string;
+  title: string;
+  status: 'active' | 'completed';
+  progress: number;
+  dueDate: Date;
+  team: TeamMember[];
+}
+
+interface Achievement {
+  _id: string;
+  title: string;
+  description: string;
+  icon: string;
+  earnedDate: Date;
+}
+
 interface User {
   _id: string;
   name: string;
   email: string;
   role: 'innovator' | 'coder';
   projectRequirements?: ProjectRequirements;
+  points: number;
+  level: number;
+  teamMembers: TeamMember[];
+  projects: Project[];
+  achievements: Achievement[];
 }
 
 export default function Dashboard() {
@@ -151,8 +180,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 p-6">
-      {/* Welcome Section */}
-      <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+      {/* Welcome Section with Stats */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
+      >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
@@ -164,10 +197,177 @@ export default function Dashboard() {
                 : 'Ready to build amazing projects'}
             </p>
           </div>
+          <div className="flex gap-4 mt-4 md:mt-0">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="bg-purple-500/10 p-4 rounded-lg text-center"
+            >
+              <p className="text-2xl font-bold text-purple-400">{user.points || 0}</p>
+              <p className="text-sm text-gray-400">Total Points</p>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="bg-pink-500/10 p-4 rounded-lg text-center"
+            >
+              <p className="text-2xl font-bold text-pink-400">Level {user.level || 1}</p>
+              <p className="text-sm text-gray-400">Current Level</p>
+            </motion.div>
+          </div>
         </div>
+      </motion.div>
+
+      {/* Quick Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+          className="bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-white/10"
+        >
+          <h3 className="text-gray-400 text-sm mb-2">Active Projects</h3>
+          <p className="text-2xl font-bold text-white">{user.projects?.filter(p => p.status === 'active').length || 0}</p>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-white/10"
+        >
+          <h3 className="text-gray-400 text-sm mb-2">Completed Projects</h3>
+          <p className="text-2xl font-bold text-white">{user.projects?.filter(p => p.status === 'completed').length || 0}</p>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          className="bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-white/10"
+        >
+          <h3 className="text-gray-400 text-sm mb-2">Team Members</h3>
+          <p className="text-2xl font-bold text-white">{user.teamMembers?.length || 0}</p>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4 }}
+          className="bg-black/50 backdrop-blur-xl rounded-xl p-4 border border-white/10"
+        >
+          <h3 className="text-gray-400 text-sm mb-2">Achievements</h3>
+          <p className="text-2xl font-bold text-white">{user.achievements?.length || 0}</p>
+        </motion.div>
       </div>
 
-      {/* Project Requirements Section */}
+      {/* Team Members Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
+      >
+        <h2 className="text-xl font-semibold mb-4">Team Members</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {user.teamMembers?.map((member) => (
+            <motion.div
+              key={member._id}
+              whileHover={{ scale: 1.02 }}
+              className="bg-white/5 rounded-lg p-4 flex items-center space-x-4"
+            >
+              <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+                {member.avatar ? (
+                  <img src={member.avatar} alt={member.name} className="w-full h-full rounded-full" />
+                ) : (
+                  <span className="text-xl text-purple-400">{member.name[0]}</span>
+                )}
+              </div>
+              <div>
+                <h3 className="font-medium text-white">{member.name}</h3>
+                <p className="text-sm text-gray-400">{member.role}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Active Projects Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
+      >
+        <h2 className="text-xl font-semibold mb-4">Active Projects</h2>
+        <div className="space-y-4">
+          {user.projects?.filter(p => p.status === 'active').map((project) => (
+            <motion.div
+              key={project._id}
+              whileHover={{ scale: 1.01 }}
+              className="bg-white/5 rounded-lg p-4"
+            >
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-medium text-white">{project.title}</h3>
+                <span className="text-sm text-purple-400">
+                  Due {new Date(project.dueDate).toLocaleDateString()}
+                </span>
+              </div>
+              <div className="w-full bg-black/50 rounded-full h-2 mb-2">
+                <div
+                  className="bg-gradient-to-r from-purple-400 to-pink-400 h-2 rounded-full"
+                  style={{ width: `${project.progress}%` }}
+                />
+              </div>
+              <div className="flex -space-x-2">
+                {project.team.slice(0, 3).map((member) => (
+                  <div
+                    key={member._id}
+                    className="w-8 h-8 rounded-full bg-purple-500/20 border-2 border-black flex items-center justify-center"
+                  >
+                    {member.avatar ? (
+                      <img src={member.avatar} alt={member.name} className="w-full h-full rounded-full" />
+                    ) : (
+                      <span className="text-sm text-purple-400">{member.name[0]}</span>
+                    )}
+                  </div>
+                ))}
+                {project.team.length > 3 && (
+                  <div className="w-8 h-8 rounded-full bg-purple-500/20 border-2 border-black flex items-center justify-center">
+                    <span className="text-sm text-purple-400">+{project.team.length - 3}</span>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Achievements Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7 }}
+        className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
+      >
+        <h2 className="text-xl font-semibold mb-4">Recent Achievements</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {user.achievements?.slice(0, 6).map((achievement) => (
+            <motion.div
+              key={achievement._id}
+              whileHover={{ scale: 1.02 }}
+              className="bg-white/5 rounded-lg p-4"
+            >
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                  <span className="text-xl text-purple-400">{achievement.icon}</span>
+                </div>
+                <div>
+                  <h3 className="font-medium text-white">{achievement.title}</h3>
+                  <p className="text-sm text-gray-400">{achievement.description}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Original Project Requirements Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
