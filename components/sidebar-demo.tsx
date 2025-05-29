@@ -101,23 +101,6 @@ export default function CreatorsSidebar() {
               ))}
             </div>
           </div>
-          <div>
-            <SidebarLink
-              link={{
-                label: "Your Profile",
-                href: "/profile",
-                icon: (
-                  <Image
-                    src="/default-avatar.png"
-                    className="h-7 w-7 shrink-0 rounded-full"
-                    width={50}
-                    height={50}
-                    alt="Avatar"
-                  />
-                ),
-              }}
-            />
-          </div>
         </SidebarBody>
       </Sidebar>
     </div>
