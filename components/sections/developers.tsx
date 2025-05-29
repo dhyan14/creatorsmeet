@@ -31,30 +31,7 @@ const developers: Developer[] = [
       "Mentored junior developers in modern web technologies",
       "Implemented CI/CD pipelines for streamlined deployment"
     ]
-  },
-  {
-    name: "Sakshi Jain",
-    institution: "JG University",
-    role: "Frontend Development Specialist",
-    bio: "Creative frontend developer with a keen eye for design and user experience. Focused on creating beautiful, responsive, and accessible web interfaces.",
-    github: "https://github.com/sakshijain",
-    email: "mailto:sakshi@example.com",
-    linkedin: "https://linkedin.com/in/sakshijain",
-    twitter: "https://twitter.com/sakshijain",
-    skills: [
-      "Frontend Development",
-      "UI/UX Design",
-      "React",
-      "Tailwind CSS",
-      "TypeScript",
-      "Animation"
-    ],
-    achievements: [
-      "Designed and implemented modern UI components library",
-      "Improved website performance and accessibility",
-      "Created responsive designs for multiple platforms"
-    ]
-  },
+  }
 ];
 
 export default function DevelopersSection() {
