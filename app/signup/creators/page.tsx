@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import LanguageSelector from '@/app/components/LanguageSelector';
+import TechnologySelector from '@/app/components/TechnologySelector';
 
 const roleOptions = [
   { id: 'innovator', label: 'Innovator', description: 'I have ideas to bring to life' },
@@ -252,8 +253,19 @@ export default function CreatorSignup() {
               <>
                 {role === 'coder' ? (
                   <div className="space-y-4">
-                    <h2 className="text-xl font-semibold text-white">Select Your Tech Stack</h2>
-                    <LanguageSelector onStackSelect={handleStackSelect} />
+                    <h2 className="text-xl font-semibold text-white">Select Your Technologies</h2>
+                    <p className="text-gray-400 text-sm">Choose the technologies you're proficient in</p>
+                    <TechnologySelector 
+                      onTechnologySelect={(technologies) => {
+                        setFormData({
+                          ...formData,
+                          developerStack: {
+                            name: 'Custom Stack',
+                            technologies
+                          }
+                        });
+                      }} 
+                    />
                   </div>
                 ) : (
                   <div className="space-y-4">
