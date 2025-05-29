@@ -326,72 +326,76 @@ export default function Dashboard() {
           </motion.div>
 
           {/* Team Members Box */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
-            className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-white">Team Members</h2>
-              <span className="text-sm text-purple-400">{user.teamMembers?.length || 0} Members</span>
-            </div>
-            <div className="space-y-3">
-              {user.teamMembers?.map((member) => (
-                <motion.div
-                  key={member._id}
-                  whileHover={{ scale: 1.02 }}
-                  className="bg-white/5 rounded-xl p-3 border border-white/10 flex items-center space-x-3"
-                >
-                  <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                    {member.avatar ? (
-                      <img src={member.avatar} alt={member.name} className="w-full h-full rounded-full" />
-                    ) : (
-                      <span className="text-lg text-purple-400">{member.name[0]}</span>
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-medium text-white truncate">{member.name}</h3>
-                    <p className="text-sm text-gray-400 truncate">{member.role}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Achievements Box */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-white">Recent Achievements</h2>
-              <span className="text-sm text-purple-400">
-                {user.achievements?.length || 0} Total
-              </span>
-            </div>
-            <div className="space-y-3">
-              {user.achievements?.slice(0, 4).map((achievement) => (
-                <motion.div
-                  key={achievement._id}
-                  whileHover={{ scale: 1.02 }}
-                  className="bg-white/5 rounded-xl p-3 border border-white/10"
-                >
-                  <div className="flex items-center space-x-3">
+          {user.teamMembers && user.teamMembers.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 }}
+              className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-white">Team Members</h2>
+                <span className="text-sm text-purple-400">{user.teamMembers.length} Members</span>
+              </div>
+              <div className="space-y-3">
+                {user.teamMembers.map((member) => (
+                  <motion.div
+                    key={member._id}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-white/5 rounded-xl p-3 border border-white/10 flex items-center space-x-3"
+                  >
                     <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                      <span className="text-xl text-purple-400">{achievement.icon}</span>
+                      {member.avatar ? (
+                        <img src={member.avatar} alt={member.name} className="w-full h-full rounded-full" />
+                      ) : (
+                        <span className="text-lg text-purple-400">{member.name[0]}</span>
+                      )}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-medium text-white truncate">{achievement.title}</h3>
-                      <p className="text-sm text-gray-400 truncate">{achievement.description}</p>
+                      <h3 className="font-medium text-white truncate">{member.name}</h3>
+                      <p className="text-sm text-gray-400 truncate">{member.role}</p>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Achievements Box */}
+          {user.achievements && user.achievements.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 }}
+              className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-white">Recent Achievements</h2>
+                <span className="text-sm text-purple-400">
+                  {user.achievements.length} Total
+                </span>
+              </div>
+              <div className="space-y-3">
+                {user.achievements.slice(0, 4).map((achievement) => (
+                  <motion.div
+                    key={achievement._id}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-white/5 rounded-xl p-3 border border-white/10"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                        <span className="text-xl text-purple-400">{achievement.icon}</span>
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-medium text-white truncate">{achievement.title}</h3>
+                        <p className="text-sm text-gray-400 truncate">{achievement.description}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
