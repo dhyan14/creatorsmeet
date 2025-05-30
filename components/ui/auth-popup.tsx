@@ -46,14 +46,14 @@ export function AuthPopup({ isOpen, onClose }: AuthPopupProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
             {/* Popup */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-lg mx-4 relative"
+              className="w-full max-w-lg relative"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative bg-black/80 border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
@@ -79,21 +79,21 @@ export function AuthPopup({ isOpen, onClose }: AuthPopupProps) {
                 </button>
 
                 {/* Title */}
-                <h2 className="text-2xl font-bold text-white mb-6 text-center">
+                <h2 className="text-2xl font-bold text-white mb-6 text-center pr-8">
                   Choose Your Path
                 </h2>
 
                 {/* Options */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {authOptions.map((option, index) => (
                     <motion.button
                       key={option.title}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
+                      onClick={() => handleOptionClick(option.href)}
                       className={`w-full p-4 rounded-xl bg-gradient-to-r ${option.gradient} 
                         hover:scale-[1.02] transition-transform duration-200 text-left group`}
-                      onClick={() => handleOptionClick(option.href)}
                     >
                       <div className="flex items-center justify-between">
                         <div>

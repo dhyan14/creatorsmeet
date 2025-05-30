@@ -150,14 +150,6 @@ export function Header() {
                   >
                     Login / Sign Up
                   </AnimatedButton>
-
-                  {/* Mobile Auth Menu */}
-                  {isMobile && (
-                    <MobileAuthMenu 
-                      isOpen={isAuthOpen}
-                      onClose={() => setIsAuthOpen(false)}
-                    />
-                  )}
                 </div>
               </div>
             </div>
@@ -165,13 +157,11 @@ export function Header() {
         </motion.div>
       </motion.header>
 
-      {/* Desktop Auth Popup */}
-      {!isMobile && (
-        <AuthPopup 
-          isOpen={isAuthOpen}
-          onClose={() => setIsAuthOpen(false)}
-        />
-      )}
+      {/* Auth Popup for both Mobile and Desktop */}
+      <AuthPopup 
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+      />
     </>
   );
 } 
