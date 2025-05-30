@@ -6,8 +6,6 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { AnimatedButton } from "./animated-button";
 import { AuthPopup } from "./auth-popup";
-import { MobileAuthMenu } from "./mobile-auth-menu";
-import { useMediaQuery } from "@/hooks/use-media-query";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -19,7 +17,6 @@ const menuItems = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 768px)");
   const { scrollY } = useScroll();
 
   useEffect(() => {
