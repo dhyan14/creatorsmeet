@@ -1,14 +1,21 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Header } from '@/components/ui/header'
 import GridBackground from '@/components/ui/grid-background'
 import { HowItWorks } from '@/components/sections/how-it-works'
 import DevelopersSection from '@/components/sections/developers'
 import { ContactSection } from '@/components/sections/contact'
+import { AuthPopup } from '@/components/ui/auth-popup'
 
 export default function Home() {
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  const handleAuthClick = () => {
+    setIsAuthOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Header />
@@ -82,6 +89,7 @@ export default function Home() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    onClick={handleAuthClick}
                     className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-8 rounded-full text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/25"
                   >
                     Start Creating
@@ -151,6 +159,10 @@ export default function Home() {
           </footer>
         </main>
       </GridBackground>
+      <AuthPopup
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+      />
     </div>
   )
 } 
