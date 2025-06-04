@@ -44,7 +44,7 @@ export default function SigninPage() {
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Use window.location for a full page reload
-      window.location.href = '/dashboard';
+      window.location.href = '/home';
     } catch (err) {
       console.error('Sign in error:', err);
       setError(err instanceof Error ? err.message : 'Something went wrong');

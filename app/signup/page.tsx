@@ -93,7 +93,7 @@ export default function SignupPage() {
         throw new Error(data.error || 'Something went wrong');
       }
 
-      router.push('/dashboard');
+      router.push('/home');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
