@@ -3,14 +3,13 @@
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
-  IconArrowLeft,
   IconDashboard,
-  IconPuzzle,
   IconSettings,
   IconUser,
   IconMessage,
   IconBriefcase,
   IconCode,
+  IconArrowLeft,
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -50,14 +49,9 @@ export default function CreatorsSidebar() {
 
   const links = [
     {
-      label: "Home",
-      href: "/home",
-      icon: <IconDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-    },
-    {
-      label: "Solve Puzzle",
-      href: "/home/puzzle",
-      icon: <IconPuzzle className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      label: "Dashboard",
+      href: "/dashboard",
+      icon: <IconDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
       label: "Profile",

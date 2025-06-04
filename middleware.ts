@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
 
   // If has token and trying to access auth pages
   if (token && isPublicPath) {
-    return NextResponse.redirect(new URL('/home', request.url));
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return NextResponse.next();
@@ -26,5 +26,5 @@ export function middleware(request: NextRequest) {
 
 // Configure which paths the middleware should run on
 export const config = {
-  matcher: ['/', '/signin', '/signup', '/home/:path*']
+  matcher: ['/', '/signin', '/signup', '/dashboard/:path*']
 };
