@@ -9,22 +9,22 @@ interface MobileMenuProps {
 
 const authOptions = [
   {
-    title: 'For Creators',
+    title: 'Start Creating',
     description: 'Join as a creator to bring your ideas to life',
     gradient: 'from-purple-500 to-pink-500',
-    href: '/signup/creators'
+    href: '/login'
   },
   {
-    title: 'For Mentors',
+    title: 'Mentor Projects',
     description: 'Guide and support innovative projects',
     gradient: 'from-blue-500 to-cyan-500',
-    href: '/signup/mentors'
+    href: '/login'
   },
   {
-    title: 'For Company',
+    title: 'Company Connect',
     description: 'Connect with talented creators and innovators',
     gradient: 'from-emerald-500 to-teal-500',
-    href: '/signup/company'
+    href: '/login'
   }
 ];
 
