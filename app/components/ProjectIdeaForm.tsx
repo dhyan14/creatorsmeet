@@ -33,7 +33,7 @@ interface ProjectIdeaFormProps {
 export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormProps) {
   const [projectIdea, setProjectIdea] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null as string | null);
   const router = useRouter();
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
