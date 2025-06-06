@@ -8,6 +8,7 @@ import { HowItWorks } from '@/components/sections/how-it-works'
 import DevelopersSection from '@/components/sections/developers'
 import { ContactSection } from '@/components/sections/contact'
 import { AuthPopup } from '@/components/ui/auth-popup'
+import { PuzzleSection } from '@/components/sections/puzzle'
 
 export default function Home() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -132,6 +133,7 @@ export default function Home() {
 
           {/* Other Sections */}
           <HowItWorks />
+          <PuzzleSection />
           <DevelopersSection />
           <ContactSection />
 
