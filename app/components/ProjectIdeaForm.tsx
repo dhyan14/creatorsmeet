@@ -1,7 +1,26 @@
+'use client';
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { IconBrain, IconLoader2 } from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
+
+// Mock icons to avoid dependency on @tabler/icons-react
+const IconBrain = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+  </svg>
+);
+
+const IconLoader2 = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+  </svg>
+);
+
+// Simple router mock to avoid next/navigation dependency
+const useRouter = () => ({
+  push: (path: string) => window.location.href = path,
+  refresh: () => window.location.reload(),
+});
 
 interface ProjectIdeaFormProps {
   onAnalysisComplete?: (analysis: {
@@ -14,7 +33,7 @@ interface ProjectIdeaFormProps {
 export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormProps) {
   const [projectIdea, setProjectIdea] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [error, setError] = useState(null as string | null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
