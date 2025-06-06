@@ -35,6 +35,89 @@ declare const React: {
   Fragment: any;
 };
 
+// Declare React namespace and types
+declare namespace React {
+  type ReactNode = any;
+  type ComponentType<P = {}> = any;
+  type FC<P = {}> = FunctionComponent<P>;
+  
+  interface FunctionComponent<P = {}> {
+    (props: P, context?: any): any;
+    propTypes?: any;
+    contextTypes?: any;
+    defaultProps?: Partial<P>;
+    displayName?: string;
+  }
+
+  interface HTMLAttributes<T> extends DOMAttributes<T> {
+    // Basic HTML attributes
+    className?: string;
+    style?: any;
+    id?: string;
+    // Add more HTML attributes as needed
+  }
+
+  interface SVGProps<T> extends HTMLAttributes<T> {
+    // Basic SVG attributes
+    width?: number | string;
+    height?: number | string;
+    viewBox?: string;
+    // Add more SVG attributes as needed
+  }
+
+  interface ChangeEvent<T = Element> extends SyntheticEvent<T> {
+    target: EventTarget & T;
+  }
+
+  interface SyntheticEvent<T = Element, E = Event> {
+    currentTarget: EventTarget & T;
+    target: EventTarget;
+    // Add more event properties as needed
+  }
+
+  interface CSSProperties {
+    [key: string]: string | number | undefined;
+  }
+
+  interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
+    type: T;
+    props: P;
+    key: Key | null;
+  }
+
+  type Key = string | number;
+  type JSXElementConstructor<P> = (props: P) => ReactElement | null;
+}
+
+// Extended Window interface for any global browser APIs
+interface Window {
+  // Add any global browser API extensions here if needed
+}
+
+// Basic DOM types
+declare namespace JSX {
+  interface IntrinsicElements {
+    [elemName: string]: any;
+  }
+}
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      [elemName: string]: any;
+    }
+  }
+}
+
+declare module 'react' {
+  export = React;
+  export as namespace React;
+}
+
+declare module 'react/jsx-runtime' {
+  export * from 'react/jsx-runtime';
+}
+
 // Type definitions for Framer Motion
 declare module 'framer-motion' {
   export const motion: any;
