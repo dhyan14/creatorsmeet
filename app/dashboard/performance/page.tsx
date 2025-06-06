@@ -20,7 +20,7 @@ interface Performance {
 }
 
 export default function PerformancePage() {
-  const [performance, setPerformance] = useState<Performance>({
+  const [performance, setPerformance] = useState({
     projectProgress: 0,
     tasksCompleted: 0,
     totalTasks: 0,
@@ -31,9 +31,9 @@ export default function PerformancePage() {
       deliverySpeed: 0,
       codeQuality: 0
     }
-  });
+  } as Performance);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null as string | null);
 
   useEffect(() => {
     const fetchPerformanceData = async () => {
@@ -133,7 +133,7 @@ export default function PerformancePage() {
         <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
           <h3 className="text-xl font-semibold mb-6">Project Milestones</h3>
           <div className="space-y-6">
-            {performance.milestones.map((milestone, index) => (
+            {performance.milestones.map((milestone: Performance['milestones'][0], index: number) => (
               <div key={index} className="flex items-center space-x-4">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   milestone.status === 'completed'
