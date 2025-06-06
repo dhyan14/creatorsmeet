@@ -77,12 +77,19 @@ export default function SigninPage() {
           <h2 className="mt-6 text-3xl font-bold text-white">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-sm text-gray-400">
-            Or{' '}
-            <Link href="/signup" className="font-medium text-purple-500 hover:text-purple-400">
-              create a new account
+          <div className="mt-6 space-y-4">
+            <Link 
+              href="/signup" 
+              className="w-full flex justify-center py-3 px-4 border border-purple-500 text-purple-500 hover:bg-purple-500/10 rounded-lg shadow-sm text-sm font-medium transition-colors"
+            >
+              Create new account
             </Link>
-          </p>
+            <div className="relative flex items-center">
+              <div className="flex-grow border-t border-gray-700"></div>
+              <span className="flex-shrink mx-4 text-gray-500 text-sm">or sign in with email</span>
+              <div className="flex-grow border-t border-gray-700"></div>
+            </div>
+          </div>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -124,14 +131,19 @@ export default function SigninPage() {
             </div>
           </div>
 
-          <div>
+          <div className="space-y-4">
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-purple-500 hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-purple-500 hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? 'Signing in...' : 'Sign in with Email'}
             </button>
+            <p className="text-center text-sm text-gray-400">
+              <Link href="/forgot-password" className="font-medium text-purple-500 hover:text-purple-400">
+                Forgot your password?
+              </Link>
+            </p>
           </div>
         </form>
       </div>

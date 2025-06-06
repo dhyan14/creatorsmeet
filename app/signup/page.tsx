@@ -130,14 +130,21 @@ export default function SignupPage() {
              step === 'analysis' ? 'Project Analysis' : 
              'Create Your Account'}
           </h2>
-          <p className="mt-2 text-sm text-gray-400">
-            {step === 'registration' && (
-              <>
-                Or{' '}
-                <Link href="/signin" className="font-medium text-purple-500 hover:text-purple-400">sign in to your account</Link>
-              </>
-            )}
-          </p>
+          {step === 'registration' && (
+            <div className="mt-6 space-y-4">
+              <Link 
+                href="/signin" 
+                className="w-full flex justify-center py-3 px-4 border border-white/20 text-white hover:bg-white/5 rounded-lg shadow-sm text-sm font-medium transition-colors"
+              >
+                Already have an account? Sign in
+              </Link>
+              <div className="relative flex items-center">
+                <div className="flex-grow border-t border-gray-700"></div>
+                <span className="flex-shrink mx-4 text-gray-500 text-sm">or create with email</span>
+                <div className="flex-grow border-t border-gray-700"></div>
+              </div>
+            </div>
+          )}
         </div>
 
         {error && (
@@ -156,13 +163,26 @@ export default function SignupPage() {
                 className="w-full h-40 bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50"
                 required
               />
-              <button
-                onClick={analyzeIdea}
-                disabled={loading || !projectIdea.trim()}
-                className="mt-4 w-full py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? 'Analyzing...' : 'Analyze Project'}
-              </button>
+              <div className="mt-6 space-y-4">
+                <button
+                  onClick={analyzeIdea}
+                  disabled={loading || !projectIdea.trim()}
+                  className="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {loading ? 'Analyzing...' : 'Analyze Project'}
+                </button>
+                <div className="relative flex items-center">
+                  <div className="flex-grow border-t border-gray-700"></div>
+                  <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
+                  <div className="flex-grow border-t border-gray-700"></div>
+                </div>
+                <Link 
+                  href="/signin" 
+                  className="w-full flex justify-center py-3 px-4 border border-white/20 text-white hover:bg-white/5 rounded-lg shadow-sm text-sm font-medium transition-colors"
+                >
+                  Already have an account? Sign in
+                </Link>
+              </div>
             </div>
           </div>
         )}
@@ -332,7 +352,7 @@ export default function SignupPage() {
                 disabled={loading}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-purple-500 hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Creating account...' : 'Create account'}
+                {loading ? 'Creating account...' : 'Continue with Email'}
               </button>
             </div>
           </form>
