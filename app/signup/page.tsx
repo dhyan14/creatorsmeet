@@ -4,11 +4,30 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
+type FormData = {
+  name: string;
+  email: string;
+  password: string;
+  country: string;
+  role: string;
+  projectRequirements: {
+    description: string;
+    technologies: string[];
+    preferredStack: string;
+  };
+  developerStack: {
+    name: string;
+    technologies: string[];
+  };
+};
+
+type NestedFormData = FormData['projectRequirements'] | FormData['developerStack'];
+
 export default function SignupPage() {
   const router = useRouter();
   const [step, setStep] = useState<'idea' | 'analysis' | 'registration'>('idea');
   const [projectIdea, setProjectIdea] = useState('');
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     password: '',
@@ -104,19 +123,21 @@ export default function SignupPage() {
   // Handle nested fields using dot notation (e.g., projectRequirements.description)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
     if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setFormData((prev: typeof formData) => ({
+      const [parent, child] = name.split('.') as [keyof FormData, string];
+      
+      setFormData((prev: FormData) => ({
         ...prev,
         [parent]: {
-          ...prev[parent],
+          ...(prev[parent] as NestedFormData),
           [child]: value
         }
       }));
     } else {
-      setFormData((prev: typeof formData) => ({
+      setFormData((prev: FormData) => ({
         ...prev,
-        [name]: value
+        [name as keyof Omit<FormData, 'projectRequirements' | 'developerStack'>]: value
       }));
     }
   };
