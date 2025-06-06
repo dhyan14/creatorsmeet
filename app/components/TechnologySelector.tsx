@@ -156,7 +156,7 @@ export default function TechnologySelector({ onTechnologySelect }: TechnologySel
           <div className="w-full">
             <h3 className="text-lg font-medium text-white mb-3">Selected Technologies</h3>
             <div className="flex flex-wrap gap-2">
-              {selectedTechnologies.map(tech => (
+              {selectedTechnologies.map((tech: string) => (
                 <motion.span
                   key={tech}
                   initial={{ scale: 0.8, opacity: 0 }}
