@@ -53,9 +53,9 @@ interface User {
 
 export default function Dashboard() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState(null as User | null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null as string | null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const analyzeProject = async (description: string) => {
@@ -256,10 +256,10 @@ export default function Dashboard() {
                       <h3 className="text-sm font-medium text-gray-400">Required Technologies</h3>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {user.projectRequirements.technologies.map((tech) => (
+                      {user.projectRequirements.technologies.map((tech: string) => (
                         <span
                           key={tech}
-                          className="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm border border-purple-500/20"
+                          className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm"
                         >
                           {tech}
                         </span>
@@ -338,7 +338,7 @@ export default function Dashboard() {
                 <span className="text-sm text-purple-400">{user.teamMembers.length} Members</span>
               </div>
               <div className="space-y-3">
-                {user.teamMembers.map((member) => (
+                {user.teamMembers.map((member: TeamMember) => (
                   <motion.div
                     key={member._id}
                     whileHover={{ scale: 1.02 }}
@@ -376,19 +376,19 @@ export default function Dashboard() {
                 </span>
               </div>
               <div className="space-y-3">
-                {user.achievements.slice(0, 4).map((achievement) => (
+                {user.achievements.slice(0, 4).map((achievement: Achievement) => (
                   <motion.div
                     key={achievement._id}
                     whileHover={{ scale: 1.02 }}
                     className="bg-white/5 rounded-xl p-3 border border-white/10"
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xl text-purple-400">{achievement.icon}</span>
+                      <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                        <img src={achievement.icon} alt="" className="w-6 h-6" />
                       </div>
-                      <div className="min-w-0">
-                        <h3 className="font-medium text-white truncate">{achievement.title}</h3>
-                        <p className="text-sm text-gray-400 truncate">{achievement.description}</p>
+                      <div>
+                        <h3 className="font-medium text-white">{achievement.title}</h3>
+                        <p className="text-sm text-gray-400">{achievement.description}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -396,6 +396,34 @@ export default function Dashboard() {
               </div>
             </motion.div>
           )}
+
+          {/* Projects Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {user.projects?.map((project: Project) => (
+              <motion.div
+                key={project._id}
+                whileHover={{ scale: 1.02 }}
+                className="bg-white/5 rounded-xl p-4 border border-white/10"
+              >
+                <h3 className="text-lg font-medium text-white mb-2">{project.title}</h3>
+                <div className="flex justify-between text-sm text-gray-400 mb-4">
+                  <span>Progress: {project.progress}%</span>
+                  <span>Due: {new Date(project.dueDate).toLocaleDateString()}</span>
+                </div>
+                <div className="flex -space-x-2">
+                  {project.team.map((member: TeamMember) => (
+                    <img
+                      key={member._id}
+                      src={member.avatar}
+                      alt={member.name}
+                      className="w-8 h-8 rounded-full border-2 border-black/50"
+                      title={member.name}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
