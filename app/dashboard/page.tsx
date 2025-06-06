@@ -308,11 +308,11 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 gap-4">
               <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <h3 className="text-gray-400 text-sm mb-1">Active Projects</h3>
-                <p className="text-2xl font-bold text-white">{user.projects?.filter(p => p.status === 'active').length || 0}</p>
+                <p className="text-2xl font-bold text-white">{user.projects?.filter((project: Project) => project.status === 'active').length || 0}</p>
               </div>
               <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <h3 className="text-gray-400 text-sm mb-1">Completed Projects</h3>
-                <p className="text-2xl font-bold text-white">{user.projects?.filter(p => p.status === 'completed').length || 0}</p>
+                <p className="text-2xl font-bold text-white">{user.projects?.filter((project: Project) => project.status === 'completed').length || 0}</p>
               </div>
               <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <h3 className="text-gray-400 text-sm mb-1">Team Members</h3>
