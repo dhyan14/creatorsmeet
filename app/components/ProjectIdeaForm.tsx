@@ -14,10 +14,10 @@ interface ProjectIdeaFormProps {
 export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormProps) {
   const [projectIdea, setProjectIdea] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null as string | null);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsAnalyzing(true);
     setError(null);
@@ -96,7 +96,7 @@ export default function ProjectIdeaForm({ onAnalysisComplete }: ProjectIdeaFormP
         <div>
           <textarea
             value={projectIdea}
-            onChange={(e) => setProjectIdea(e.target.value)}
+            onChange={(e: { target: { value: string } }) => setProjectIdea(e.target.value)}
             placeholder="Describe your project idea in detail. Include features, target users, and any specific requirements..."
             className="w-full h-40 bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50"
             required
