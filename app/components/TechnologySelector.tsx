@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface TechnologySelectorProps {
@@ -206,17 +206,17 @@ export default function TechnologySelector({ onTechnologySelect }: TechnologySel
           >
             <h3 className="text-lg font-medium text-white">{category.name}</h3>
             <div className="flex flex-wrap gap-2">
-              {category.technologies.map((technology: string) => (
+              {category.technologies.map((tech: string) => (
                 <button
-                  key={technology}
-                  onClick={() => handleTechnologyToggle(technology)}
+                  key={tech}
+                  onClick={() => handleTechnologyToggle(tech)}
                   className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                    selectedTechnologies.includes(technology)
+                    selectedTechnologies.includes(tech)
                       ? 'bg-purple-500 text-white'
                       : 'bg-white/5 text-gray-300 hover:bg-white/10'
                   }`}
                 >
-                  {technology}
+                  {tech}
                 </button>
               ))}
             </div>
