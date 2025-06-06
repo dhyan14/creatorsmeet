@@ -50,9 +50,9 @@ interface LanguageSelectorProps {
 }
 
 export default function LanguageSelector({ onStackSelect }: LanguageSelectorProps) {
-  const [selectedStack, setSelectedStack] = useState<string>('');
-  const [customTechnologies, setCustomTechnologies] = useState<string>('');
-  const [customStackName, setCustomStackName] = useState<string>('');
+  const [selectedStack, setSelectedStack] = useState('');
+  const [customTechnologies, setCustomTechnologies] = useState('');
+  const [customStackName, setCustomStackName] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
 
   const handleStackSelect = (stackId: string) => {
@@ -72,7 +72,7 @@ export default function LanguageSelector({ onStackSelect }: LanguageSelectorProp
   };
 
   const handleCustomSubmit = () => {
-    const technologies = customTechnologies.split(',').map(tech => tech.trim());
+    const technologies = customTechnologies.split(',').map((tech: string) => tech.trim());
     onStackSelect({
       name: customStackName || 'Custom Developer',
       technologies
@@ -111,7 +111,7 @@ export default function LanguageSelector({ onStackSelect }: LanguageSelectorProp
             <input
               type="text"
               value={customStackName}
-              onChange={(e) => setCustomStackName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCustomStackName(e.target.value)}
               placeholder="e.g., Full Stack Developer, Mobile Developer"
               className="w-full px-4 py-2 bg-black/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-500"
             />
@@ -123,7 +123,7 @@ export default function LanguageSelector({ onStackSelect }: LanguageSelectorProp
             <input
               type="text"
               value={customTechnologies}
-              onChange={(e) => setCustomTechnologies(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCustomTechnologies(e.target.value)}
               placeholder="e.g., React Native, Firebase, TypeScript"
               className="w-full px-4 py-2 bg-black/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-500"
             />
