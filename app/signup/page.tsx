@@ -58,7 +58,7 @@ export default function SignupPage() {
 
       setAnalysisResults(data);
       setStep('analysis');
-      setFormData(prev => ({
+      setFormData((prev: typeof formData) => ({
         ...prev,
         projectRequirements: {
           ...prev.projectRequirements,
@@ -101,12 +101,24 @@ export default function SignupPage() {
     }
   };
 
+  // Handle nested fields using dot notation (e.g., projectRequirements.description)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setFormData((prev: typeof formData) => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value
+        }
+      }));
+    } else {
+      setFormData((prev: typeof formData) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   return (
@@ -122,9 +134,7 @@ export default function SignupPage() {
             {step === 'registration' && (
               <>
                 Or{' '}
-                <Link href="/signin" className="font-medium text-purple-500 hover:text-purple-400">
-                  sign in to your account
-                </Link>
+                <Link href="/signin" className="font-medium text-purple-500 hover:text-purple-400">sign in to your account</Link>
               </>
             )}
           </p>
