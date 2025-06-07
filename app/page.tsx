@@ -131,9 +131,29 @@ export default function Home() {
             </motion.div>
           </section>
 
+          {/* Puzzle Section - Moved to be more prominent */}
+          <section className="relative py-16 md:py-24 bg-gradient-to-b from-gray-900 to-black">
+            <div className="container mx-auto px-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="text-center mb-12"
+              >
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  Interactive Puzzle Challenge
+                </h2>
+                <p className="text-lg text-purple-300 max-w-2xl mx-auto">
+                  Test your problem-solving skills with our interactive puzzle solver
+                </p>
+              </motion.div>
+              <PuzzleSection />
+            </div>
+          </section>
+
           {/* Other Sections */}
           <HowItWorks />
-          <PuzzleSection />
           <DevelopersSection />
           <ContactSection />
 
