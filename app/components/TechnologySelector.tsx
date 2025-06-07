@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
@@ -123,13 +125,13 @@ const technologyCategories = {
 };
 
 export default function TechnologySelector({ onTechnologySelect }: TechnologySelectorProps) {
-  const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>([]);
+  const [selectedTechnologies, setSelectedTechnologies] = useState([] as string[]);
   const [customTechnology, setCustomTechnology] = useState('');
 
   const handleTechnologyToggle = (technology: string) => {
-    setSelectedTechnologies(prev => {
+    setSelectedTechnologies((prev: string[]) => {
       if (prev.includes(technology)) {
-        return prev.filter(t => t !== technology);
+        return prev.filter((t: string) => t !== technology);
       } else {
         return [...prev, technology];
       }
@@ -138,7 +140,7 @@ export default function TechnologySelector({ onTechnologySelect }: TechnologySel
 
   const handleCustomTechnologyAdd = () => {
     if (customTechnology.trim() && !selectedTechnologies.includes(customTechnology.trim())) {
-      setSelectedTechnologies(prev => [...prev, customTechnology.trim()]);
+      setSelectedTechnologies((prev: string[]) => [...prev, customTechnology.trim()]);
       setCustomTechnology('');
     }
   };
@@ -154,7 +156,7 @@ export default function TechnologySelector({ onTechnologySelect }: TechnologySel
           <div className="w-full">
             <h3 className="text-lg font-medium text-white mb-3">Selected Technologies</h3>
             <div className="flex flex-wrap gap-2">
-              {selectedTechnologies.map(tech => (
+              {selectedTechnologies.map((tech: string) => (
                 <motion.span
                   key={tech}
                   initial={{ scale: 0.8, opacity: 0 }}
@@ -175,10 +177,10 @@ export default function TechnologySelector({ onTechnologySelect }: TechnologySel
         <input
           type="text"
           value={customTechnology}
-          onChange={(e) => setCustomTechnology(e.target.value)}
+          onChange={(e: { target: { value: string } }) => setCustomTechnology(e.target.value)}
           placeholder="Add custom technology..."
           className="flex-1 px-4 py-2 bg-black/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-500"
-          onKeyPress={(e) => {
+          onKeyPress={(e: { key: string; preventDefault: () => void }) => {
             if (e.key === 'Enter') {
               e.preventDefault();
               handleCustomTechnologyAdd();
@@ -204,7 +206,7 @@ export default function TechnologySelector({ onTechnologySelect }: TechnologySel
           >
             <h3 className="text-lg font-medium text-white">{category.name}</h3>
             <div className="flex flex-wrap gap-2">
-              {category.technologies.map(tech => (
+              {category.technologies.map((tech: string) => (
                 <button
                   key={tech}
                   onClick={() => handleTechnologyToggle(tech)}
