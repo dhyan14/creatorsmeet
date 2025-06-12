@@ -178,7 +178,7 @@ export default function PerformancePage() {
         <div className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
           <h3 className="text-xl font-semibold mb-6">Team Metrics</h3>
           <div className="space-y-6">
-            {Object.entries(performance.teamMetrics).map(([key, value]) => (
+            {(Object.entries(performance.teamMetrics) as Array<[keyof Performance['teamMetrics'], number]>).map(([key, value]) => (
               <div key={key}>
                 <div className="flex justify-between mb-2">
                   <span className="text-sm font-medium text-gray-400">
