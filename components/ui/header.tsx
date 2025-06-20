@@ -6,6 +6,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { AnimatedButton } from "./animated-button";
 import { AuthPopup } from "./auth-popup";
+import { useRouter } from "next/navigation";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -18,6 +19,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { scrollY } = useScroll();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -139,13 +141,19 @@ export function Header() {
                   ))}
                 </nav>
 
-                {/* Right Section - Login/Sign Up Combined */}
-                <div className="flex items-center relative">
+                {/* Right Section - Separate Login and Sign Up buttons */}
+                <div className="flex items-center space-x-4 relative">
                   <AnimatedButton
-                    onClick={handleAuthClick}
-                    className="transition-all duration-300"
+                    onClick={() => router.push('/signin')}
+                    className="transition-all duration-300 bg-transparent border-2 border-purple-600/50 hover:border-purple-600 px-6"
                   >
-                    Login / Sign Up
+                    Sign In
+                  </AnimatedButton>
+                  <AnimatedButton
+                    onClick={() => router.push('/signup-select')}
+                    className="transition-all duration-300 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6"
+                  >
+                    Sign Up
                   </AnimatedButton>
                 </div>
               </div>
