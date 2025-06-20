@@ -82,16 +82,18 @@ export default function Home() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-8 rounded-full text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/25"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-8 rounded-full text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/25 font-semibold"
+                    onClick={() => window.location.href = '/signin'}
                   >
-                    Start Creating
+                    Log In
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="border-2 border-purple-600/50 hover:border-purple-600 text-white py-4 px-8 rounded-full text-lg transition-all"
+                    className="border-2 border-pink-600/50 hover:border-pink-600 text-white py-4 px-8 rounded-full text-lg transition-all font-semibold"
+                    onClick={() => window.location.href = '/signup-select'}
                   >
-                    Explore Projects
+                    Sign Up
                   </motion.button>
                 </div>
               </motion.div>
