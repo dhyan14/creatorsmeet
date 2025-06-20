@@ -145,13 +145,13 @@ export function Header() {
                 <div className="flex items-center space-x-4 relative">
                   <AnimatedButton
                     onClick={() => router.push('/signin')}
-                    className="transition-all duration-300 bg-transparent border-2 border-purple-600/50 hover:border-purple-600 px-6"
+                    className="transition-all duration-300 bg-transparent border-2 border-purple-600/50 hover:border-purple-600 px-6 py-2 rounded-full text-sm"
                   >
                     Sign In
                   </AnimatedButton>
                   <AnimatedButton
                     onClick={() => router.push('/signup-select')}
-                    className="transition-all duration-300 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6"
+                    className="transition-all duration-300 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6 py-2 rounded-full text-sm"
                   >
                     Sign Up
                   </AnimatedButton>
