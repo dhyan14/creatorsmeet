@@ -79,20 +79,16 @@ export default function CreatorsSidebar() {
           <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <SidebarLink
-                    key={item.name}
-                    link={{
-                      label: item.name,
-                      href: item.href,
-                      icon: item.icon,
-                    }}
-                    active={isActive}
-                  />
-                );
-              })}
+              {navigation.map((item) => (
+                <SidebarLink
+                  key={item.name}
+                  link={{
+                    label: item.name,
+                    href: item.href,
+                    icon: item.icon,
+                  }}
+                />
+              ))}
             </div>
           </div>
         </SidebarBody>
@@ -103,7 +99,7 @@ export default function CreatorsSidebar() {
 
 export const Logo = () => {
   return (
-    <a
+    <Link
       href="/"
       className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
     >
@@ -115,17 +111,17 @@ export const Logo = () => {
       >
         CreatorsMeet
       </motion.span>
-    </a>
+    </Link>
   );
 };
 
 export const LogoIcon = () => {
   return (
-    <a
+    <Link
       href="/"
       className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
     >
       <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-purple-500" />
-    </a>
+    </Link>
   );
 }; 
