@@ -29,6 +29,8 @@ interface UserProfile {
   };
 }
 
+type UpdateableProfileFields = Pick<UserProfile, 'name' | 'bio' | 'skills' | 'country' | 'github' | 'linkedin'>;
+
 export async function GET() {
   console.log('GET /api/user/me - Start');
   
@@ -134,7 +136,7 @@ export async function PUT(request: Request) {
     const updates = await request.json();
 
     // 5. Validate updates
-    const allowedUpdates = [
+    const allowedUpdates: (keyof UpdateableProfileFields)[] = [
       'name',
       'bio',
       'skills',
@@ -143,12 +145,13 @@ export async function PUT(request: Request) {
       'linkedin'
     ];
 
-    const updateData = Object.keys(updates)
-      .filter(key => allowedUpdates.includes(key))
-      .reduce((obj, key) => {
+    // Type-safe way to build update object
+    const updateData = allowedUpdates.reduce<Partial<UpdateableProfileFields>>((obj, key) => {
+      if (key in updates) {
         obj[key] = updates[key];
-        return obj;
-      }, {} as Partial<UserProfile>);
+      }
+      return obj;
+    }, {});
 
     // 6. Update user
     const updatedUser = await User.findByIdAndUpdate(
