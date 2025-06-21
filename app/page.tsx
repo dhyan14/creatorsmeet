@@ -8,6 +8,8 @@ import { HowItWorks } from '@/components/sections/how-it-works'
 import DevelopersSection from '@/components/sections/developers'
 import { ContactSection } from '@/components/sections/contact'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
 
 // @ts-ignore -- Ignoring type errors since types will be handled by Vercel build
 export default function Home() {
@@ -91,13 +93,15 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-8 rounded-full text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/25"
-                  >
-                    Start Creating
-                  </motion.button>
+                  <Link href="/signup-select">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-8 rounded-full text-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/25"
+                    >
+                      Start Creating
+                    </motion.button>
+                  </Link>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
