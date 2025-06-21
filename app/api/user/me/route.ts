@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { verify } from 'jsonwebtoken';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
+import mongoose from 'mongoose';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
@@ -76,6 +77,10 @@ export async function GET() {
     }
 
     // 5. Return user data with default values for missing fields
+    // Get timestamp from ObjectId
+    const objectId = new mongoose.Types.ObjectId(user._id);
+    const timestamp = objectId.getTimestamp();
+
     const profileData = {
       ...user,
       bio: user.bio || '',
@@ -84,7 +89,7 @@ export async function GET() {
       github: user.github || '',
       linkedin: user.linkedin || '',
       profileImage: user.profileImage || '/default-avatar.png',
-      joinedAt: user.joinedAt || user._id.getTimestamp()
+      joinedAt: user.joinedAt || timestamp
     };
 
     return NextResponse.json(profileData);
