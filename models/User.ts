@@ -92,60 +92,56 @@ const aiMentorSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Please provide a name'],
+    trim: true,
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Please provide an email'],
     unique: true,
+    trim: true,
+    lowercase: true,
   },
   password: {
     type: String,
-    required: true,
-  },
-  country: {
-    type: String,
-    required: true,
+    required: [true, 'Please provide a password'],
   },
   role: {
     type: String,
-    enum: ['innovator', 'coder'],
-    required: true,
+    enum: ['innovator', 'coder', 'mentor', 'company'],
+    required: [true, 'Please specify your role'],
   },
-  // Fields for coders
-  developerStack: {
-    type: {
-      name: String,
-      technologies: [String],
-    },
-    required: function(this: any) {
-      return this.role === 'coder';
-    },
+  bio: {
+    type: String,
+    default: '',
   },
-  // Fields for innovators
+  skills: {
+    type: [String],
+    default: [],
+  },
+  country: {
+    type: String,
+    default: '',
+  },
+  github: {
+    type: String,
+    default: '',
+  },
+  linkedin: {
+    type: String,
+    default: '',
+  },
+  profileImage: {
+    type: String,
+    default: '/default-avatar.png',
+  },
   projectRequirements: {
-    type: {
-      description: String,
-      technologies: [String],
-      complexity: {
-        type: String,
-        enum: ['Simple', 'Moderate', 'Complex', 'Very Complex'],
-      },
-      expertise: {
-        type: String,
-        enum: [
-          'Technical Architecture',
-          'Product Development',
-          'AI/ML Development',
-          'Mobile Development',
-          'Web Development',
-        ],
-      },
-      preferredStack: String,
-    },
-    required: function(this: any) {
-      return this.role === 'innovator';
-    },
+    description: String,
+    technologies: [String],
+    complexity: String,
+    expertise: String,
+    preferredStack: String,
+    lastAnalyzed: Date,
   },
   matchedWith: {
     type: mongoose.Schema.Types.ObjectId,
@@ -166,7 +162,27 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project'
   },
+}, {
+  timestamps: true,
 });
+
+// Add virtual field for joinedAt
+userSchema.virtual('joinedAt').get(function() {
+  return this._id.getTimestamp();
+});
+
+// Ensure virtuals are included in JSON
+userSchema.set('toJSON', {
+  virtuals: true,
+  transform: function(doc, ret) {
+    delete ret.password;
+    delete ret.__v;
+    return ret;
+  }
+});
+
+// Ensure virtuals are included when using lean()
+userSchema.set('toObject', { virtuals: true });
 
 // Add indexes for better query performance
 userSchema.index({ role: 1 });

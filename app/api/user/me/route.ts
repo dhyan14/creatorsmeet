@@ -6,22 +6,26 @@ import User from '@/models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
-interface ProjectRequirements {
-  description: string;
-  technologies: string[];
-  complexity: string;
-  expertise: string;
-  preferredStack?: string;
-  lastAnalyzed?: Date;
-}
-
-interface UserDocument {
+interface UserProfile {
   _id: string;
   name: string;
   email: string;
-  role: 'innovator' | 'coder';
-  projectRequirements?: ProjectRequirements;
-  matchedWith?: UserDocument;
+  role: string;
+  bio: string;
+  skills: string[];
+  country: string;
+  github: string;
+  linkedin: string;
+  profileImage: string;
+  joinedAt: Date;
+  projectRequirements?: {
+    description: string;
+    technologies: string[];
+    complexity: string;
+    expertise: string;
+    preferredStack?: string;
+    lastAnalyzed?: Date;
+  };
 }
 
 export async function GET() {
@@ -43,7 +47,7 @@ export async function GET() {
     // 2. Verify token
     let userId: string;
     try {
-    const decoded = verify(token.value, JWT_SECRET) as { userId: string };
+      const decoded = verify(token.value, JWT_SECRET) as { userId: string };
       userId = decoded.userId;
       console.log('Token verified for user:', userId);
     } catch (error) {
@@ -61,8 +65,7 @@ export async function GET() {
     // 4. Fetch user data
     const user = await User.findById(userId)
       .select('-password')
-      .populate('matchedWith', '-password')
-      .lean() as UserDocument | null;
+      .lean() as UserProfile | null;
 
     if (!user) {
       console.log('User not found:', userId);
@@ -72,75 +75,93 @@ export async function GET() {
       );
     }
 
-    // 5. Check if project requirements need analysis
-    if (
-      user.role === 'innovator' && 
-      user.projectRequirements?.description && 
-      (!user.projectRequirements.technologies || user.projectRequirements.technologies.length === 0)
-    ) {
-      console.log('Project requirements need analysis');
-      
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
-          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-          : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-        
-        const analysisResponse = await fetch(`${baseUrl}/api/project/analyze`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cookie': `token=${token.value}`
-          },
-          body: JSON.stringify({ 
-            projectIdea: user.projectRequirements.description 
-          })
-        });
+    // 5. Return user data with default values for missing fields
+    const profileData = {
+      ...user,
+      bio: user.bio || '',
+      skills: user.skills || [],
+      country: user.country || '',
+      github: user.github || '',
+      linkedin: user.linkedin || '',
+      profileImage: user.profileImage || '/default-avatar.png',
+      joinedAt: user.joinedAt || user._id.getTimestamp()
+    };
 
-        if (!analysisResponse.ok) {
-          throw new Error(`Analysis failed with status ${analysisResponse.status}`);
-        }
-
-        const analysis = await analysisResponse.json();
-        console.log('Project analysis completed:', analysis);
-
-        // Update user with analysis results
-        const updatedUser = await User.findByIdAndUpdate(
-          userId,
-          {
-            $set: {
-              'projectRequirements.technologies': analysis.technologies.map((tech: any) => 
-                typeof tech === 'string' ? tech : tech.name
-              ),
-              'projectRequirements.complexity': analysis.complexity,
-              'projectRequirements.expertise': analysis.expertise,
-              'projectRequirements.lastAnalyzed': new Date()
-            }
-          },
-          { new: true, select: '-password' }
-        ).populate('matchedWith', '-password')
-        .lean() as UserDocument | null;
-
-        if (updatedUser) {
-          console.log('User updated with analysis results');
-        return NextResponse.json(updatedUser);
-        }
-      } catch (error) {
-        console.error('Project analysis failed:', error);
-        // Continue with original user data if analysis fails
-      }
-    }
-
-    // 6. Return user data
-    console.log('Returning user data:', {
-      id: user._id,
-      role: user.role,
-      hasProjectRequirements: !!user.projectRequirements,
-      technologies: user.projectRequirements?.technologies?.length || 0
-    });
-
-    return NextResponse.json(user);
+    return NextResponse.json(profileData);
   } catch (error) {
     console.error('Error in /api/user/me:', error);
+    return NextResponse.json(
+      { message: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    // 1. Get and validate token
+    const cookieStore = cookies();
+    const token = cookieStore.get('token');
+
+    if (!token?.value) {
+      return NextResponse.json(
+        { message: 'Unauthorized - No token provided' },
+        { status: 401 }
+      );
+    }
+
+    // 2. Verify token
+    let userId: string;
+    try {
+      const decoded = verify(token.value, JWT_SECRET) as { userId: string };
+      userId = decoded.userId;
+    } catch (error) {
+      return NextResponse.json(
+        { message: 'Unauthorized - Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    // 3. Connect to database
+    await dbConnect();
+
+    // 4. Get request body
+    const updates = await request.json();
+
+    // 5. Validate updates
+    const allowedUpdates = [
+      'name',
+      'bio',
+      'skills',
+      'country',
+      'github',
+      'linkedin'
+    ];
+
+    const updateData = Object.keys(updates)
+      .filter(key => allowedUpdates.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = updates[key];
+        return obj;
+      }, {} as Partial<UserProfile>);
+
+    // 6. Update user
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true, select: '-password' }
+    ).lean();
+
+    if (!updatedUser) {
+      return NextResponse.json(
+        { message: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    console.error('Error updating user:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
