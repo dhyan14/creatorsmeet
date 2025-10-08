@@ -103,23 +103,40 @@ export default function CreatorSignup() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white py-12 px-4">
+    <div className="min-h-screen bg-black text-white py-12 px-4 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
       <div className="max-w-md mx-auto">
         {/* Logo and Title */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block">
-            <Image
-              src="/logo.png"
-              alt="CreatorsMeet Logo"
-              width={60}
-              height={60}
-              className="rounded-xl mb-4"
-            />
+          <Link href="/signup-select" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6 group">
+            <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back
           </Link>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+          <Link href="/" className="inline-block">
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Image
+                src="/logo.png"
+                alt="CreatorsMeet Logo"
+                width={70}
+                height={70}
+                className="rounded-xl mb-4 mx-auto"
+              />
+            </motion.div>
+          </Link>
+          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 animate-gradient mb-3">
             Join as a Creator
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="text-gray-400">
             Start your journey of innovation with us
           </p>
         </div>
@@ -128,7 +145,7 @@ export default function CreatorSignup() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-black/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl"
+          className="glass-effect bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl"
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             {formStep === 1 ? (
@@ -291,12 +308,28 @@ export default function CreatorSignup() {
               </>
             )}
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black transition-all duration-200"
+              className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all shadow-lg hover:shadow-purple-500/50 flex items-center justify-center gap-2"
             >
-              {formStep === 1 ? 'Continue' : 'Create Account'}
-            </button>
+              {formStep === 1 ? (
+                <>
+                  Continue
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  Create Account
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </>
+              )}
+            </motion.button>
           </form>
 
           {formStep === 1 && (
@@ -310,32 +343,42 @@ export default function CreatorSignup() {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <button className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg font-medium text-white flex items-center justify-center space-x-2 transition-all duration-200">
+              <div className="grid grid-cols-2 gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  className="py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg font-medium text-white flex items-center justify-center space-x-2 transition-all"
+                >
                   <Image
                     src="/google-icon.svg"
                     alt="Google"
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                   />
-                  <span>Continue with Google</span>
-                </button>
-                <button className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg font-medium text-white flex items-center justify-center space-x-2 transition-all duration-200">
+                  <span>Google</span>
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  className="py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg font-medium text-white flex items-center justify-center space-x-2 transition-all"
+                >
                   <Image
                     src="/github-icon.svg"
                     alt="GitHub"
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                   />
-                  <span>Continue with GitHub</span>
-                </button>
+                  <span>GitHub</span>
+                </motion.button>
               </div>
 
-              <p className="mt-6 text-center text-gray-400">
+              <p className="mt-6 text-center text-gray-400 text-sm">
                 Already have an account?{' '}
                 <Link
-                  href="/signin/creators"
-                  className="text-purple-400 hover:text-purple-300 font-medium"
+                  href="/signin"
+                  className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
                 >
                   Sign in
                 </Link>

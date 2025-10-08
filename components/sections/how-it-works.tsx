@@ -116,35 +116,6 @@ export function HowItWorks() {
           ))}
         </div>
 
-        {/* Video/Image Showcase */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative max-w-5xl mx-auto"
-        >
-          <div className="relative rounded-3xl overflow-hidden border-2 border-purple-500/20 shadow-2xl shadow-purple-500/20">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10" />
-            <img
-              src="/HOW-IT-WORKS.png"
-              alt="Collaborative Development Process"
-              className="w-full h-auto"
-            />
-            {/* Play Button Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md border-2 border-white/30 flex items-center justify-center group hover:bg-white/20 transition-all"
-              >
-                <svg className="w-10 h-10 text-white ml-1 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
 
         {/* CTA */}
         <motion.div
