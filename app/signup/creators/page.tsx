@@ -145,8 +145,13 @@ export default function CreatorSignup() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-effect bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl"
+          className="relative"
         >
+          {/* Glow Effect */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity" />
+          
+          <div className="relative glass-effect bg-black/60 backdrop-blur-2xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+        
           <form onSubmit={handleSubmit} className="space-y-4">
             {formStep === 1 ? (
               <>
@@ -417,6 +422,7 @@ export default function CreatorSignup() {
               </p>
             </>
           )}
+          </div>
         </motion.div>
       </div>
     </div>

@@ -196,7 +196,7 @@ export default function SignupPage() {
           {/* Glow Effect */}
           <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity" />
           
-          <div className="relative glass-effect bg-black/40 backdrop-blur-2xl p-8 md:p-10 rounded-3xl border border-white/20 shadow-2xl">
+          <div className="relative glass-effect bg-black/60 backdrop-blur-2xl p-8 md:p-10 rounded-3xl border border-white/20 shadow-2xl">
             {/* Logo and Title */}
             <div className="text-center mb-8">
               <Link href="/" className="inline-block">
