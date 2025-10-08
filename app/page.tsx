@@ -68,22 +68,6 @@ export default function Home() {
               style={{ y, opacity }}
               className="container mx-auto px-4 mt-16 md:mt-0 max-w-[1400px]"
             >
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-8"
-              >
-                <span className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium backdrop-blur-sm">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-                  </span>
-                  AI-Powered Collaboration Platform
-                </span>
-              </motion.div>
-
               {/* Main Heading */}
               <div className="flex flex-col items-center justify-center mb-8 md:mb-12">
                 <motion.div
@@ -207,7 +191,6 @@ export default function Home() {
               }}
               className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
             >
-              <span className="text-sm text-gray-400">Scroll to explore</span>
               <div className="w-6 h-10 rounded-full border-2 border-purple-500/50 flex items-start justify-center p-2">
                 <motion.div
                   animate={{ y: [0, 12, 0] }}

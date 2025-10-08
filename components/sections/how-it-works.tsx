@@ -7,91 +7,161 @@ export function HowItWorks() {
     {
       title: "Create Your Profile",
       description: "Sign up and tell us about your skills or project ideas. Our AI-powered matching system starts working for you immediately.",
-      icon: "🎯"
+      icon: "🎯",
+      gradient: "from-purple-500 to-pink-500"
+    },
+    {
+      title: "Get AI-Matched",
+      description: "Our intelligent algorithm analyzes your profile and connects you with the perfect collaborators based on skills, interests, and goals.",
+      icon: "🤖",
+      gradient: "from-blue-500 to-cyan-500"
     },
     {
       title: "Connect & Collaborate",
-      description: "Browse matched profiles, connect with potential collaborators, and discuss your vision in our real-time chat environment.",
-      icon: "🤝"
+      description: "Start conversations, share ideas, and plan your project with integrated chat, video calls, and collaboration tools.",
+      icon: "🤝",
+      gradient: "from-green-500 to-emerald-500"
     },
     {
       title: "Build Together",
-      description: "Use our integrated project management tools to track progress, share files, and bring your ideas to life.",
-      icon: "🚀"
+      description: "Use our project management dashboard to track progress, manage tasks, share files, and bring your vision to life.",
+      icon: "🚀",
+      gradient: "from-orange-500 to-red-500"
     },
     {
-      title: "Launch & Grow",
-      description: "Deploy your project and continue to grow with our supportive community of innovators.",
-      icon: "✨"
+      title: "Launch & Succeed",
+      description: "Deploy your project with confidence and continue growing with our supportive community and ongoing resources.",
+      icon: "✨",
+      gradient: "from-purple-500 to-pink-500"
     },
   ];
 
   return (
-    <section id="how-it-works" className="py-20 relative">
-      <div className="container mx-auto px-4 max-w-[1200px]">
+    <section id="how-it-works" className="py-24 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
+      <div className="container mx-auto px-4 max-w-[1400px]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-3xl mx-auto mb-20"
         >
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">
-            How It Works
+          <motion.div
+            initial={{ scale: 0.9 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-block mb-4"
+          >
+            <span className="px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium">
+              🔄 Simple Process
+            </span>
+          </motion.div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
+            How{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400 animate-gradient">
+              It Works
+            </span>
           </h2>
-          <p className="text-gray-300 text-base md:text-lg">
-            Our streamlined process makes it easy to turn your ideas into reality. 
-            Follow these simple steps to start your innovation journey.
+          <p className="text-gray-400 text-lg md:text-xl leading-relaxed">
+            From idea to launch in 5 simple steps. Our streamlined process makes collaboration effortless and effective.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Left Side - Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative w-full"
-          >
-            <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden flex items-center justify-center bg-black/20">
-              <img
-                src="/HOW-IT-WORKS.png"
-                alt="Collaborative Development Process"
-                className="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl"
-              />
-            </div>
-          </motion.div>
-
-          {/* Right Side - Steps */}
-          <div className="grid grid-cols-1 gap-4">
-            {steps.map((step, index) => (
-              <motion.div
-                key={step.title}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-black/40 backdrop-blur-sm p-5 rounded-xl border border-white/5 relative overflow-hidden group hover:border-purple-500/20 transition-colors"
-              >
-                {/* Step number */}
-                <div className="absolute -right-4 -top-4 w-14 h-14 bg-gradient-to-br from-purple-500/5 to-pink-500/5 rounded-full flex items-center justify-center text-3xl transform rotate-12 group-hover:scale-110 transition-transform duration-300">
+        {/* Steps Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-16">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ y: -10, scale: 1.05 }}
+              className="relative group"
+            >
+              <div className="glass-effect bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 h-full">
+                {/* Step Number */}
+                <div className="absolute -top-3 -left-3 w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center font-bold text-white shadow-lg">
+                  {index + 1}
+                </div>
+                
+                {/* Icon with Gradient Background */}
+                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${step.gradient} flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   {step.icon}
                 </div>
-                <div className="pr-10">
-                  <h3 className="text-lg font-semibold mb-2 text-white/90">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-gray-400">{step.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                
+                <h3 className="text-xl font-bold mb-3 text-white group-hover:text-purple-400 transition-colors">
+                  {step.title}
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  {step.description}
+                </p>
+
+                {/* Arrow Connector (hidden on last item and mobile) */}
+                {index < steps.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10">
+                    <svg className="w-6 h-6 text-purple-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Background Elements */}
-        <div className="absolute top-1/2 left-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-0 right-0 w-64 h-64 bg-pink-500/5 rounded-full blur-3xl -z-10" />
+        {/* Video/Image Showcase */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative max-w-5xl mx-auto"
+        >
+          <div className="relative rounded-3xl overflow-hidden border-2 border-purple-500/20 shadow-2xl shadow-purple-500/20">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10" />
+            <img
+              src="/HOW-IT-WORKS.png"
+              alt="Collaborative Development Process"
+              className="w-full h-auto"
+            />
+            {/* Play Button Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md border-2 border-white/30 flex items-center justify-center group hover:bg-white/20 transition-all"
+              >
+                <svg className="w-10 h-10 text-white ml-1 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="text-center mt-16"
+        >
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-full font-semibold text-lg transition-all shadow-lg hover:shadow-purple-500/50"
+          >
+            Start Your Journey Today →
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   );
