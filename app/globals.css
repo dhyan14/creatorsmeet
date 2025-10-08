@@ -45,4 +45,18 @@
   .glass-effect {
     @apply bg-black bg-opacity-50 backdrop-blur-lg;
   }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 } 
