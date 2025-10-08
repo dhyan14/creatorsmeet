@@ -319,15 +319,16 @@ export default function SigninPage() {
             </div>
           </form>
 
-          <div className="mt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              Don't have an account?{' '}
-              <Link href="/signup-select" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors">
-                Sign up now
-              </Link>
-            </p>
+            <div className="mt-8 text-center">
+              <p className="text-gray-400 text-sm">
+                Don't have an account?{' '}
+                <Link href="/signup-select" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors">
+                  Sign up now
+                </Link>
+              </p>
+            </div>
           </div>
-        </div>
+        </motion.div>
 
         <p className="text-center text-gray-500 text-xs mt-6">
           Protected by industry-standard encryption

@@ -513,7 +513,8 @@ export default function SignupPage() {
               </motion.button>
             </form>
           )}
-        </div>
+          </div>
+        </motion.div>
 
         <p className="text-center text-gray-500 text-xs mt-6">
           By signing up, you agree to our Terms of Service and Privacy Policy
