@@ -22,6 +22,9 @@ export default function Home() {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   useEffect(() => {
+    // Only add mouse tracking on desktop devices
+    if (window.innerWidth < 768) return;
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
         x: (e.clientX / window.innerWidth - 0.5) * 20,
@@ -54,14 +57,14 @@ export default function Home() {
                 x: mousePosition.x,
                 y: mousePosition.y,
               }}
-              className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"
+              className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-purple-500/20 rounded-full blur-3xl pointer-events-none hidden sm:block"
             />
             <motion.div
               style={{
                 x: -mousePosition.x,
                 y: -mousePosition.y,
               }}
-              className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-pink-500/20 rounded-full blur-3xl pointer-events-none"
+              className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-pink-500/20 rounded-full blur-3xl pointer-events-none hidden sm:block"
             />
 
             <motion.div 
@@ -371,31 +374,31 @@ export default function Home() {
           <ContactSection />
 
           {/* CTA Section */}
-          <section className="relative py-24 overflow-hidden">
+          <section className="relative py-16 sm:py-24 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10" />
-            <div className="container mx-auto px-4 max-w-[1200px] relative">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1200px] relative">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="glass-effect bg-gradient-to-r from-purple-900/30 to-pink-900/30 backdrop-blur-xl rounded-3xl p-12 md:p-16 border border-purple-500/20 text-center"
+                className="glass-effect bg-gradient-to-r from-purple-900/30 to-pink-900/30 backdrop-blur-xl rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 border border-purple-500/20 text-center"
               >
-                <h2 className="text-3xl md:text-5xl font-bold mb-6">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 sm:mb-6 px-4">
                   Ready to Turn Your{" "}
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
                     Ideas Into Reality?
                   </span>
                 </h2>
-                <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                <p className="text-gray-300 text-base sm:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
                   Join thousands of innovators and developers who are already building the future together.
                 </p>
-                <div className="flex flex-wrap gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
                   <Link href="/signup-select">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="bg-white text-purple-600 py-4 px-10 rounded-full text-lg font-semibold hover:bg-gray-100 transition-all shadow-lg"
+                      className="bg-white text-purple-600 py-3 sm:py-4 px-6 sm:px-10 rounded-full text-base sm:text-lg font-semibold hover:bg-gray-100 transition-all shadow-lg w-full sm:w-auto"
                     >
                       Get Started Now
                     </motion.button>
@@ -404,7 +407,7 @@ export default function Home() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="border-2 border-white/30 hover:border-white/60 text-white py-4 px-10 rounded-full text-lg font-semibold transition-all backdrop-blur-sm"
+                      className="border-2 border-white/30 hover:border-white/60 text-white py-3 sm:py-4 px-6 sm:px-10 rounded-full text-base sm:text-lg font-semibold transition-all backdrop-blur-sm w-full sm:w-auto"
                     >
                       Sign In
                     </motion.button>
@@ -415,27 +418,27 @@ export default function Home() {
           </section>
 
           {/* Enhanced Footer */}
-          <footer className="relative py-16 border-t border-white/10">
-            <div className="container mx-auto px-4">
+          <footer className="relative py-12 sm:py-16 border-t border-white/10">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="max-w-6xl mx-auto">
-                <div className="grid md:grid-cols-4 gap-12 mb-12">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
                   {/* Logo & Description */}
-                  <div className="md:col-span-2">
+                  <div className="sm:col-span-2 lg:col-span-2">
                     <div className="flex items-center gap-3 mb-4">
                       <img
                         src="/logo.png"
                         alt="CreatorsMeet Logo"
-                        className="w-10 h-10"
+                        className="w-8 h-8 sm:w-10 sm:h-10"
                       />
-                      <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+                      <span className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
                         CreatorsMeet
                       </span>
                     </div>
-                    <p className="text-gray-400 mb-6 max-w-md">
+                    <p className="text-gray-400 mb-6 max-w-md text-sm sm:text-base">
                       Connecting innovators with developers to build groundbreaking projects. 
                       Your gateway to collaborative innovation.
                     </p>
-                    <div className="flex gap-4">
+                    <div className="flex gap-3 sm:gap-4">
                       {[
                         { icon: "M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z", label: "GitHub" },
                         { icon: "M8 3C9.1 3 10 3.9 10 5s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 2.5c.83 0 1.5-.67 1.5-1.5S8.83 2.5 8 2.5 6.5 3.17 6.5 4 7.17 5.5 8 5.5M8 8c-1.86 0-5.5 1.07-5.5 3.2V14h11v-2.8C13.5 9.07 9.86 8 8 8m0 2.14c1.08 0 2.35.41 3.14 1.04.71.57 1.36 1.25 1.36 2.42v.4H3.5v-.4c0-1.17.65-1.85 1.36-2.42.79-.63 2.06-1.04 3.14-1.04M15.83 8C17.14 8 20 9.07 20 11.2V14h-3v-2.8c0-1.1-.65-1.99-1.61-2.52-.19-.1-.38-.18-.56-.28m-.83-.87c-.55-.15-1.12-.23-1.67-.23", label: "LinkedIn" },
@@ -445,9 +448,9 @@ export default function Home() {
                           key={i}
                           whileHover={{ scale: 1.1, y: -2 }}
                           href="#"
-                          className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-purple-400 hover:border-purple-500/30 transition-all"
+                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-purple-400 hover:border-purple-500/30 transition-all"
                         >
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
                             <path d={social.icon} />
                           </svg>
                         </motion.a>
@@ -457,11 +460,11 @@ export default function Home() {
 
                   {/* Quick Links */}
                   <div>
-                    <h3 className="text-white font-semibold mb-4">Product</h3>
+                    <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Product</h3>
                     <ul className="space-y-2">
                       {['Features', 'Pricing', 'How it Works', 'FAQ'].map((item) => (
                         <li key={item}>
-                          <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                          <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-sm sm:text-base">
                             {item}
                           </a>
                         </li>
@@ -471,11 +474,11 @@ export default function Home() {
 
                   {/* Company */}
                   <div>
-                    <h3 className="text-white font-semibold mb-4">Company</h3>
+                    <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Company</h3>
                     <ul className="space-y-2">
                       {['About Us', 'Careers', 'Blog', 'Contact'].map((item) => (
                         <li key={item}>
-                          <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                          <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-sm sm:text-base">
                             {item}
                           </a>
                         </li>
@@ -485,11 +488,11 @@ export default function Home() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-                  <p className="text-gray-400 text-sm">
+                <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+                  <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">
                     © {new Date().getFullYear()} CreatorsMeet. All rights reserved.
                   </p>
-                  <div className="flex gap-6 text-sm">
+                  <div className="flex flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm justify-center sm:justify-end">
                     <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
                       Privacy Policy
                     </a>
