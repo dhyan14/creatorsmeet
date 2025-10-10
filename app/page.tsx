@@ -50,7 +50,7 @@ export default function Home() {
       <GridBackground>
         <main className="relative w-full">
           {/* Enhanced Hero Section */}
-          <section className="relative z-10 min-h-screen flex items-center justify-center py-12 sm:py-20 md:py-0">
+          <section className="relative z-10 min-h-screen flex items-center justify-center py-16 sm:py-20 md:py-0">
             {/* Animated Background Orbs */}
             <motion.div
               style={{
@@ -69,7 +69,7 @@ export default function Home() {
 
             <motion.div 
               style={{ y, opacity }}
-              className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-16 md:mt-0 max-w-[1400px]"
+              className="container mx-auto px-6 sm:px-6 lg:px-8 mt-12 sm:mt-16 md:mt-0 max-w-[1400px]"
             >
               {/* Main Heading */}
               <div className="flex flex-col items-center justify-center mb-8 md:mb-12">
@@ -79,7 +79,7 @@ export default function Home() {
                   transition={{ duration: 0.8, delay: 0.2 }}
                   className="text-center w-full"
                 >
-                  <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white pb-4 leading-tight max-w-[1000px] mx-auto px-4">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white pb-6 leading-tight max-w-[1000px] mx-auto px-2">
                     Transform{" "}
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-gradient">
                       Ideas
@@ -90,7 +90,7 @@ export default function Home() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.4 }}
-                    className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-gray-400 max-w-[700px] mx-auto leading-relaxed px-4"
+                    className="mt-6 sm:mt-8 text-lg sm:text-xl md:text-xl text-gray-300 max-w-[700px] mx-auto leading-relaxed px-2"
                   >
                     Connect with talented developers and innovators. Build groundbreaking projects with AI-powered matching and seamless collaboration tools.
                   </motion.p>
@@ -102,17 +102,17 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center mb-12 sm:mb-16 px-4"
+                className="flex flex-col sm:flex-row gap-6 justify-center mb-16 sm:mb-20 px-4"
               >
                 <Link href="/signup-select">
                   <motion.button
                     whileHover={{ scale: 1.05, boxShadow: "0 20px 60px -15px rgba(168, 85, 247, 0.4)" }}
                     whileTap={{ scale: 0.95 }}
-                    className="group relative bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 sm:py-4 px-6 sm:px-10 rounded-full text-base sm:text-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/50 overflow-hidden w-full sm:w-auto"
+                    className="group relative bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 sm:py-4 px-8 sm:px-10 rounded-full text-lg sm:text-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/50 overflow-hidden w-full sm:w-auto min-h-[56px] flex items-center justify-center"
                   >
-                    <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span className="relative z-10 flex items-center justify-center gap-3">
                       Get Started Free
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
                     </span>
@@ -122,18 +122,18 @@ export default function Home() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="border-2 border-purple-500/50 hover:border-purple-500 hover:bg-purple-500/10 text-white py-3 sm:py-4 px-6 sm:px-10 rounded-full text-base sm:text-lg font-semibold transition-all backdrop-blur-sm w-full sm:w-auto"
+                  className="border-2 border-purple-500/50 hover:border-purple-500 hover:bg-purple-500/10 text-white py-4 sm:py-4 px-8 sm:px-10 rounded-full text-lg sm:text-lg font-semibold transition-all backdrop-blur-sm w-full sm:w-auto min-h-[56px] flex items-center justify-center"
                 >
                   Watch Demo
                 </motion.button>
-              </motion.div>
+                  </motion.div>
 
               {/* Feature Pills */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="flex flex-wrap gap-3 sm:gap-4 justify-center items-center max-w-3xl mx-auto mb-12 sm:mb-16 px-4"
+                className="flex flex-wrap gap-4 sm:gap-4 justify-center items-center max-w-3xl mx-auto mb-16 sm:mb-20 px-4"
               >
                 {[
                   { icon: "🤖", text: "AI Matching" },
@@ -146,10 +146,10 @@ export default function Home() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.9 + index * 0.1 }}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs sm:text-sm text-gray-300 backdrop-blur-sm hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-3 px-4 sm:px-4 py-3 bg-white/5 border border-white/10 rounded-full text-sm sm:text-sm text-gray-300 backdrop-blur-sm hover:bg-white/10 transition-colors min-h-[48px]"
                   >
-                    <span className="text-base sm:text-lg">{feature.icon}</span>
-                    <span className="whitespace-nowrap">{feature.text}</span>
+                    <span className="text-lg sm:text-lg">{feature.icon}</span>
+                    <span className="whitespace-nowrap font-medium">{feature.text}</span>
                   </motion.div>
                 ))}
               </motion.div>
@@ -159,7 +159,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1 }}
-                className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto px-4"
+                className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-6 max-w-5xl mx-auto px-4"
               >
                 {[
                   { value: "10K+", label: "Active Users" },
@@ -173,12 +173,12 @@ export default function Home() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1.1 + index * 0.1 }}
                     whileHover={{ scale: 1.05 }}
-                    className="text-center p-3 sm:p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all"
+                    className="text-center p-6 sm:p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all min-h-[100px] flex flex-col justify-center"
                   >
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400 mb-1 sm:mb-2">
+                    <div className="text-3xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400 mb-2">
                       {stat.value}
-                    </div>
-                    <div className="text-xs sm:text-sm text-gray-400 font-medium">{stat.label}</div>
+                </div>
+                    <div className="text-sm sm:text-sm text-gray-400 font-medium">{stat.label}</div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -209,27 +209,27 @@ export default function Home() {
           </section>
 
           {/* Features Grid Section */}
-          <section className="relative py-16 sm:py-24 overflow-hidden">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1200px]">
+          <section className="relative py-20 sm:py-24 overflow-hidden">
+            <div className="container mx-auto px-6 sm:px-6 lg:px-8 max-w-[1200px]">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="text-center mb-12 sm:mb-16"
+                className="text-center mb-16 sm:mb-16"
               >
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 px-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 px-2">
                   Everything You Need to{" "}
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
                     Succeed
                   </span>
                 </h2>
-                <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto px-4">
+                <p className="text-gray-300 text-lg sm:text-lg max-w-2xl mx-auto px-2 leading-relaxed">
                   Powerful features designed to help you collaborate, innovate, and build amazing projects together.
                 </p>
               </motion.div>
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6">
                 {[
                   {
                     icon: "🎯",
@@ -269,15 +269,15 @@ export default function Home() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     whileHover={{ y: -5, scale: 1.02 }}
-                    className="group p-4 sm:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300"
+                    className="group p-6 sm:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300 min-h-[280px] flex flex-col"
                   >
-                    <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                    <div className="text-5xl sm:text-5xl mb-4 sm:mb-4 group-hover:scale-110 transition-transform">
                       {feature.icon}
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-white group-hover:text-purple-400 transition-colors">
+                    <h3 className="text-xl sm:text-xl font-bold mb-3 sm:mb-3 text-white group-hover:text-purple-400 transition-colors">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-400 leading-relaxed text-sm sm:text-base">
+                    <p className="text-gray-300 leading-relaxed text-base sm:text-base flex-grow">
                       {feature.description}
                     </p>
                   </motion.div>
@@ -291,29 +291,29 @@ export default function Home() {
           <DevelopersSection />
           
           {/* Testimonials Section */}
-          <section className="relative py-16 sm:py-24 overflow-hidden">
+          <section className="relative py-20 sm:py-24 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/5 to-transparent" />
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1200px] relative">
+            <div className="container mx-auto px-6 sm:px-6 lg:px-8 max-w-[1200px] relative">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="text-center mb-12 sm:mb-16"
+                className="text-center mb-16 sm:mb-16"
               >
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 px-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 px-2">
                   Loved by{" "}
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
                     Innovators
                   </span>
                   {" "}& Developers
                 </h2>
-                <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto px-4">
+                <p className="text-gray-300 text-lg sm:text-lg max-w-2xl mx-auto px-2 leading-relaxed">
                   Join thousands of creators who are already building their dreams on our platform.
                 </p>
               </motion.div>
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6">
                 {[
                   {
                     name: "Sarah Chen",
@@ -344,25 +344,25 @@ export default function Home() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     whileHover={{ y: -5 }}
-                    className="p-4 sm:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-purple-500/30 transition-all"
+                    className="p-6 sm:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-purple-500/30 transition-all min-h-[280px] flex flex-col"
                   >
-                    <div className="flex items-center gap-1 mb-3 sm:mb-4">
+                    <div className="flex items-center gap-1 mb-4 sm:mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <svg key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                        <svg key={i} className="w-5 h-5 sm:w-5 sm:h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
                           <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                         </svg>
                       ))}
                     </div>
-                    <p className="text-gray-300 mb-4 sm:mb-6 leading-relaxed italic text-sm sm:text-base">
+                    <p className="text-gray-300 mb-6 sm:mb-6 leading-relaxed italic text-base sm:text-base flex-grow">
                       "{testimonial.content}"
                     </p>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm sm:text-base">
+                    <div className="flex items-center gap-3 mt-auto">
+                      <div className="w-12 h-12 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-base sm:text-base">
                         {testimonial.image}
                       </div>
                       <div>
-                        <div className="font-semibold text-white text-sm sm:text-base">{testimonial.name}</div>
-                        <div className="text-xs sm:text-sm text-gray-400">{testimonial.role}</div>
+                        <div className="font-semibold text-white text-base sm:text-base">{testimonial.name}</div>
+                        <div className="text-sm sm:text-sm text-gray-400">{testimonial.role}</div>
                       </div>
                     </div>
                   </motion.div>
@@ -374,31 +374,31 @@ export default function Home() {
           <ContactSection />
 
           {/* CTA Section */}
-          <section className="relative py-16 sm:py-24 overflow-hidden">
+          <section className="relative py-20 sm:py-24 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10" />
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1200px] relative">
+            <div className="container mx-auto px-6 sm:px-6 lg:px-8 max-w-[1200px] relative">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="glass-effect bg-gradient-to-r from-purple-900/30 to-pink-900/30 backdrop-blur-xl rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 border border-purple-500/20 text-center"
+                className="glass-effect bg-gradient-to-r from-purple-900/30 to-pink-900/30 backdrop-blur-xl rounded-3xl p-8 sm:p-8 md:p-12 lg:p-16 border border-purple-500/20 text-center"
               >
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 sm:mb-6 px-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-6 px-2">
                   Ready to Turn Your{" "}
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
                     Ideas Into Reality?
                   </span>
                 </h2>
-                <p className="text-gray-300 text-base sm:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
+                <p className="text-gray-300 text-lg sm:text-lg mb-8 sm:mb-8 max-w-2xl mx-auto px-2 leading-relaxed">
                   Join thousands of innovators and developers who are already building the future together.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
+                <div className="flex flex-col sm:flex-row gap-6 justify-center px-2">
                   <Link href="/signup-select">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="bg-white text-purple-600 py-3 sm:py-4 px-6 sm:px-10 rounded-full text-base sm:text-lg font-semibold hover:bg-gray-100 transition-all shadow-lg w-full sm:w-auto"
+                      className="bg-white text-purple-600 py-4 sm:py-4 px-8 sm:px-10 rounded-full text-lg sm:text-lg font-semibold hover:bg-gray-100 transition-all shadow-lg w-full sm:w-auto min-h-[56px] flex items-center justify-center"
                     >
                       Get Started Now
                     </motion.button>
@@ -407,7 +407,7 @@ export default function Home() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="border-2 border-white/30 hover:border-white/60 text-white py-3 sm:py-4 px-6 sm:px-10 rounded-full text-base sm:text-lg font-semibold transition-all backdrop-blur-sm w-full sm:w-auto"
+                      className="border-2 border-white/30 hover:border-white/60 text-white py-4 sm:py-4 px-8 sm:px-10 rounded-full text-lg sm:text-lg font-semibold transition-all backdrop-blur-sm w-full sm:w-auto min-h-[56px] flex items-center justify-center"
                     >
                       Sign In
                     </motion.button>
@@ -425,9 +425,9 @@ export default function Home() {
                   {/* Logo & Description */}
                   <div className="sm:col-span-2 lg:col-span-2">
                     <div className="flex items-center gap-3 mb-4">
-                      <img
-                        src="/logo.png"
-                        alt="CreatorsMeet Logo"
+                  <img
+                    src="/logo.png"
+                    alt="CreatorsMeet Logo"
                         className="w-8 h-8 sm:w-10 sm:h-10"
                       />
                       <span className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
@@ -502,7 +502,7 @@ export default function Home() {
                     <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
                       Cookie Policy
                     </a>
-                  </div>
+                </div>
                 </div>
               </div>
             </div>
