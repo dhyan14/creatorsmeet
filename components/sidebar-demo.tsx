@@ -83,7 +83,7 @@ export default function CreatorsSidebar() {
                 <SidebarLink
                   key={item.name}
                   link={{
-                    label: open ? item.name : item.shortName,
+                    label: open ? item.name : "",
                     href: item.href,
                     icon: item.icon,
                   }}
