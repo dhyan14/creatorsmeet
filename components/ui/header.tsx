@@ -18,6 +18,7 @@ const menuItems = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const router = useRouter();
 
@@ -141,26 +142,142 @@ export function Header() {
                   ))}
                 </nav>
 
-                {/* Right Section - Separate Login and Sign Up buttons */}
+                {/* Right Section - Desktop buttons and Mobile hamburger */}
                 <div className="flex items-center space-x-4 relative">
-                  <AnimatedButton
-                    onClick={() => router.push('/signin')}
-                    className="transition-all duration-300 bg-transparent border-2 border-purple-600/50 hover:border-purple-600 px-6 py-2 rounded-full text-sm"
+                  {/* Desktop Sign In/Sign Up buttons */}
+                  <div className="hidden md:flex items-center space-x-4">
+                    <AnimatedButton
+                      onClick={() => router.push('/signin')}
+                      className="transition-all duration-300 bg-transparent border-2 border-purple-600/50 hover:border-purple-600 px-6 py-2 rounded-full text-sm"
+                    >
+                      Sign In
+                    </AnimatedButton>
+                    <AnimatedButton
+                      onClick={() => router.push('/signup-select')}
+                      className="transition-all duration-300 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6 py-2 rounded-full text-sm"
+                    >
+                      Sign Up
+                    </AnimatedButton>
+                  </div>
+
+                  {/* Mobile Hamburger Menu */}
+                  <motion.button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="md:hidden flex flex-col items-center justify-center w-8 h-8 space-y-1"
+                    whileTap={{ scale: 0.95 }}
                   >
-                    Sign In
-                  </AnimatedButton>
-                  <AnimatedButton
-                    onClick={() => router.push('/signup-select')}
-                    className="transition-all duration-300 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6 py-2 rounded-full text-sm"
-                  >
-                    Sign Up
-                  </AnimatedButton>
+                    <motion.span
+                      className="w-6 h-0.5 bg-white rounded-full"
+                      animate={{
+                        rotate: isMobileMenuOpen ? 45 : 0,
+                        y: isMobileMenuOpen ? 6 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+                    <motion.span
+                      className="w-6 h-0.5 bg-white rounded-full"
+                      animate={{
+                        opacity: isMobileMenuOpen ? 0 : 1,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+                    <motion.span
+                      className="w-6 h-0.5 bg-white rounded-full"
+                      animate={{
+                        rotate: isMobileMenuOpen ? -45 : 0,
+                        y: isMobileMenuOpen ? -6 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.button>
                 </div>
               </div>
             </div>
           </motion.div>
         </motion.div>
       </motion.header>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className="absolute right-0 top-0 h-full w-80 bg-black/90 backdrop-blur-xl border-l border-white/10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 pt-24">
+                {/* Mobile Navigation */}
+                <nav className="space-y-6 mb-8">
+                  {menuItems.map((item, index) => (
+                    <motion.div
+                      key={item.name}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        href={item.href}
+                        onClick={(e) => {
+                          handleNavClick(e, item.href);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="block text-white hover:text-purple-400 transition-colors text-lg font-medium"
+                      >
+                        {item.name}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </nav>
+
+                {/* Mobile Auth Buttons */}
+                <div className="space-y-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <AnimatedButton
+                      onClick={() => {
+                        router.push('/signin');
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full bg-transparent border-2 border-purple-600/50 hover:border-purple-600 px-6 py-3 rounded-full text-base font-medium"
+                    >
+                      Sign In
+                    </AnimatedButton>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <AnimatedButton
+                      onClick={() => {
+                        router.push('/signup-select');
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6 py-3 rounded-full text-base font-medium"
+                    >
+                      Sign Up
+                    </AnimatedButton>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Auth Popup for both Mobile and Desktop */}
       <AuthPopup 
