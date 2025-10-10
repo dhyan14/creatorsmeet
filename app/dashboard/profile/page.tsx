@@ -452,8 +452,6 @@ export default function ProfilePage() {
                 </motion.div>
               </div>
             </div>
-            </div>
-          </div>
 
             {/* Action Buttons */}
             {isEditing && (
