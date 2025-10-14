@@ -10,6 +10,7 @@ import {
   IconMessage,
   IconBriefcase,
   IconCode,
+  IconLogout,
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -21,7 +22,7 @@ export default function CreatorsSidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const handleLogout = async () => {
     try {
@@ -91,6 +92,28 @@ export default function CreatorsSidebar() {
               ))}
             </div>
           </div>
+          
+          {/* Logout Button */}
+          <div className="mt-auto">
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                "hover:bg-red-500/10 hover:text-red-400",
+                "text-gray-300",
+                open ? "justify-start" : "justify-center",
+                isLoggingOut && "opacity-50 cursor-not-allowed"
+              )}
+            >
+              <IconLogout className={cn("shrink-0", open ? "w-5 h-5" : "w-6 h-6")} />
+              {open && (
+                <span className="truncate">
+                  {isLoggingOut ? "Logging out..." : "Logout"}
+                </span>
+              )}
+            </button>
+          </div>
         </SidebarBody>
       </Sidebar>
     </div>
@@ -133,16 +156,16 @@ export const LogoIcon = () => {
       className="relative z-20 flex items-center justify-center py-2"
     >
       <div className="relative">
-        <div className="h-10 w-10 shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+        <div className="h-14 w-14 shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
           <Image
             src="/logo.png"
             alt="CreatorsMeet Logo"
-            width={32}
-            height={32}
+            width={40}
+            height={40}
             className="object-contain"
           />
         </div>
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900"></div>
+        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-900"></div>
       </div>
     </Link>
   );
