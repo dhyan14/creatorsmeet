@@ -50,7 +50,7 @@ export default function Home() {
       <GridBackground>
         <main className="relative w-full">
           {/* Enhanced Hero Section */}
-          <section className="relative z-10 min-h-screen flex items-center justify-center py-16 sm:py-20 md:py-0">
+          <section className="relative z-10 min-h-screen flex items-center justify-center pt-32 sm:pt-36 md:pt-40 pb-16 sm:pb-20 md:pb-0">
             {/* Animated Background Orbs */}
             <motion.div
               style={{
