@@ -127,16 +127,16 @@ export const Logo = () => {
       className="relative z-20 flex items-center space-x-3 py-2 text-sm font-normal"
     >
       <div className="relative">
-        <div className="h-10 w-10 shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+        <div className="h-14 w-14 shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
           <Image
             src="/logo.png"
             alt="CreatorsMeet Logo"
-            width={32}
-            height={32}
+            width={40}
+            height={40}
             className="object-contain"
           />
         </div>
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900"></div>
+        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-900"></div>
       </div>
       <motion.span
         initial={{ opacity: 0 }}
