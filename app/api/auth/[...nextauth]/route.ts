@@ -6,7 +6,7 @@ import dbConnect from '@/lib/db';
 import User from '@/models/User';
 
 const authOptions: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise),
+  // adapter: MongoDBAdapter(clientPromise), // Disabled temporarily - using JWT sessions
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -32,14 +32,14 @@ const authOptions: NextAuthOptions = {
         return true; // Still allow sign in even if error
       }
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       try {
-        // Attach user ID to session
-        if (session.user && user) {
-          session.user.id = user.id;
-          session.user.email = user.email || session.user.email;
-          session.user.name = user.name || session.user.name;
-          session.user.image = user.image || session.user.image;
+        // Attach user data from token to session
+        if (session.user && token) {
+          session.user.id = token.sub || token.id as string;
+          session.user.email = token.email as string || session.user.email;
+          session.user.name = token.name as string || session.user.name;
+          session.user.image = token.picture as string || session.user.image;
           
           // Try to fetch additional data from custom User model if available
           try {
@@ -67,7 +67,8 @@ const authOptions: NextAuthOptions = {
             }
           } catch (dbError) {
             console.error('Error syncing with custom User model:', dbError);
-            // Continue anyway - user is authenticated via OAuth adapter
+            // Continue anyway - user is authenticated via OAuth
+            session.user.role = 'innovator'; // Default role
           }
         }
         return session;
@@ -76,9 +77,13 @@ const authOptions: NextAuthOptions = {
         return session;
       }
     },
-    async jwt({ token, user, account }) {
-      if (user) {
+    async jwt({ token, user, account, profile }) {
+      // Initial sign in
+      if (account && user) {
         token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.picture = user.image;
       }
       return token;
     },
