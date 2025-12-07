@@ -32,4 +32,7 @@ export async function connectToDatabase() {
   const client = await clientPromise;
   const db = client.db();
   return { client, db };
-} 
+}
+
+// Export a module-scoped MongoClient promise for NextAuth
+export default clientPromise; 
