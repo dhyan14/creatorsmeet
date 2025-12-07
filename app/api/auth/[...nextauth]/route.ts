@@ -5,7 +5,7 @@ import clientPromise from '@/lib/mongodb';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     GoogleProvider({
