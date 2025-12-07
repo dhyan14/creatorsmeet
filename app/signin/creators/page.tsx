@@ -62,16 +62,19 @@ export default function CreatorSignin() {
 
   // Google OAuth sign in handler
   const handleGoogleSignIn = async () => {
+    console.log('🚀 Google button clicked!');
     try {
       setLoading(true);
       setError('');
       
+      console.log('📞 Calling signIn function...');
       await signIn('google', {
         callbackUrl: '/dashboard',
         redirect: true,
       });
+      console.log('✅ signIn called successfully');
     } catch (err) {
-      console.error('Google sign in error:', err);
+      console.error('❌ Google sign in error:', err);
       setError('Failed to sign in with Google');
       setLoading(false);
     }
