@@ -65,11 +65,11 @@ const authOptions: NextAuthOptions = {
           const fullUser = await User.findOne({ email: session.user.email }).lean();
           
           if (fullUser) {
-            session.user.role = fullUser.role;
-            session.user._id = fullUser._id.toString();
-            session.user.name = fullUser.name;
-            session.user.email = fullUser.email;
-            session.user.image = fullUser.profileImage;
+            session.user.role = (fullUser as any).role;
+            session.user._id = (fullUser as any)._id.toString();
+            session.user.name = (fullUser as any).name;
+            session.user.email = (fullUser as any).email;
+            session.user.image = (fullUser as any).profileImage;
           }
         }
         return session;
