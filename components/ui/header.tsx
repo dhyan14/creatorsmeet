@@ -10,9 +10,10 @@ import { useRouter } from "next/navigation";
 
 const menuItems = [
   { name: "Home", href: "/" },
-  { name: "How It Works", href: "#how-it-works" },
-  { name: "Developers", href: "#developers" },
-  { name: "Contact Us", href: "#contact" },
+  { name: "Tips", href: "/tips" },
+  { name: "How It Works", href: "/#how-it-works" },
+  { name: "Developers", href: "/#developers" },
+  { name: "Contact Us", href: "/#contact" },
 ];
 
 export function Header() {
@@ -72,26 +73,26 @@ export function Header() {
         animate={{ y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <motion.div 
+        <motion.div
           className="mx-auto px-4"
           initial={{ scale: 1, y: 0 }}
-          animate={{ 
+          animate={{
             scale: isScrolled ? 0.9 : 1,
             y: isScrolled ? 16 : 0
           }}
-          transition={{ 
+          transition={{
             duration: 0.4,
             ease: [0.23, 1, 0.32, 1]
           }}
         >
           <motion.div
-            initial={{ 
+            initial={{
               opacity: 0,
               backgroundColor: "rgba(0, 0, 0, 0.4)",
               borderColor: "rgba(255, 255, 255, 0)",
               boxShadow: "none"
             }}
-            animate={{ 
+            animate={{
               opacity: 1,
               backgroundColor: isScrolled ? "rgba(0, 0, 0, 0.7)" : "rgba(0, 0, 0, 0.4)",
               borderColor: isScrolled ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0)",
@@ -280,7 +281,7 @@ export function Header() {
       </AnimatePresence>
 
       {/* Auth Popup for both Mobile and Desktop */}
-      <AuthPopup 
+      <AuthPopup
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
       />
