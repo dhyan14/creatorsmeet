@@ -27,8 +27,9 @@ interface SidebarProps {
 export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: SidebarProps) {
     const menuItems = [
         { id: 'overview', label: 'Overview', icon: IconLayoutDashboard, color: 'purple' },
-        { id: 'projects', label: 'Projects', icon: IconRocket, color: 'blue' },
-        { id: 'tasks', label: 'Tasks', icon: IconChecklist, color: 'green' },
+        { id: 'profile', label: 'Profile', icon: IconUsers, color: 'blue' },
+        { id: 'projects', label: 'Projects', icon: IconRocket, color: 'cyan' },
+        { id: 'problems', label: 'Problems', icon: IconChecklist, color: 'green' },
         { id: 'calendar', label: 'Calendar', icon: IconCalendar, color: 'pink' },
         { id: 'meetings', label: 'Meetings', icon: IconVideo, color: 'orange' },
         { id: 'learning', label: 'Learning', icon: IconBook, color: 'indigo' },
@@ -36,7 +37,6 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
         { id: 'network', label: 'Network', icon: IconUsers, color: 'teal' },
         { id: 'team', label: 'Team', icon: IconUsersGroup, color: 'violet' },
         { id: 'analytics', label: 'Analytics', icon: IconChartBar, color: 'rose' },
-        { id: 'finance', label: 'Finance', icon: IconCurrencyDollar, color: 'emerald' },
     ];
 
     return (
@@ -75,8 +75,8 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                                 }
                             }}
                             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${activeTab === item.id
-                                    ? `bg-${item.color}-500/20 border border-${item.color}-500/30 text-${item.color}-400`
-                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                ? `bg-${item.color}-500/20 border border-${item.color}-500/30 text-${item.color}-400`
+                                : 'text-gray-400 hover:bg-white/5 hover:text-white'
                                 }`}
                         >
                             <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -91,26 +91,7 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                     ))}
                 </div>
 
-                {/* Quick Stats */}
-                <div className="p-4 mt-6 border-t border-white/10">
-                    <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-4">
-                        Quick Stats
-                    </h3>
-                    <div className="space-y-3 px-3">
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Active Projects</span>
-                            <span className="text-white font-semibold">8</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Tasks Due</span>
-                            <span className="text-orange-400 font-semibold">12</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Team Members</span>
-                            <span className="text-white font-semibold">15</span>
-                        </div>
-                    </div>
-                </div>
+
             </motion.div>
 
             {/* Overlay for mobile */}

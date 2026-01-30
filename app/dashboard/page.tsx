@@ -129,7 +129,7 @@ export default function Dashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'projects' | 'analytics' | 'network' | 'calendar' | 'finance' | 'team' | 'tasks' | 'meetings' | 'learning' | 'capture'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'projects' | 'problems' | 'analytics' | 'network' | 'calendar' | 'team' | 'meetings' | 'learning' | 'capture'>('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
