@@ -15,7 +15,7 @@ import {
   IconTarget,
   IconClock,
   IconChartBar,
-  IconLightbulb,
+  IconBulb,
   IconX,
   IconCheck,
   IconStar,
@@ -488,7 +488,7 @@ export default function Dashboard() {
                 <div className="space-y-4">
                   {[
                     {
-                      icon: IconLightbulb,
+                      icon: IconBulb,
                       title: 'Perfect Match Found',
                       description: 'Sarah Chen has 95% compatibility with your AI project',
                       action: 'View Profile',

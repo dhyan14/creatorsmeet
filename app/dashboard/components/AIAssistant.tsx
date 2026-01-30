@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { IconBrain, IconAlertTriangle, IconLightbulb, IconRocket } from '@tabler/icons-react';
+import { IconBrain, IconAlertTriangle, IconBulb, IconRocket } from '@tabler/icons-react';
 
 export default function AIAssistant() {
     const suggestions = [
@@ -15,7 +15,7 @@ export default function AIAssistant() {
         },
         {
             type: 'suggestion',
-            icon: IconLightbulb,
+            icon: IconBulb,
             title: 'Optimize Workflow',
             message: 'Consider splitting the authentication task into smaller subtasks',
             action: 'Apply Suggestion',
