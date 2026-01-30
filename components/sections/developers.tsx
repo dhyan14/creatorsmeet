@@ -34,6 +34,32 @@ const developers: Developer[] = [
       "Mentored junior developers in modern web technologies",
       "Implemented CI/CD pipelines for streamlined deployment"
     ]
+  },
+  {
+    name: "Chaitya Belani",
+    institution: "UCP Institute Of Technology, SVGU",
+    role: "Full Stack Developer & UI/UX Specialist",
+    bio: "Passionate developer focused on creating seamless user experiences and robust backend systems. Dedicated to writing clean, maintainable code and delivering high-quality solutions that make a difference.",
+    github: "https://github.com/chaityabelani",
+    email: "mailto:chaitya@example.com",
+    linkedin: "https://linkedin.com/in/chaityabelani",
+    twitter: "https://twitter.com/chaityabelani",
+    skills: [
+      "Full Stack Development",
+      "React/Next.js",
+      "UI/UX Design",
+      "TypeScript",
+      "Database Design",
+      "API Development",
+      "Responsive Design",
+      "Performance Optimization"
+    ],
+    achievements: [
+      "Co-developed CreatorsMeet platform with modern design principles",
+      "Implemented responsive and accessible user interfaces",
+      "Optimized application performance and user experience",
+      "Collaborated on building scalable backend architectures"
+    ]
   }
 ];
 
@@ -51,7 +77,7 @@ export default function DevelopersSection() {
   // Effect to toggle body scroll and hide header
   useEffect(() => {
     const header = document.querySelector('header');
-    
+
     if (selectedDeveloper) {
       document.body.style.overflow = 'hidden';
       if (header) (header as HTMLElement).style.display = 'none';
@@ -160,7 +186,7 @@ export default function DevelopersSection() {
               className="w-full max-w-2xl"
             >
               {/* Mobile View - Enhanced */}
-              <motion.div 
+              <motion.div
                 className="lg:hidden w-full cursor-pointer group"
                 onClick={(e) => handleDeveloperClick(developer, e)}
                 whileHover={{ scale: 1.02 }}
@@ -315,7 +341,7 @@ export default function DevelopersSection() {
                             ))}
                           </div>
                         </div>
-                        
+
                         <div>
                           <h3 className="text-white text-sm font-semibold mb-3 text-center flex items-center justify-center gap-2">
                             <span className="text-lg">🏆</span>
@@ -380,7 +406,7 @@ export default function DevelopersSection() {
                           <HiMail className="w-5 h-5" />
                         </motion.a>
                       </div>
-                      
+
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
