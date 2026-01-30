@@ -29,7 +29,12 @@ import {
   IconAward,
   IconBookmark,
   IconFilter,
-  IconCurrencyDollar
+  IconCurrencyDollar,
+  IconVideo,
+  IconBook,
+  IconNote,
+  IconMenu2,
+  IconLayoutSidebar
 } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import CalendarView from './components/CalendarView';
@@ -37,6 +42,10 @@ import FinanceDashboard from './components/FinanceDashboard';
 import KanbanBoard from './components/KanbanBoard';
 import TeamAnalytics from './components/TeamAnalytics';
 import AIAssistant from './components/AIAssistant';
+import MeetingScheduler from './components/MeetingScheduler';
+import LearningHub from './components/LearningHub';
+import QuickCapture from './components/QuickCapture';
+import Sidebar from './components/Sidebar';
 
 interface ProjectRequirements {
   description: string;
@@ -120,7 +129,8 @@ export default function Dashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'projects' | 'calendar' | 'finance' | 'team' | 'tasks' | 'analytics' | 'network'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'projects' | 'analytics' | 'network' | 'calendar' | 'finance' | 'team' | 'tasks' | 'meetings' | 'learning' | 'capture'>('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Mock data for enhanced features
@@ -373,8 +383,16 @@ export default function Dashboard() {
         </div>
       </motion.header>
 
+      {/* Sidebar */}
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
+
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-all ${sidebarOpen ? 'lg:ml-64' : ''}`}>
         {/* Tab Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -838,6 +856,36 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
           >
             <TeamAnalytics />
+          </motion.div>
+        )}
+
+        {/* Meetings Tab */}
+        {activeTab === 'meetings' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <MeetingScheduler />
+          </motion.div>
+        )}
+
+        {/* Learning Tab */}
+        {activeTab === 'learning' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <LearningHub />
+          </motion.div>
+        )}
+
+        {/* Quick Capture Tab */}
+        {activeTab === 'capture' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <QuickCapture />
           </motion.div>
         )}
 
