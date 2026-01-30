@@ -129,7 +129,7 @@ export default function Dashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'projects' | 'problems' | 'analytics' | 'network' | 'calendar' | 'team' | 'meetings' | 'learning' | 'capture'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'projects' | 'problems' | 'analytics' | 'network' | 'calendar' | 'team' | 'meetings' | 'learning' | 'capture' | 'settings'>('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -285,8 +285,8 @@ export default function Dashboard() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo & Brand */}
-            <div className="flex items-center gap-3">
+            {/* Logo & Brand - Aligned Left */}
+            <div className="flex items-center gap-3 justify-start">
               <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
                 <IconRocket className="w-6 h-6 text-white" />
               </div>
@@ -369,14 +369,21 @@ export default function Dashboard() {
               </div>
 
               {/* User Menu */}
-              <div className="flex items-center gap-2 pl-3 border-l border-white/10">
-                <div className="w-9 h-9 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <span className="text-sm font-bold text-white">{user.name[0]}</span>
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-sm font-medium text-white">{user.name}</p>
-                  <p className="text-xs text-gray-400 capitalize">{user.role}</p>
-                </div>
+              <div className="relative">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setActiveTab('profile')}
+                  className="flex items-center gap-2 pl-3 border-l border-white/10 hover:bg-white/5 rounded-lg pr-2 py-1 transition-all"
+                >
+                  <div className="w-9 h-9 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <span className="text-sm font-bold text-white">{user.name[0]}</span>
+                  </div>
+                  <div className="hidden sm:block">
+                    <p className="text-sm font-medium text-white">{user.name}</p>
+                    <p className="text-xs text-gray-400 capitalize">{user.role}</p>
+                  </div>
+                </motion.button>
               </div>
             </div>
           </div>
@@ -447,15 +454,7 @@ export default function Dashboard() {
                         : 'Ready to build amazing projects'}
                     </p>
                   </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setShowProjectModal(true)}
-                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-purple-500/50 transition-all"
-                  >
-                    <IconPlus className="w-5 h-5" />
-                    New Project
-                  </motion.button>
+
                 </div>
 
                 {/* Quick Stats Grid */}
@@ -811,6 +810,59 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-3">Social Media</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <motion.a
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      href="#"
+                      className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
+                    >
+                      <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
+                        🐙
+                      </div>
+                      <span className="text-sm text-white font-medium">GitHub</span>
+                    </motion.a>
+
+                    <motion.a
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      href="#"
+                      className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
+                    >
+                      <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
+                        💼
+                      </div>
+                      <span className="text-sm text-white font-medium">LinkedIn</span>
+                    </motion.a>
+
+                    <motion.a
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      href="#"
+                      className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
+                    >
+                      <div className="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center text-cyan-400">
+                        🐦
+                      </div>
+                      <span className="text-sm text-white font-medium">Twitter</span>
+                    </motion.a>
+
+                    <motion.a
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      href="#"
+                      className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
+                    >
+                      <div className="w-8 h-8 bg-pink-500/20 rounded-lg flex items-center justify-center text-pink-400">
+                        📷
+                      </div>
+                      <span className="text-sm text-white font-medium">Instagram</span>
+                    </motion.a>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -1114,6 +1166,161 @@ export default function Dashboard() {
                   </div>
                 </motion.div>
               ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Settings Tab */}
+        {activeTab === 'settings' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">Settings</h2>
+
+            {/* Security Settings */}
+            <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20">
+              <h3 className="text-xl font-semibold text-white mb-6">Security</h3>
+
+              <div className="space-y-4">
+                {/* Change Password */}
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="text-white font-medium">Change Password</h4>
+                      <p className="text-sm text-gray-400">Update your password regularly for security</p>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg border border-purple-500/30 transition-all"
+                    >
+                      Change
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* Two-Factor Authentication */}
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-white font-medium">Two-Factor Authentication (2FA)</h4>
+                      <p className="text-sm text-gray-400">Add an extra layer of security to your account</p>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg border border-green-500/30 transition-all"
+                    >
+                      Enable
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Connected Accounts */}
+            <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20">
+              <h3 className="text-xl font-semibold text-white mb-6">Connected Accounts</h3>
+
+              <div className="space-y-4">
+                {/* Google */}
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center text-red-400 text-xl">
+                        🔴
+                      </div>
+                      <div>
+                        <h4 className="text-white font-medium">Google</h4>
+                        <p className="text-sm text-gray-400">Connect your Google account</p>
+                      </div>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg border border-white/10 transition-all"
+                    >
+                      Connect
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* GitHub */}
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 text-xl">
+                        🐙
+                      </div>
+                      <div>
+                        <h4 className="text-white font-medium">GitHub</h4>
+                        <p className="text-sm text-gray-400">Connect your GitHub account</p>
+                      </div>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg border border-white/10 transition-all"
+                    >
+                      Connect
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Account Preferences */}
+            <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20">
+              <h3 className="text-xl font-semibold text-white mb-6">Preferences</h3>
+
+              <div className="space-y-4">
+                {/* Email Notifications */}
+                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
+                  <div>
+                    <h4 className="text-white font-medium">Email Notifications</h4>
+                    <p className="text-sm text-gray-400">Receive email updates about your activity</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" defaultChecked className="sr-only peer" />
+                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  </label>
+                </div>
+
+                {/* Dark Mode */}
+                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
+                  <div>
+                    <h4 className="text-white font-medium">Dark Mode</h4>
+                    <p className="text-sm text-gray-400">Use dark theme across the dashboard</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" defaultChecked className="sr-only peer" />
+                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="bg-red-500/10 backdrop-blur-2xl rounded-3xl p-6 border border-red-500/30">
+              <h3 className="text-xl font-semibold text-red-400 mb-6">Danger Zone</h3>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-white font-medium">Delete Account</h4>
+                    <p className="text-sm text-gray-400">Permanently delete your account and all data</p>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg border border-red-500/30 transition-all"
+                  >
+                    Delete Account
+                  </motion.button>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

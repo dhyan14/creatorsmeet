@@ -15,6 +15,8 @@ import {
     IconNote,
     IconMenu2,
     IconX,
+    IconSettings,
+    IconLogout,
 } from '@tabler/icons-react';
 
 interface SidebarProps {
@@ -37,6 +39,7 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
         { id: 'network', label: 'Network', icon: IconUsers, color: 'teal' },
         { id: 'team', label: 'Team', icon: IconUsersGroup, color: 'violet' },
         { id: 'analytics', label: 'Analytics', icon: IconChartBar, color: 'rose' },
+        { id: 'settings', label: 'Settings', icon: IconSettings, color: 'gray' },
     ];
 
     return (
@@ -91,6 +94,21 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                     ))}
                 </div>
 
+                {/* Logout Button */}
+                <div className="p-4 mt-auto border-t border-white/10">
+                    <motion.button
+                        whileHover={{ scale: 1.02, x: 5 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                            // Add logout logic here
+                            console.log('Logout clicked');
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 hover:border hover:border-red-500/30 transition-all"
+                    >
+                        <IconLogout className="w-5 h-5 flex-shrink-0" />
+                        <span className="font-medium text-sm">Logout</span>
+                    </motion.button>
+                </div>
 
             </motion.div>
 
