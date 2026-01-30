@@ -24,7 +24,7 @@ export default function Home() {
   useEffect(() => {
     // Only add mouse tracking on desktop devices
     if (window.innerWidth < 768) return;
-    
+
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
         x: (e.clientX / window.innerWidth - 0.5) * 20,
@@ -67,7 +67,7 @@ export default function Home() {
               className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-pink-500/20 rounded-full blur-3xl pointer-events-none hidden sm:block"
             />
 
-            <motion.div 
+            <motion.div
               style={{ y, opacity }}
               className="container mx-auto px-6 sm:px-6 lg:px-8 mt-12 sm:mt-16 md:mt-0 max-w-[1400px]"
             >
@@ -126,7 +126,7 @@ export default function Home() {
                 >
                   Watch Demo
                 </motion.button>
-                  </motion.div>
+              </motion.div>
 
               {/* Feature Pills */}
               <motion.div
@@ -177,7 +177,7 @@ export default function Home() {
                   >
                     <div className="text-3xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400 mb-2">
                       {stat.value}
-                </div>
+                    </div>
                     <div className="text-sm sm:text-sm text-gray-400 font-medium">{stat.label}</div>
                   </motion.div>
                 ))}
@@ -289,7 +289,7 @@ export default function Home() {
           {/* Other Sections */}
           <HowItWorks />
           <DevelopersSection />
-          
+
           {/* Testimonials Section */}
           <section className="relative py-20 sm:py-24 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/5 to-transparent" />
@@ -425,9 +425,9 @@ export default function Home() {
                   {/* Logo & Description */}
                   <div className="sm:col-span-2 lg:col-span-2">
                     <div className="flex items-center gap-3 mb-4">
-                  <img
-                    src="/logo.png"
-                    alt="CreatorsMeet Logo"
+                      <img
+                        src="/logo.png"
+                        alt="CreatorsMeet Logo"
                         className="w-8 h-8 sm:w-10 sm:h-10"
                       />
                       <span className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
@@ -435,7 +435,7 @@ export default function Home() {
                       </span>
                     </div>
                     <p className="text-gray-400 mb-6 max-w-md text-sm sm:text-base">
-                      Connecting innovators with developers to build groundbreaking projects. 
+                      Connecting innovators with developers to build groundbreaking projects.
                       Your gateway to collaborative innovation.
                     </p>
                     <div className="flex gap-3 sm:gap-4">
@@ -488,21 +488,39 @@ export default function Home() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
-                  <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">
-                    © {new Date().getFullYear()} CreatorsMeet. All rights reserved.
-                  </p>
-                  <div className="flex flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm justify-center sm:justify-end">
-                    <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                      Privacy Policy
-                    </a>
-                    <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                      Terms of Service
-                    </a>
-                    <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                      Cookie Policy
-                    </a>
-                </div>
+                <div className="pt-6 sm:pt-8 border-t border-white/10">
+                  <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 mb-4">
+                    <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">
+                      © {new Date().getFullYear()} CreatorsMeet. All rights reserved.
+                    </p>
+                    <div className="flex flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm justify-center sm:justify-end">
+                      <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                        Privacy Policy
+                      </a>
+                      <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                        Terms of Service
+                      </a>
+                      <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                        Cookie Policy
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Developer Credit */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="text-center pt-4 border-t border-white/5"
+                  >
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Crafted with <span className="text-red-400 animate-pulse">♥</span> by{" "}
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-semibold">
+                        Chaitya Belani
+                      </span>
+                    </p>
+                  </motion.div>
                 </div>
               </div>
             </div>
