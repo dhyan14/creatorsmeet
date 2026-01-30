@@ -723,6 +723,100 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* Profile Tab */}
+        {activeTab === 'profile' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-8 border border-white/20">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8">
+                <div className="relative">
+                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-1">
+                    <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-6xl">
+                      👨‍💻
+                    </div>
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-green-400 rounded-full border-4 border-black"></div>
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-3xl font-bold text-white mb-2">{user?.name || 'Creator Name'}</h2>
+                  <p className="text-gray-400 mb-4">Full Stack Developer & Designer</p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">React</span>
+                    <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm">TypeScript</span>
+                    <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Node.js</span>
+                    <span className="px-3 py-1 bg-pink-500/20 text-pink-400 rounded-full text-sm">UI/UX</span>
+                  </div>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
+                >
+                  Edit Profile
+                </motion.button>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div className="text-3xl font-bold text-white mb-1">42</div>
+                  <div className="text-gray-400 text-sm">Projects</div>
+                </div>
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div className="text-3xl font-bold text-white mb-1">156</div>
+                  <div className="text-gray-400 text-sm">Connections</div>
+                </div>
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div className="text-3xl font-bold text-white mb-1">89%</div>
+                  <div className="text-gray-400 text-sm">Success Rate</div>
+                </div>
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div className="text-3xl font-bold text-white mb-1">4.8</div>
+                  <div className="text-gray-400 text-sm">Rating</div>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-3">About</h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    Passionate full-stack developer with 5+ years of experience building scalable web applications.
+                    Specialized in React, Node.js, and cloud architecture. Love working on innovative projects that
+                    make a difference.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-3">Contact Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center gap-3 text-gray-300">
+                      <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
+                        📧
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">Email</div>
+                        <div className="font-medium">{user?.email || 'creator@example.com'}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 text-gray-300">
+                      <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
+                        🌐
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">Website</div>
+                        <div className="font-medium">www.portfolio.com</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+
         {/* Projects Tab */}
         {activeTab === 'projects' && (
           <motion.div
@@ -819,8 +913,8 @@ export default function Dashboard() {
           </motion.div>
         )}
 
-        {/* Tasks/Kanban Tab */}
-        {activeTab === 'tasks' && (
+        {/* Problems/Kanban Tab */}
+        {activeTab === 'problems' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -839,15 +933,7 @@ export default function Dashboard() {
           </motion.div>
         )}
 
-        {/* Finance Tab */}
-        {activeTab === 'finance' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <FinanceDashboard />
-          </motion.div>
-        )}
+
 
         {/* Team Tab */}
         {activeTab === 'team' && (

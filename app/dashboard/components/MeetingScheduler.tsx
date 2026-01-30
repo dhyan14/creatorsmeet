@@ -15,15 +15,26 @@ export default function MeetingScheduler() {
 
     return (
         <div className="space-y-6">
-            {/* Quick Schedule Button */}
-            <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2"
-            >
-                <IconPlus className="w-5 h-5" />
-                Schedule New Meeting
-            </motion.button>
+            {/* Quick Action Buttons */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2"
+                >
+                    <IconPlus className="w-5 h-5" />
+                    Schedule New Meeting
+                </motion.button>
+
+                <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="bg-gradient-to-r from-green-500 to-emerald-500 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2"
+                >
+                    <IconVideo className="w-5 h-5" />
+                    Start Instant Meeting
+                </motion.button>
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Upcoming Meetings */}
@@ -82,8 +93,8 @@ export default function MeetingScheduler() {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className={`p-3 rounded-xl font-medium text-sm ${idx % 3 === 0
-                                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                                        : 'bg-white/5 text-gray-400 border border-white/10'
+                                    ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                                    : 'bg-white/5 text-gray-400 border border-white/10'
                                     }`}
                             >
                                 {time}
