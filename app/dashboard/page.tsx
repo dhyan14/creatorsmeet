@@ -1478,5 +1478,6 @@ export default function Dashboard() {
           <IconNote className="w-8 h-8 text-white" />
         </motion.button>
       </div>
-      );
+    </div>
+  );
 }
