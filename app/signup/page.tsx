@@ -143,7 +143,7 @@ export default function SignUp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateStep(3)) return;
+    if (!validateStep(4)) return;
 
     setLoading(true);
     setErrors({});
@@ -160,7 +160,10 @@ export default function SignUp() {
           password: formData.password,
           role: formData.role,
           country: formData.country,
-          bio: formData.bio || undefined
+          bio: formData.bio || undefined,
+          technologies: formData.role === 'creator' ? formData.technologies : undefined,
+          idea: formData.role === 'innovator' ? formData.idea : undefined,
+          extractedTechnologies: formData.role === 'innovator' ? formData.extractedTechnologies : undefined
         }),
         credentials: 'include'
       });
