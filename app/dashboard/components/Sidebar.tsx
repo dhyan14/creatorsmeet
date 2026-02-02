@@ -1,22 +1,18 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import {
     IconLayoutDashboard,
     IconRocket,
     IconChartBar,
     IconUsers,
     IconCalendar,
-    IconCurrencyDollar,
     IconUsersGroup,
-    IconChecklist,
-    IconVideo,
-    IconBook,
-    IconNote,
-    IconMenu2,
-    IconX,
     IconSettings,
     IconLogout,
+    IconMenu2,
+    IconX,
 } from '@tabler/icons-react';
 
 interface SidebarProps {
@@ -27,6 +23,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: SidebarProps) {
+    const [isHovered, setIsHovered] = useState(false);
+
     const menuItems = [
         { id: 'overview', label: 'Overview', icon: IconLayoutDashboard, color: 'purple' },
         { id: 'projects', label: 'Projects', icon: IconRocket, color: 'cyan' },
@@ -37,6 +35,8 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
         { id: 'profile', label: 'Profile', icon: IconUsers, color: 'blue' },
         { id: 'settings', label: 'Settings', icon: IconSettings, color: 'gray' },
     ];
+
+    const sidebarWidth = isHovered ? 'w-64' : 'w-16';
 
     return (
         <>
@@ -50,76 +50,122 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                 {sidebarOpen ? <IconX className="w-5 h-5" /> : <IconMenu2 className="w-5 h-5" />}
             </motion.button>
 
-            {/* Sidebar */}
+            {/* Sidebar - Auto-expand on hover (Desktop) */}
+            <motion.div
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                animate={{ width: isHovered ? 256 : 64 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                className={`hidden lg:block fixed top-16 left-0 h-[calc(100vh-4rem)] bg-black/60 backdrop-blur-2xl border-r border-white/10 z-40 overflow-hidden`}
+            >
+                <div className="p-2 space-y-2 h-full flex flex-col">
+                    {/* Navigation Items */}
+                    <div className="flex-1 space-y-2">
+                        {menuItems.map((item) => (
+                            <motion.button
+                                key={item.id}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setActiveTab(item.id)}
+                                className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${activeTab === item.id
+                                        ? `bg-${item.color}-500/20 border border-${item.color}-500/30 text-${item.color}-400`
+                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                    }`}
+                                title={!isHovered ? item.label : ''}
+                            >
+                                <item.icon className="w-5 h-5 flex-shrink-0" />
+                                <motion.span
+                                    initial={{ opacity: 0, width: 0 }}
+                                    animate={{
+                                        opacity: isHovered ? 1 : 0,
+                                        width: isHovered ? 'auto' : 0,
+                                    }}
+                                    transition={{ duration: 0.2 }}
+                                    className="font-medium text-sm whitespace-nowrap overflow-hidden"
+                                >
+                                    {item.label}
+                                </motion.span>
+                            </motion.button>
+                        ))}
+                    </div>
+
+                    {/* Logout Button */}
+                    <div className="border-t border-white/10 pt-2">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => {
+                                console.log('Logout clicked');
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all"
+                            title={!isHovered ? 'Logout' : ''}
+                        >
+                            <IconLogout className="w-5 h-5 flex-shrink-0" />
+                            <motion.span
+                                initial={{ opacity: 0, width: 0 }}
+                                animate={{
+                                    opacity: isHovered ? 1 : 0,
+                                    width: isHovered ? 'auto' : 0,
+                                }}
+                                transition={{ duration: 0.2 }}
+                                className="font-medium text-sm whitespace-nowrap overflow-hidden"
+                            >
+                                Logout
+                            </motion.span>
+                        </motion.button>
+                    </div>
+                </div>
+            </motion.div>
+
+            {/* Sidebar - Mobile (Full width when open) */}
             <motion.div
                 initial={{ x: -300 }}
                 animate={{ x: sidebarOpen ? 0 : -300 }}
                 transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-                className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-black/60 backdrop-blur-2xl border-r border-white/10 z-40 overflow-y-auto ${sidebarOpen ? 'block' : 'hidden lg:block'
-                    }`}
+                className="lg:hidden fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-black/60 backdrop-blur-2xl border-r border-white/10 z-40 overflow-y-auto"
             >
-                <div className="p-4 space-y-2">
+                <div className="p-4 space-y-2 h-full flex flex-col">
                     <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-4">
                         Navigation
                     </h3>
-                    {menuItems.map((item) => (
+
+                    {/* Navigation Items */}
+                    <div className="flex-1 space-y-2">
+                        {menuItems.map((item) => (
+                            <motion.button
+                                key={item.id}
+                                whileHover={{ scale: 1.02, x: 5 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => {
+                                    setActiveTab(item.id);
+                                    setSidebarOpen(false);
+                                }}
+                                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${activeTab === item.id
+                                        ? `bg-${item.color}-500/20 border border-${item.color}-500/30 text-${item.color}-400`
+                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                    }`}
+                            >
+                                <item.icon className="w-5 h-5 flex-shrink-0" />
+                                <span className="font-medium text-sm">{item.label}</span>
+                            </motion.button>
+                        ))}
+                    </div>
+
+                    {/* Logout Button */}
+                    <div className="border-t border-white/10 pt-4">
                         <motion.button
-                            key={item.id}
                             whileHover={{ scale: 1.02, x: 5 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => {
-                                setActiveTab(item.id);
-                                if (window.innerWidth < 1024) {
-                                    setSidebarOpen(false);
-                                }
+                                console.log('Logout clicked');
                             }}
-                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${activeTab === item.id
-                                ? `bg-${item.color}-500/20 border border-${item.color}-500/30 text-${item.color}-400`
-                                : 'text-gray-400 hover:bg-white/5 hover:text-white'
-                                }`}
+                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 hover:border hover:border-red-500/30 transition-all"
                         >
-                            <item.icon className="w-5 h-5 flex-shrink-0" />
-                            <span className="font-medium text-sm">{item.label}</span>
-                            {activeTab === item.id && (
-                                <motion.div
-                                    layoutId="activeTab"
-                                    className={`ml-auto w-2 h-2 rounded-full bg-${item.color}-400`}
-                                />
-                            )}
+                            <IconLogout className="w-5 h-5 flex-shrink-0" />
+                            <span className="font-medium text-sm">Logout</span>
                         </motion.button>
-                    ))}
+                    </div>
                 </div>
-
-                {/* Collapse Button (Desktop) */}
-                <div className="p-4 border-t border-white/10 hidden lg:block">
-                    <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all"
-                        title={sidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
-                    >
-                        <IconX className="w-5 h-5 flex-shrink-0 rotate-45" />
-                        <span className="font-medium text-sm">Collapse</span>
-                    </motion.button>
-                </div>
-
-                {/* Logout Button */}
-                <div className="p-4 border-t border-white/10">
-                    <motion.button
-                        whileHover={{ scale: 1.02, x: 5 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => {
-                            // Add logout logic here
-                            console.log('Logout clicked');
-                        }}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 hover:border hover:border-red-500/30 transition-all"
-                    >
-                        <IconLogout className="w-5 h-5 flex-shrink-0" />
-                        <span className="font-medium text-sm">Logout</span>
-                    </motion.button>
-                </div>
-
             </motion.div>
 
             {/* Overlay for mobile */}
