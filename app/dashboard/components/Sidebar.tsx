@@ -34,7 +34,6 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
         { id: 'team', label: 'Team', icon: IconUsersGroup, color: 'violet' },
         { id: 'network', label: 'Network', icon: IconUsers, color: 'teal' },
         { id: 'analytics', label: 'Analytics', icon: IconChartBar, color: 'rose' },
-        { id: 'capture', label: 'Quick Notes', icon: IconNote, color: 'cyan' },
         { id: 'profile', label: 'Profile', icon: IconUsers, color: 'blue' },
         { id: 'settings', label: 'Settings', icon: IconSettings, color: 'gray' },
     ];
@@ -91,8 +90,22 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                     ))}
                 </div>
 
+                {/* Collapse Button (Desktop) */}
+                <div className="p-4 border-t border-white/10 hidden lg:block">
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all"
+                        title={sidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+                    >
+                        <IconX className="w-5 h-5 flex-shrink-0 rotate-45" />
+                        <span className="font-medium text-sm">Collapse</span>
+                    </motion.button>
+                </div>
+
                 {/* Logout Button */}
-                <div className="p-4 mt-auto border-t border-white/10">
+                <div className="p-4 border-t border-white/10">
                     <motion.button
                         whileHover={{ scale: 1.02, x: 5 }}
                         whileTap={{ scale: 0.98 }}

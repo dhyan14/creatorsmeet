@@ -423,12 +423,10 @@ export default function Dashboard() {
           {[
             { id: 'overview', label: 'Overview', icon: IconChartBar },
             { id: 'projects', label: 'Projects', icon: IconFolder },
-            { id: 'tasks', label: 'Tasks', icon: IconTarget },
             { id: 'calendar', label: 'Calendar', icon: IconCalendar },
-            { id: 'finance', label: 'Finance', icon: IconCurrencyDollar },
             { id: 'team', label: 'Team', icon: IconUsers },
-            { id: 'analytics', label: 'Analytics', icon: IconTrendingUp },
             { id: 'network', label: 'Network', icon: IconUsers },
+            { id: 'analytics', label: 'Analytics', icon: IconTrendingUp },
           ].map((tab) => (
             <motion.button
               key={tab.id}
@@ -1466,16 +1464,17 @@ export default function Dashboard() {
         )}
       </AnimatePresence>
 
-      {/* Floating Action Button */}
+      {/* Floating Quick Notes Button */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        onClick={() => setShowProjectModal(true)}
+        onClick={() => setActiveTab('capture')}
         className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center z-40 hover:shadow-purple-500/50 transition-all"
+        title="Quick Notes"
       >
-        <IconPlus className="w-8 h-8 text-white" />
+        <IconNote className="w-8 h-8 text-white" />
       </motion.button>
     </div>
   );
