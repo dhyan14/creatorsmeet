@@ -731,6 +731,6 @@ export default function SignUp() {
               </Link>
             </motion.p>
           </div>
-      </div >
+      </div>
       );
 }
