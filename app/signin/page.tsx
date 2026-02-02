@@ -111,7 +111,7 @@ export default function SignIn() {
 
   return (
     <div className={`min-h-screen py-12 px-4 relative overflow-hidden transition-colors ${darkMode
-        ? 'bg-gradient-to-br from-slate-950 via-purple-950/30 to-slate-950'
+        ? 'bg-black'
         : 'bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50'
       }`}>
       {/* Animated Background */}
@@ -151,8 +151,8 @@ export default function SignIn() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className={`backdrop-blur-xl rounded-3xl p-8 border shadow-2xl ${darkMode
-              ? 'bg-white/5 border-white/10'
-              : 'bg-white border-gray-200'
+            ? 'bg-white/5 border-white/10'
+            : 'bg-white border-gray-200'
             }`}
         >
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -209,8 +209,8 @@ export default function SignIn() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className={`p-4 rounded-xl border ${darkMode
-                    ? 'bg-red-500/10 border-red-500/50'
-                    : 'bg-red-50 border-red-200'
+                  ? 'bg-red-500/10 border-red-500/50'
+                  : 'bg-red-50 border-red-200'
                   }`}
               >
                 <p className="text-sm text-red-400">{errors.submit}</p>

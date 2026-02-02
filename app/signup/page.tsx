@@ -189,7 +189,7 @@ export default function SignUp() {
 
   return (
     <div className={`min-h-screen py-12 px-4 relative overflow-hidden transition-colors ${darkMode
-        ? 'bg-gradient-to-br from-slate-950 via-purple-950/30 to-slate-950'
+        ? 'bg-black'
         : 'bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50'
       }`}>
       {/* Animated Background */}
@@ -233,21 +233,21 @@ export default function SignUp() {
             {[1, 2, 3].map((step) => (
               <div key={step} className="flex items-center">
                 <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 font-semibold transition-all ${currentStep > step
-                    ? 'bg-purple-600 border-purple-600 text-white'
-                    : currentStep === step
-                      ? 'border-purple-500 text-purple-500'
-                      : darkMode
-                        ? 'border-white/20 text-gray-400'
-                        : 'border-gray-300 text-gray-400'
+                  ? 'bg-purple-600 border-purple-600 text-white'
+                  : currentStep === step
+                    ? 'border-purple-500 text-purple-500'
+                    : darkMode
+                      ? 'border-white/20 text-gray-400'
+                      : 'border-gray-300 text-gray-400'
                   }`}>
                   {currentStep > step ? <IconCheck size={20} /> : step}
                 </div>
                 {step < 3 && (
                   <div className={`w-16 md:w-24 h-0.5 ${currentStep > step
-                      ? 'bg-purple-600'
-                      : darkMode
-                        ? 'bg-white/20'
-                        : 'bg-gray-300'
+                    ? 'bg-purple-600'
+                    : darkMode
+                      ? 'bg-white/20'
+                      : 'bg-gray-300'
                     }`} />
                 )}
               </div>
@@ -272,8 +272,8 @@ export default function SignUp() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className={`backdrop-blur-xl rounded-3xl p-8 border shadow-2xl ${darkMode
-              ? 'bg-white/5 border-white/10'
-              : 'bg-white border-gray-200'
+            ? 'bg-white/5 border-white/10'
+            : 'bg-white border-gray-200'
             }`}
         >
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -368,8 +368,8 @@ export default function SignUp() {
                   />
 
                   <div className={`p-4 rounded-xl border ${darkMode
-                      ? 'bg-blue-500/10 border-blue-500/30'
-                      : 'bg-blue-50 border-blue-200'
+                    ? 'bg-blue-500/10 border-blue-500/30'
+                    : 'bg-blue-50 border-blue-200'
                     }`}>
                     <p className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-800'}`}>
                       <strong>Password Requirements:</strong> At least 8 characters with uppercase, lowercase, and a number.
@@ -414,8 +414,8 @@ export default function SignUp() {
                       maxLength={500}
                       placeholder="Tell us a bit about yourself and your interests..."
                       className={`w-full px-4 py-3 rounded-xl border transition-all resize-none ${darkMode
-                          ? 'bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50'
-                          : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50'
+                        ? 'bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50'
+                        : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50'
                         } focus:outline-none`}
                     />
                     <p className={`text-xs mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -456,8 +456,8 @@ export default function SignUp() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className={`p-4 rounded-xl border ${darkMode
-                    ? 'bg-red-500/10 border-red-500/50'
-                    : 'bg-red-50 border-red-200'
+                  ? 'bg-red-500/10 border-red-500/50'
+                  : 'bg-red-50 border-red-200'
                   }`}
               >
                 <p className="text-sm text-red-400">{errors.submit}</p>
@@ -473,8 +473,8 @@ export default function SignUp() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className={`flex-1 py-3 px-4 rounded-xl font-semibold border-2 transition-all ${darkMode
-                      ? 'border-white/20 text-white hover:bg-white/5'
-                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    ? 'border-white/20 text-white hover:bg-white/5'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                     }`}
                 >
                   Back
