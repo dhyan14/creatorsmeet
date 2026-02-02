@@ -1048,15 +1048,7 @@ export default function Dashboard() {
           </motion.div>
         )}
 
-        {/* Problems/Kanban Tab */}
-        {activeTab === 'problems' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <KanbanBoard />
-          </motion.div>
-        )}
+
 
         {/* Calendar Tab */}
         {activeTab === 'calendar' && (
@@ -1080,25 +1072,9 @@ export default function Dashboard() {
           </motion.div>
         )}
 
-        {/* Meetings Tab */}
-        {activeTab === 'meetings' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <MeetingScheduler />
-          </motion.div>
-        )}
 
-        {/* Learning Tab */}
-        {activeTab === 'learning' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <LearningHub />
-          </motion.div>
-        )}
+
+
 
         {/* Quick Capture Tab */}
         {activeTab === 'capture' && (
