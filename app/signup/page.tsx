@@ -260,7 +260,7 @@ export default function SignUp() {
     }
   };
 
-  const handleAnalyzeIdea = async (idea: string): Promise<string[]> => {
+  const handleAnalyzeIdea = async (idea: string) => {
     try {
       const response = await fetch('/api/analyze-idea', {
         method: 'POST',
@@ -319,418 +319,411 @@ export default function SignUp() {
         </motion.div>
 
         {/* Progress Indicator */}
+        {currentStep < 5 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <div className="flex items-center justify-center gap-4">
+              {[1, 2, 3, 4].map((step) => (
+                <div key={step} className="flex items-center">
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 font-semibold transition-all ${currentStep > step
+                    ? 'bg-purple-600 border-purple-600 text-white'
+                    : currentStep === step
+                      ? 'border-purple-600 text-purple-600'
+                      : darkMode
+                        ? 'border-white/20 text-gray-500'
+                        : 'border-gray-300 text-gray-400'
+                    }`}>
+                    {currentStep > step ? <IconCheck size={20} /> : step}
+                  </div>
+                  {step < 4 && (
+                    <div className={`w-16 md:w-24 h-0.5 ${currentStep > step
+                      ? 'bg-purple-600'
+                      : darkMode
+                        ? 'bg-white/20'
+                        : 'bg-gray-300'
+                      }`} />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between mt-2 px-2">
+              <span className={`text-xs ${currentStep === 1 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Basic Info
+              </span>
+              <span className={`text-xs ${currentStep === 2 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Security
+              </span>
+              <span className={`text-xs ${currentStep === 3 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Profile
+              </span>
+              <span className={`text-xs ${currentStep === 4 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                {formData.role === 'creator' ? 'Tech Skills' : formData.role === 'innovator' ? 'Your Idea' : 'Details'}
+              </span>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Sign Up Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          transition={{ delay: 0.1 }}
+          className={`backdrop-blur-xl rounded-3xl p-8 border shadow-2xl ${darkMode
+            ? 'bg-white/5 border-white/10'
+            : 'bg-white border-gray-200'
+            }`}
         >
-          <div className="flex items-center justify-center gap-4">
-            {currentStep < 5 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-8"
-              >
-                <div className="flex items-center justify-center gap-4">
-                  {[1, 2, 3, 4].map((step) => (
-                    <div key={step} className="flex items-center">
-                      <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 font-semibold transition-all ${currentStep > step
-                        ? 'bg-purple-600 border-purple-600 text-white'
-                        : currentStep === step
-                          ? 'border-purple-600 text-purple-600'
-                          : darkMode
-                            ? 'border-white/20 text-gray-500'
-                            : 'border-gray-300 text-gray-400'
-                        } ${currentStep === 5 && step === 4 ? 'bg-purple-600 border-purple-600 text-white' : ''}`}> {/* Keep step 4 active/completed visually if in step 5 */}
-                        {currentStep > step || (currentStep === 5) ? <IconCheck size={20} /> : step}
-                      </div>
-                      {step < 4 && (
-                        <div className={`w-16 md:w-24 h-0.5 ${currentStep > step
-                          ? 'bg-purple-600'
-                          : darkMode
-                            ? 'bg-white/20'
-                            : 'bg-gray-300'
-                          }`} />
-                      )}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <AnimatePresence mode="wait">
+              {/* Step 1: Basic Info */}
+              {currentStep === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <FormInput
+                    label="Full Name"
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
+                    error={errors.name}
+                    darkMode={darkMode}
+                    icon={<IconUser size={20} />}
+                  />
+
+                  <FormInput
+                    label="Username"
+                    type="text"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    placeholder="johndoe"
+                    error={errors.username}
+                    darkMode={darkMode}
+                    icon={<span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>@</span>}
+                  />
+
+                  <FormInput
+                    label="Email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="john@example.com"
+                    error={errors.email}
+                    darkMode={darkMode}
+                    icon={<IconMail size={20} />}
+                  />
+
+                  <FormInput
+                    label="Phone Number (Optional)"
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+1234567890"
+                    error={errors.phone}
+                    darkMode={darkMode}
+                    icon={<IconPhone size={20} />}
+                  />
+                </motion.div>
+              )}
+
+              {/* Step 2: Security */}
+              {currentStep === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <PasswordInput
+                    label="Password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    error={errors.password}
+                    showStrength
+                    darkMode={darkMode}
+                    placeholder="Create a strong password"
+                  />
+
+                  <PasswordInput
+                    label="Confirm Password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    error={errors.confirmPassword}
+                    darkMode={darkMode}
+                    placeholder="Re-enter your password"
+                  />
+
+                  <div className={`p-4 rounded-xl border ${darkMode
+                    ? 'bg-blue-500/10 border-blue-500/30'
+                    : 'bg-blue-50 border-blue-200'
+                    }`}>
+                    <p className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-800'}`}>
+                      <strong>Password Requirements:</strong> At least 8 characters with uppercase, lowercase, and a number.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 3: Profile */}
+              {currentStep === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <RoleSelector
+                    value={formData.role}
+                    onChange={handleRoleChange}
+                    error={errors.role}
+                    darkMode={darkMode}
+                  />
+
+                  <CountrySelect
+                    value={formData.country}
+                    onChange={handleCountryChange}
+                    error={errors.country}
+                    darkMode={darkMode}
+                  />
+
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                      Bio (Optional)
+                    </label>
+                    <textarea
+                      name="bio"
+                      value={formData.bio}
+                      onChange={handleChange}
+                      rows={4}
+                      maxLength={500}
+                      placeholder="Tell us a bit about yourself and your interests..."
+                      className={`w-full px-4 py-3 rounded-xl border transition-all resize-none ${darkMode
+                        ? 'bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50'
+                        : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50'
+                        } focus:outline-none`}
+                    />
+                    <p className={`text-xs mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {formData.bio.length}/500 characters
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 4: Technology Skills or Idea Description */}
+              {currentStep === 4 && (
+                <motion.div
+                  key="step4"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  {formData.role === 'creator' ? (
+                    <TechnologySelector
+                      selectedTechnologies={formData.technologies}
+                      onChange={handleTechnologiesChange}
+                      error={errors.technologies}
+                      darkMode={darkMode}
+                    />
+                  ) : formData.role === 'innovator' ? (
+                    <IdeaInput
+                      value={formData.idea}
+                      onChange={handleIdeaChange}
+                      onAnalyze={handleAnalyzeIdea}
+                      error={errors.idea}
+                      darkMode={darkMode}
+                      extractedTechnologies={formData.extractedTechnologies}
+                    />
+                  ) : (
+                    <div className={`p-8 text-center rounded-xl border ${darkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'
+                      }`}>
+                      <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                        Please go back and select your role
+                      </p>
                     </div>
-                  ))}
-                </div>
-                <div className="flex justify-between mt-2 px-2">
-                  <span className={`text-xs ${currentStep === 1 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Basic Info
-                  </span>
-                  <span className={`text-xs ${currentStep === 2 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Security
-                  </span>
-                  <span className={`text-xs ${currentStep === 3 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Profile
-                  </span>
-                  <span className={`text-xs ${currentStep === 4 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {formData.role === 'creator' ? 'Tech Skills' : formData.role === 'innovator' ? 'Your Idea' : 'Details'}
-                  </span>
-                </div>
+                  )}
+
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="agreedToTerms"
+                      checked={formData.agreedToTerms}
+                      onChange={handleChange}
+                      className="mt-1 w-4 h-4 rounded border-white/20 bg-white/10 text-purple-600 focus:ring-purple-500 focus:ring-offset-0"
+                    />
+                    <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                      I agree to the{' '}
+                      <Link href="/terms" className="text-purple-400 hover:text-purple-300">
+                        Terms and Conditions
+                      </Link>{' '}
+                      and{' '}
+                      <Link href="/privacy" className="text-purple-400 hover:text-purple-300">
+                        Privacy Policy
+                      </Link>
+                    </span>
+                  </label>
+                  {errors.agreedToTerms && (
+                    <p className="text-sm text-red-400 -mt-2">{errors.agreedToTerms}</p>
+                  )}
+                </motion.div>
+              )}
+
+              {/* Step 5: OTP Verification */}
+              {currentStep === 5 && (
+                <motion.div
+                  key="step5"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="space-y-6 text-center"
+                >
+                  <div className="mb-6">
+                    <h3 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Verify Your Email
+                    </h3>
+                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      We sent a code to <span className="font-semibold text-purple-400">{formData.email}</span>
+                    </p>
+                  </div>
+
+                  <OTPInput
+                    onComplete={handleVerifyOtp}
+                    error={errors.submit}
+                    darkMode={darkMode}
+                  />
+
+                  <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                    Didn't receive code? Check your spam folder or try again.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Submit Error */}
+            {errors.submit && currentStep < 5 && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-center"
+              >
+                <p className="text-sm text-red-400">{errors.submit}</p>
               </motion.div>
             )}
 
-
-            {/* Sign Up Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className={`backdrop-blur-xl rounded-3xl p-8 border shadow-2xl ${darkMode
-                ? 'bg-white/5 border-white/10'
-                : 'bg-white border-gray-200'
-                }`}
-            >
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <AnimatePresence mode="wait">
-                  {/* Step 1: Basic Info */}
-                  {currentStep === 1 && (
-                    <motion.div
-                      key="step1"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="space-y-6"
-                    >
-                      <FormInput
-                        label="Full Name"
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="John Doe"
-                        error={errors.name}
-                        darkMode={darkMode}
-                        icon={<IconUser size={20} />}
-                      />
-
-                      <FormInput
-                        label="Username"
-                        type="text"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        placeholder="johndoe"
-                        error={errors.username}
-                        darkMode={darkMode}
-                        icon={<span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>@</span>}
-                      />
-
-                      <FormInput
-                        label="Email"
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="john@example.com"
-                        error={errors.email}
-                        darkMode={darkMode}
-                        icon={<IconMail size={20} />}
-                      />
-
-                      <FormInput
-                        label="Phone Number (Optional)"
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="+1234567890"
-                        error={errors.phone}
-                        darkMode={darkMode}
-                        icon={<IconPhone size={20} />}
-                      />
-                    </motion.div>
-                  )}
-
-                  {/* Step 2: Security */}
-                  {currentStep === 2 && (
-                    <motion.div
-                      key="step2"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="space-y-6"
-                    >
-                      <PasswordInput
-                        label="Password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        error={errors.password}
-                        showStrength
-                        darkMode={darkMode}
-                        placeholder="Create a strong password"
-                      />
-
-                      <PasswordInput
-                        label="Confirm Password"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        error={errors.confirmPassword}
-                        darkMode={darkMode}
-                        placeholder="Re-enter your password"
-                      />
-
-                      <div className={`p-4 rounded-xl border ${darkMode
-                        ? 'bg-blue-500/10 border-blue-500/30'
-                        : 'bg-blue-50 border-blue-200'
-                        }`}>
-                        <p className={`text-sm ${darkMode ? 'text-blue-300' : 'text-blue-800'}`}>
-                          <strong>Password Requirements:</strong> At least 8 characters with uppercase, lowercase, and a number.
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 3: Profile */}
-                  {currentStep === 3 && (
-                    <motion.div
-                      key="step3"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="space-y-6"
-                    >
-                      <RoleSelector
-                        value={formData.role}
-                        onChange={handleRoleChange}
-                        error={errors.role}
-                        darkMode={darkMode}
-                      />
-
-                      <CountrySelect
-                        value={formData.country}
-                        onChange={handleCountryChange}
-                        error={errors.country}
-                        darkMode={darkMode}
-                      />
-
-                      <div>
-                        <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'
-                          }`}>
-                          Bio (Optional)
-                        </label>
-                        <textarea
-                          name="bio"
-                          value={formData.bio}
-                          onChange={handleChange}
-                          rows={4}
-                          maxLength={500}
-                          placeholder="Tell us a bit about yourself and your interests..."
-                          className={`w-full px-4 py-3 rounded-xl border transition-all resize-none ${darkMode
-                            ? 'bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50'
-                            : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50'
-                            } focus:outline-none`}
-                        />
-                        <p className={`text-xs mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          {formData.bio.length}/500 characters
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Step 4: Technology Skills or Idea Description */}
-                  {currentStep === 4 && (
-                    <motion.div
-                      key="step4"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="space-y-6"
-                    >
-                      {formData.role === 'creator' ? (
-                        <TechnologySelector
-                          selectedTechnologies={formData.technologies}
-                          onChange={handleTechnologiesChange}
-                          error={errors.technologies}
-                          darkMode={darkMode}
-                        />
-                      ) : formData.role === 'innovator' ? (
-                        <IdeaInput
-                          value={formData.idea}
-                          onChange={handleIdeaChange}
-                          onAnalyze={handleAnalyzeIdea}
-                          error={errors.idea}
-                          darkMode={darkMode}
-                          extractedTechnologies={formData.extractedTechnologies}
-                        />
-                      ) : (
-                        <div className={`p-8 text-center rounded-xl border ${darkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'
-                          }`}>
-                          <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                            Please go back and select your role
-                          </p>
-                        </div>
-                      )}
-
-                      <label className="flex items-start gap-3 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="agreedToTerms"
-                          checked={formData.agreedToTerms}
-                          onChange={handleChange}
-                          className="mt-1 w-4 h-4 rounded border-white/20 bg-white/10 text-purple-600 focus:ring-purple-500 focus:ring-offset-0"
-                        />
-                        <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'
-                          }`}>
-                          I agree to the{' '}
-                          <Link href="/terms" className="text-purple-400 hover:text-purple-300">
-                            Terms and Conditions
-                          </Link>{' '}
-                          and{' '}
-                          <Link href="/privacy" className="text-purple-400 hover:text-purple-300">
-                            Privacy Policy
-                          </Link>
-                        </span>
-                      </label>
-                      {errors.agreedToTerms && (
-                        <p className="text-sm text-red-400 -mt-2">{errors.agreedToTerms}</p>
-                      )}
-                    </motion.div>
-                  )}
-
-                  {/* Step 5: OTP Verification */}
-                  {currentStep === 5 && (
-                    <motion.div
-                      key="step5"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="space-y-6 text-center"
-                    >
-                      <div className="mb-6">
-                        <h3 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                          Verify Your Email
-                        </h3>
-                        <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          We sent a code to <span className="font-semibold text-purple-400">{formData.email}</span>
-                        </p>
-                      </div>
-
-                      <OTPInput
-                        onComplete={handleVerifyOtp}
-                        error={errors.submit}
-                        darkMode={darkMode}
-                      />
-
-                      <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                        Didn't receive code? Check your spam folder or try again.
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Submit Error */}
-                {errors.submit && currentStep < 5 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-center"
+            {/* Navigation Buttons */}
+            {currentStep < 5 && (
+              <div className="flex gap-4">
+                {currentStep > 1 && (
+                  <motion.button
+                    type="button"
+                    onClick={handleBack}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`flex-1 py-3 px-4 rounded-xl font-semibold border-2 transition-all ${darkMode
+                      ? 'border-white/20 text-white hover:bg-white/5'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
                   >
-                    <p className="text-sm text-red-400">{errors.submit}</p>
-                  </motion.div>
+                    Back
+                  </motion.button>
                 )}
 
-                {/* Navigation Buttons */}
-                {currentStep < 5 && (
-                  <div className="flex gap-4">
-                    {currentStep > 1 && (
-                      <motion.button
-                        type="button"
-                        onClick={handleBack}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className={`flex-1 py-3 px-4 rounded-xl font-semibold border-2 transition-all ${darkMode
-                          ? 'border-white/20 text-white hover:bg-white/5'
-                          : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                          }`}
-                      >
-                        Back
-                      </motion.button>
-                    )}
+                {currentStep < totalSteps ? (
+                  <motion.button
+                    type="button"
+                    onClick={handleNext}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  >
+                    Next
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    type="submit"
+                    disabled={loading}
+                    whileHover={{ scale: loading ? 1 : 1.02 }}
+                    whileTap={{ scale: loading ? 1 : 0.98 }}
+                    className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        Processing...
+                      </span>
+                    ) : 'Create Account'}
+                  </motion.button>
+                )}
+              </div>
+            )}
 
-                    {currentStep < totalSteps ? (
-                      <motion.button
-                        type="button"
-                        onClick={handleNext}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
-                      >
-                        Next
-                      </motion.button>
-                    ) : (
-                      <motion.button
-                        type="submit"
-                        disabled={loading}
-                        whileHover={{ scale: loading ? 1 : 1.02 }}
-                        whileTap={{ scale: loading ? 1 : 0.98 }}
-                        className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {loading ? (
-                          <span className="flex items-center justify-center gap-2">
-                            Processing...
-                          </span>
-                        ) : 'Create Account'}
-                      </motion.button>
-                    )}
+            {/* Social Sign Up (only on step 1) */}
+            {currentStep === 1 && (
+              <>
+                <div className="relative">
+                  <div className={`absolute inset-0 flex items-center`}>
+                    <div className={`w-full border-t ${darkMode ? 'border-white/10' : 'border-gray-300'
+                      }`} />
                   </div>
-                )}
+                  <div className="relative flex justify-center text-sm">
+                    <span className={`px-4 ${darkMode ? 'bg-white/5 text-gray-400' : 'bg-white text-gray-600'
+                      }`}>
+                      Or sign up with
+                    </span>
+                  </div>
+                </div>
 
-                {/* Social Sign Up (only on step 1) */}
-                {currentStep === 1 && (
-                  <>
-                    <div className="relative">
-                      <div className={`absolute inset-0 flex items-center`}>
-                        <div className={`w-full border-t ${darkMode ? 'border-white/10' : 'border-gray-300'
-                          }`} />
-                      </div>
-                      <div className="relative flex justify-center text-sm">
-                        <span className={`px-4 ${darkMode ? 'bg-white/5 text-gray-400' : 'bg-white text-gray-600'
-                          }`}>
-                          Or sign up with
-                        </span>
-                      </div>
-                    </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <SocialButton
+                    provider="google"
+                    onClick={() => window.location.href = '/api/auth/google'}
+                    disabled={loading}
+                    darkMode={darkMode}
+                  />
+                  <SocialButton
+                    provider="github"
+                    onClick={() => window.location.href = '/api/auth/github'}
+                    disabled={loading}
+                    darkMode={darkMode}
+                  />
+                </div>
+              </>
+            )}
+          </form>
+        </motion.div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <SocialButton
-                        provider="google"
-                        onClick={() => window.location.href = '/api/auth/google'}
-                        disabled={loading}
-                        darkMode={darkMode}
-                      />
-                      <SocialButton
-                        provider="github"
-                        onClick={() => window.location.href = '/api/auth/github'}
-                        disabled={loading}
-                        darkMode={darkMode}
-                      />
-                    </div>
-                  </>
-                )}
-              </form>
-            </motion.div>
-
-            {/* Sign In Link */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className={`text-center mt-6 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}
-            >
-              Already have an account?{' '}
-              <Link
-                href="/signin"
-                className="font-semibold text-purple-400 hover:text-purple-300 transition-colors"
-              >
-                Sign in
-              </Link>
-            </motion.p>
-          </div>
+        {/* Sign In Link */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className={`text-center mt-6 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'
+            }`}
+        >
+          Already have an account?{' '}
+          <Link
+            href="/signin"
+            className="font-semibold text-purple-400 hover:text-purple-300 transition-colors"
+          >
+            Sign in
+          </Link>
+        </motion.p>
       </div>
-      );
+    </div>
+  );
 }
