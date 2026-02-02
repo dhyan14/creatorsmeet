@@ -58,7 +58,7 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 className={`hidden lg:block fixed top-16 left-0 h-[calc(100vh-4rem)] bg-black/60 backdrop-blur-2xl border-r-[0.5px] border-white/10 z-40 overflow-hidden flex-shrink-0`}
             >
-                <div className="p-2 space-y-2 h-full flex flex-col">
+                <div className="p-3 space-y-2 h-full flex flex-col">
                     {/* Navigation Items */}
                     <div className="flex-1 space-y-2">
                         {menuItems.map((item) => (
