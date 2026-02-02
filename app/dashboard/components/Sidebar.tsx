@@ -56,7 +56,7 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                 onMouseLeave={() => setIsHovered(false)}
                 animate={{ width: isHovered ? 256 : 64 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className={`hidden lg:block fixed top-16 left-0 h-[calc(100vh-4rem)] bg-black/60 backdrop-blur-2xl border-r border-white/10 z-40 overflow-hidden`}
+                className={`hidden lg:block fixed top-16 left-0 h-[calc(100vh-4rem)] bg-black/60 backdrop-blur-2xl border-r border-white/10 z-40 overflow-hidden flex-shrink-0`}
             >
                 <div className="p-2 space-y-2 h-full flex flex-col">
                     {/* Navigation Items */}
@@ -68,8 +68,8 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setActiveTab(item.id)}
                                 className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${activeTab === item.id
-                                        ? `bg-${item.color}-500/20 border border-${item.color}-500/30 text-${item.color}-400`
-                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                    ? `bg-${item.color}-500/20 border border-${item.color}-500/30 text-${item.color}-400`
+                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
                                     }`}
                                 title={!isHovered ? item.label : ''}
                             >
@@ -141,8 +141,8 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                                     setSidebarOpen(false);
                                 }}
                                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${activeTab === item.id
-                                        ? `bg-${item.color}-500/20 border border-${item.color}-500/30 text-${item.color}-400`
-                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                    ? `bg-${item.color}-500/20 border border-${item.color}-500/30 text-${item.color}-400`
+                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
                                     }`}
                             >
                                 <item.icon className="w-5 h-5 flex-shrink-0" />

@@ -245,7 +245,7 @@ export default function Dashboard() {
 
   if (loading || isAnalyzing) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-purple-950/20 to-black">
+      <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-purple-950/20 to-black">
         <div className="relative">
           <div className="w-20 h-20 border-4 border-purple-200/30 rounded-full"></div>
           <div className="w-20 h-20 border-4 border-purple-500 rounded-full border-t-transparent animate-spin absolute top-0"></div>
@@ -263,7 +263,7 @@ export default function Dashboard() {
 
   if (error || !user) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-purple-950/20 to-black">
+      <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-purple-950/20 to-black">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -290,14 +290,14 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-950/20 to-black">
+    <div className="h-screen overflow-y-auto bg-gradient-to-br from-black via-purple-950/20 to-black">
       {/* Enhanced Header */}
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo & Brand - Aligned Left */}
             <div className="flex items-center gap-3 justify-start">
@@ -414,7 +414,7 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <div className="w-full lg:pl-16 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Tab Navigation */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
