@@ -129,9 +129,23 @@ export default function Dashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'projects' | 'problems' | 'analytics' | 'network' | 'calendar' | 'team' | 'meetings' | 'learning' | 'capture' | 'settings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'projects' | 'analytics' | 'network' | 'calendar' | 'team' | 'capture' | 'settings'>('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileData, setProfileData] = useState({
+    name: '',
+    title: 'Full Stack Developer & Designer',
+    about: 'Passionate full-stack developer with 5+ years of experience building scalable web applications. Specialized in React, Node.js, and cloud architecture. Love working on innovative projects that make a difference.',
+    website: 'www.portfolio.com',
+    skills: ['React', 'TypeScript', 'Node.js', 'UI/UX'],
+    social: {
+      github: '',
+      linkedin: '',
+      twitter: '',
+      instagram: ''
+    }
+  });
 
   // Mock data for enhanced features
   const [notifications, setNotifications] = useState<Notification[]>([
@@ -740,22 +754,73 @@ export default function Dashboard() {
                   <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-green-400 rounded-full border-4 border-black"></div>
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-3xl font-bold text-white mb-2">{user?.name || 'Creator Name'}</h2>
-                  <p className="text-gray-400 mb-4">Full Stack Developer & Designer</p>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">React</span>
-                    <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm">TypeScript</span>
-                    <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Node.js</span>
-                    <span className="px-3 py-1 bg-pink-500/20 text-pink-400 rounded-full text-sm">UI/UX</span>
+                  {isEditingProfile ? (
+                    <div className="space-y-4">
+                      <input
+                        type="text"
+                        value={profileData.name || user?.name || ''}
+                        onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                        className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-2xl font-bold text-white focus:outline-none focus:border-purple-500"
+                        placeholder="Your Name"
+                      />
+                      <input
+                        type="text"
+                        value={profileData.title}
+                        onChange={(e) => setProfileData({ ...profileData, title: e.target.value })}
+                        className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:border-purple-500"
+                        placeholder="Your Title"
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <h2 className="text-3xl font-bold text-white mb-2">{profileData.name || user?.name || 'Creator Name'}</h2>
+                      <p className="text-gray-400 mb-4">{profileData.title}</p>
+                    </>
+                  )}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {profileData.skills.map((skill, index) => (
+                      <span key={index} className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">{skill}</span>
+                    ))}
                   </div>
                 </div>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
-                >
-                  Edit Profile
-                </motion.button>
+                {!isEditingProfile ? (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      setIsEditingProfile(true);
+                      if (!profileData.name && user?.name) {
+                        setProfileData({ ...profileData, name: user.name });
+                      }
+                    }}
+                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
+                  >
+                    Edit Profile
+                  </motion.button>
+                ) : (
+                  <div className="flex gap-2">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        // Save logic here - you can add API call
+                        console.log('Saving profile:', profileData);
+                        setIsEditingProfile(false);
+                      }}
+                      className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold"
+                    >
+                      Save
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setIsEditingProfile(false)}
+                      className="px-6 py-3 bg-white/10 text-white rounded-xl font-semibold border border-white/20"
+                    >
+                      Cancel
+                    </motion.button>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -780,11 +845,19 @@ export default function Dashboard() {
               <div className="space-y-6">
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-3">About</h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    Passionate full-stack developer with 5+ years of experience building scalable web applications.
-                    Specialized in React, Node.js, and cloud architecture. Love working on innovative projects that
-                    make a difference.
-                  </p>
+                  {isEditingProfile ? (
+                    <textarea
+                      value={profileData.about}
+                      onChange={(e) => setProfileData({ ...profileData, about: e.target.value })}
+                      rows={4}
+                      className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:border-purple-500 resize-none"
+                      placeholder="Tell us about yourself..."
+                    />
+                  ) : (
+                    <p className="text-gray-300 leading-relaxed">
+                      {profileData.about}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -803,9 +876,19 @@ export default function Dashboard() {
                       <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
                         🌐
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <div className="text-xs text-gray-500">Website</div>
-                        <div className="font-medium">www.portfolio.com</div>
+                        {isEditingProfile ? (
+                          <input
+                            type="text"
+                            value={profileData.website}
+                            onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
+                            className="w-full px-2 py-1 bg-black/40 border border-white/10 rounded text-sm font-medium focus:outline-none focus:border-purple-500"
+                            placeholder="www.yourwebsite.com"
+                          />
+                        ) : (
+                          <div className="font-medium">{profileData.website}</div>
+                        )}
                       </div>
                     </div>
                   </div>

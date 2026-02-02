@@ -29,16 +29,13 @@ interface SidebarProps {
 export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: SidebarProps) {
     const menuItems = [
         { id: 'overview', label: 'Overview', icon: IconLayoutDashboard, color: 'purple' },
-        { id: 'profile', label: 'Profile', icon: IconUsers, color: 'blue' },
         { id: 'projects', label: 'Projects', icon: IconRocket, color: 'cyan' },
-        { id: 'problems', label: 'Problems', icon: IconChecklist, color: 'green' },
         { id: 'calendar', label: 'Calendar', icon: IconCalendar, color: 'pink' },
-        { id: 'meetings', label: 'Meetings', icon: IconVideo, color: 'orange' },
-        { id: 'learning', label: 'Learning', icon: IconBook, color: 'indigo' },
-        { id: 'capture', label: 'Quick Capture', icon: IconNote, color: 'cyan' },
-        { id: 'network', label: 'Network', icon: IconUsers, color: 'teal' },
         { id: 'team', label: 'Team', icon: IconUsersGroup, color: 'violet' },
+        { id: 'network', label: 'Network', icon: IconUsers, color: 'teal' },
         { id: 'analytics', label: 'Analytics', icon: IconChartBar, color: 'rose' },
+        { id: 'capture', label: 'Quick Notes', icon: IconNote, color: 'cyan' },
+        { id: 'profile', label: 'Profile', icon: IconUsers, color: 'blue' },
         { id: 'settings', label: 'Settings', icon: IconSettings, color: 'gray' },
     ];
 
