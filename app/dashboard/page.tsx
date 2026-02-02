@@ -413,1069 +413,1070 @@ export default function Dashboard() {
       />
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-all lg:ml-16">
-        {/* Tab Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex gap-2 mb-8 overflow-x-auto pb-2"
-        >
-          {[
-            { id: 'overview', label: 'Overview', icon: IconChartBar },
-            { id: 'projects', label: 'Projects', icon: IconFolder },
-            { id: 'calendar', label: 'Calendar', icon: IconCalendar },
-            { id: 'team', label: 'Team', icon: IconUsers },
-            { id: 'network', label: 'Network', icon: IconUsers },
-            { id: 'analytics', label: 'Analytics', icon: IconTrendingUp },
-          ].map((tab) => (
-            <motion.button
-              key={tab.id}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all whitespace-nowrap ${activeTab === tab.id
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
-                }`}
-            >
-              <tab.icon className="w-5 h-5" />
-              {tab.label}
-            </motion.button>
-          ))}
-        </motion.div>
-
-        {/* Overview Tab */}
-        {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column - Main Content */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Welcome Card with Quick Stats */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl"
+      <div className="lg:ml-16 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Tab Navigation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex gap-2 mb-8 overflow-x-auto pb-2"
+          >
+            {[
+              { id: 'overview', label: 'Overview', icon: IconChartBar },
+              { id: 'projects', label: 'Projects', icon: IconFolder },
+              { id: 'calendar', label: 'Calendar', icon: IconCalendar },
+              { id: 'team', label: 'Team', icon: IconUsers },
+              { id: 'network', label: 'Network', icon: IconUsers },
+              { id: 'analytics', label: 'Analytics', icon: IconTrendingUp },
+            ].map((tab) => (
+              <motion.button
+                key={tab.id}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all whitespace-nowrap ${activeTab === tab.id
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                  }`}
               >
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                  <div>
-                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-                      Welcome back, {user.name}!
-                    </h2>
-                    <p className="text-gray-300 mt-2">
-                      {user.role === 'innovator'
-                        ? "Let's bring your ideas to life"
-                        : 'Ready to build amazing projects'}
-                    </p>
-                  </div>
+                <tab.icon className="w-5 h-5" />
+                {tab.label}
+              </motion.button>
+            ))}
+          </motion.div>
 
-                </div>
-
-                {/* Quick Stats Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { label: 'Total Points', value: user.points || 0, icon: IconStar, color: 'purple' },
-                    { label: 'Level', value: user.level || 1, icon: IconTrendingUp, color: 'pink' },
-                    { label: 'Active Projects', value: user.projects?.filter(p => p.status === 'active').length || 0, icon: IconFolder, color: 'blue' },
-                    { label: 'Team Members', value: user.teamMembers?.length || 0, icon: IconUsers, color: 'green' },
-                  ].map((stat, index) => (
-                    <motion.div
-                      key={stat.label}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      className={`bg-gradient-to-br from-${stat.color}-500/20 to-${stat.color}-600/10 p-4 rounded-xl border border-${stat.color}-500/30 backdrop-blur-sm`}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className={`w-8 h-8 bg-${stat.color}-500/30 rounded-lg flex items-center justify-center`}>
-                          <stat.icon className={`w-5 h-5 text-${stat.color}-400`} />
-                        </div>
-                      </div>
-                      <p className={`text-2xl font-bold text-${stat.color}-400`}>{stat.value}</p>
-                      <p className="text-xs text-gray-400 font-medium">{stat.label}</p>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* AI Recommendations Panel */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                    <IconBrain className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-white">AI Recommendations</h3>
-                    <p className="text-sm text-gray-400">Personalized insights for you</p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {[
-                    {
-                      icon: IconBulb,
-                      title: 'Perfect Match Found',
-                      description: 'Sarah Chen has 95% compatibility with your AI project',
-                      action: 'View Profile',
-                      color: 'yellow'
-                    },
-                    {
-                      icon: IconTarget,
-                      title: 'Skill Development',
-                      description: 'Learning React Native could help you with mobile projects',
-                      action: 'Explore Courses',
-                      color: 'blue'
-                    },
-                    {
-                      icon: IconTrendingUp,
-                      title: 'Project Opportunity',
-                      description: 'AI/ML projects are trending 45% higher this month',
-                      action: 'Learn More',
-                      color: 'green'
-                    },
-                  ].map((rec, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ scale: 1.02, x: 5 }}
-                      className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
-                    >
-                      <div className={`w-10 h-10 bg-${rec.color}-500/20 rounded-lg flex items-center justify-center flex-shrink-0`}>
-                        <rec.icon className={`w-5 h-5 text-${rec.color}-400`} />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-white font-medium mb-1">{rec.title}</h4>
-                        <p className="text-gray-400 text-sm mb-2">{rec.description}</p>
-                        <button className="text-purple-400 text-sm font-medium hover:text-purple-300 flex items-center gap-1">
-                          {rec.action}
-                          <IconChevronRight className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Project Requirements (if innovator) */}
-              {user.role === 'innovator' && user.projectRequirements && (
+          {/* Overview Tab */}
+          {activeTab === 'overview' && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left Column - Main Content */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Welcome Card with Quick Stats */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
                   className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl"
                 >
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                        <IconCode className="w-6 h-6 text-white" />
-                      </div>
-                      <h2 className="text-xl sm:text-2xl font-semibold text-white">Project Requirements</h2>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                      <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+                        Welcome back, {user.name}!
+                      </h2>
+                      <p className="text-gray-300 mt-2">
+                        {user.role === 'innovator'
+                          ? "Let's bring your ideas to life"
+                          : 'Ready to build amazing projects'}
+                      </p>
                     </div>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => user.projectRequirements?.description && analyzeProject(user.projectRequirements.description)}
-                      disabled={isAnalyzing}
-                      className="flex items-center space-x-2 px-4 py-2 bg-purple-500/20 text-purple-400 rounded-xl hover:bg-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-purple-500/30"
-                    >
-                      <IconRefresh className={`w-5 h-5 ${isAnalyzing ? 'animate-spin' : ''}`} />
-                      <span className="font-medium">Reanalyze</span>
-                    </motion.button>
+
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                      <h3 className="text-sm font-semibold text-gray-300 mb-2">Description</h3>
-                      <p className="text-gray-200 text-sm">{user.projectRequirements.description}</p>
-                    </div>
-
-                    {user.projectRequirements.technologies && user.projectRequirements.technologies.length > 0 && (
-                      <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                        <h3 className="text-sm font-semibold text-gray-300 mb-2">Technologies</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {user.projectRequirements.technologies.map((tech) => (
-                            <span
-                              key={tech}
-                              className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg text-xs font-medium border border-purple-500/30"
-                            >
-                              {tech}
-                            </span>
-                          ))}
+                  {/* Quick Stats Grid */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                      { label: 'Total Points', value: user.points || 0, icon: IconStar, color: 'purple' },
+                      { label: 'Level', value: user.level || 1, icon: IconTrendingUp, color: 'pink' },
+                      { label: 'Active Projects', value: user.projects?.filter(p => p.status === 'active').length || 0, icon: IconFolder, color: 'blue' },
+                      { label: 'Team Members', value: user.teamMembers?.length || 0, icon: IconUsers, color: 'green' },
+                    ].map((stat, index) => (
+                      <motion.div
+                        key={stat.label}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        className={`bg-gradient-to-br from-${stat.color}-500/20 to-${stat.color}-600/10 p-4 rounded-xl border border-${stat.color}-500/30 backdrop-blur-sm`}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className={`w-8 h-8 bg-${stat.color}-500/30 rounded-lg flex items-center justify-center`}>
+                            <stat.icon className={`w-5 h-5 text-${stat.color}-400`} />
+                          </div>
                         </div>
-                      </div>
-                    )}
-
-                    {user.projectRequirements.complexity && (
-                      <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                        <h3 className="text-sm font-semibold text-gray-300 mb-2">Complexity</h3>
-                        <p className="text-gray-200 text-sm">{user.projectRequirements.complexity}</p>
-                      </div>
-                    )}
-
-                    {user.projectRequirements.expertise && (
-                      <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                        <h3 className="text-sm font-semibold text-gray-300 mb-2">Required Expertise</h3>
-                        <p className="text-gray-200 text-sm">{user.projectRequirements.expertise}</p>
-                      </div>
-                    )}
+                        <p className={`text-2xl font-bold text-${stat.color}-400`}>{stat.value}</p>
+                        <p className="text-xs text-gray-400 font-medium">{stat.label}</p>
+                      </motion.div>
+                    ))}
                   </div>
                 </motion.div>
-              )}
-            </div>
 
-            {/* Right Column - Sidebar */}
-            <div className="space-y-6">
-              {/* Activity Feed */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20 shadow-2xl"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                    <IconActivity className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-white">Recent Activity</h3>
-                </div>
-
-                <div className="space-y-4">
-                  {activities.map((activity) => (
-                    <motion.div
-                      key={activity.id}
-                      whileHover={{ scale: 1.02, x: 5 }}
-                      className="flex items-start gap-3 p-3 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
-                    >
-                      <div className="text-2xl">{activity.icon}</div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-white text-sm font-medium truncate">{activity.title}</h4>
-                        <p className="text-gray-400 text-xs mt-1 line-clamp-2">{activity.description}</p>
-                        <span className="text-gray-500 text-xs mt-1 block">{activity.time}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <button className="w-full mt-4 py-2 text-purple-400 text-sm font-medium hover:text-purple-300 transition-colors">
-                  View All Activity
-                </button>
-              </motion.div>
-
-              {/* Quick Actions */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-                className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20 shadow-2xl"
-              >
-                <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { icon: IconPlus, label: 'New Project', color: 'purple' },
-                    { icon: IconUsers, label: 'Find Devs', color: 'blue' },
-                    { icon: IconCalendar, label: 'Schedule', color: 'green' },
-                    { icon: IconMessage, label: 'Messages', color: 'pink' },
-                  ].map((action) => (
-                    <motion.button
-                      key={action.label}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`flex flex-col items-center gap-2 p-4 bg-${action.color}-500/10 rounded-xl border border-${action.color}-500/30 hover:bg-${action.color}-500/20 transition-all`}
-                    >
-                      <action.icon className={`w-6 h-6 text-${action.color}-400`} />
-                      <span className="text-xs text-gray-300 font-medium">{action.label}</span>
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* AI Assistant Widget */}
-              <AIAssistant />
-
-              {/* Achievements Preview */}
-              {user.achievements && user.achievements.length > 0 && (
+                {/* AI Recommendations Panel */}
                 <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20 shadow-2xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
-                        <IconAward className="w-6 h-6 text-white" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-white">Achievements</h3>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                      <IconBrain className="w-6 h-6 text-white" />
                     </div>
-                    <span className="text-sm text-yellow-400 font-medium">{user.achievements.length}</span>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white">AI Recommendations</h3>
+                      <p className="text-sm text-gray-400">Personalized insights for you</p>
+                    </div>
                   </div>
 
-                  <div className="space-y-3">
-                    {user.achievements.slice(0, 3).map((achievement) => (
+                  <div className="space-y-4">
+                    {[
+                      {
+                        icon: IconBulb,
+                        title: 'Perfect Match Found',
+                        description: 'Sarah Chen has 95% compatibility with your AI project',
+                        action: 'View Profile',
+                        color: 'yellow'
+                      },
+                      {
+                        icon: IconTarget,
+                        title: 'Skill Development',
+                        description: 'Learning React Native could help you with mobile projects',
+                        action: 'Explore Courses',
+                        color: 'blue'
+                      },
+                      {
+                        icon: IconTrendingUp,
+                        title: 'Project Opportunity',
+                        description: 'AI/ML projects are trending 45% higher this month',
+                        action: 'Learn More',
+                        color: 'green'
+                      },
+                    ].map((rec, index) => (
                       <motion.div
-                        key={achievement._id}
-                        whileHover={{ scale: 1.02 }}
-                        className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10"
+                        key={index}
+                        whileHover={{ scale: 1.02, x: 5 }}
+                        className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
                       >
-                        <div className="text-2xl">{achievement.icon}</div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-white text-sm font-medium truncate">{achievement.title}</h4>
-                          <p className="text-gray-400 text-xs truncate">{achievement.description}</p>
+                        <div className={`w-10 h-10 bg-${rec.color}-500/20 rounded-lg flex items-center justify-center flex-shrink-0`}>
+                          <rec.icon className={`w-5 h-5 text-${rec.color}-400`} />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-white font-medium mb-1">{rec.title}</h4>
+                          <p className="text-gray-400 text-sm mb-2">{rec.description}</p>
+                          <button className="text-purple-400 text-sm font-medium hover:text-purple-300 flex items-center gap-1">
+                            {rec.action}
+                            <IconChevronRight className="w-4 h-4" />
+                          </button>
                         </div>
                       </motion.div>
                     ))}
                   </div>
                 </motion.div>
-              )}
-            </div>
-          </div>
-        )}
 
-        {/* Profile Tab */}
-        {activeTab === 'profile' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-8 border border-white/20">
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8">
-                <div className="relative">
-                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-1">
-                    <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-6xl">
-                      👨‍💻
+                {/* Project Requirements (if innovator) */}
+                {user.role === 'innovator' && user.projectRequirements && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl"
+                  >
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                          <IconCode className="w-6 h-6 text-white" />
+                        </div>
+                        <h2 className="text-xl sm:text-2xl font-semibold text-white">Project Requirements</h2>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => user.projectRequirements?.description && analyzeProject(user.projectRequirements.description)}
+                        disabled={isAnalyzing}
+                        className="flex items-center space-x-2 px-4 py-2 bg-purple-500/20 text-purple-400 rounded-xl hover:bg-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-purple-500/30"
+                      >
+                        <IconRefresh className={`w-5 h-5 ${isAnalyzing ? 'animate-spin' : ''}`} />
+                        <span className="font-medium">Reanalyze</span>
+                      </motion.button>
                     </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                        <h3 className="text-sm font-semibold text-gray-300 mb-2">Description</h3>
+                        <p className="text-gray-200 text-sm">{user.projectRequirements.description}</p>
+                      </div>
+
+                      {user.projectRequirements.technologies && user.projectRequirements.technologies.length > 0 && (
+                        <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                          <h3 className="text-sm font-semibold text-gray-300 mb-2">Technologies</h3>
+                          <div className="flex flex-wrap gap-2">
+                            {user.projectRequirements.technologies.map((tech) => (
+                              <span
+                                key={tech}
+                                className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg text-xs font-medium border border-purple-500/30"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {user.projectRequirements.complexity && (
+                        <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                          <h3 className="text-sm font-semibold text-gray-300 mb-2">Complexity</h3>
+                          <p className="text-gray-200 text-sm">{user.projectRequirements.complexity}</p>
+                        </div>
+                      )}
+
+                      {user.projectRequirements.expertise && (
+                        <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                          <h3 className="text-sm font-semibold text-gray-300 mb-2">Required Expertise</h3>
+                          <p className="text-gray-200 text-sm">{user.projectRequirements.expertise}</p>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Right Column - Sidebar */}
+              <div className="space-y-6">
+                {/* Activity Feed */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20 shadow-2xl"
+                >
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                      <IconActivity className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">Recent Activity</h3>
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-green-400 rounded-full border-4 border-black"></div>
-                </div>
-                <div className="flex-1">
-                  {isEditingProfile ? (
-                    <div className="space-y-4">
-                      <input
-                        type="text"
-                        value={profileData.name || user?.name || ''}
-                        onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                        className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-2xl font-bold text-white focus:outline-none focus:border-purple-500"
-                        placeholder="Your Name"
-                      />
-                      <input
-                        type="text"
-                        value={profileData.title}
-                        onChange={(e) => setProfileData({ ...profileData, title: e.target.value })}
-                        className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:border-purple-500"
-                        placeholder="Your Title"
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <h2 className="text-3xl font-bold text-white mb-2">{profileData.name || user?.name || 'Creator Name'}</h2>
-                      <p className="text-gray-400 mb-4">{profileData.title}</p>
-                    </>
-                  )}
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {profileData.skills.map((skill, index) => (
-                      <span key={index} className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">{skill}</span>
+
+                  <div className="space-y-4">
+                    {activities.map((activity) => (
+                      <motion.div
+                        key={activity.id}
+                        whileHover={{ scale: 1.02, x: 5 }}
+                        className="flex items-start gap-3 p-3 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
+                      >
+                        <div className="text-2xl">{activity.icon}</div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-white text-sm font-medium truncate">{activity.title}</h4>
+                          <p className="text-gray-400 text-xs mt-1 line-clamp-2">{activity.description}</p>
+                          <span className="text-gray-500 text-xs mt-1 block">{activity.time}</span>
+                        </div>
+                      </motion.div>
                     ))}
                   </div>
-                </div>
-                {!isEditingProfile ? (
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      setIsEditingProfile(true);
-                      if (!profileData.name && user?.name) {
-                        setProfileData({ ...profileData, name: user.name });
-                      }
-                    }}
-                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
+
+                  <button className="w-full mt-4 py-2 text-purple-400 text-sm font-medium hover:text-purple-300 transition-colors">
+                    View All Activity
+                  </button>
+                </motion.div>
+
+                {/* Quick Actions */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20 shadow-2xl"
+                >
+                  <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { icon: IconPlus, label: 'New Project', color: 'purple' },
+                      { icon: IconUsers, label: 'Find Devs', color: 'blue' },
+                      { icon: IconCalendar, label: 'Schedule', color: 'green' },
+                      { icon: IconMessage, label: 'Messages', color: 'pink' },
+                    ].map((action) => (
+                      <motion.button
+                        key={action.label}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`flex flex-col items-center gap-2 p-4 bg-${action.color}-500/10 rounded-xl border border-${action.color}-500/30 hover:bg-${action.color}-500/20 transition-all`}
+                      >
+                        <action.icon className={`w-6 h-6 text-${action.color}-400`} />
+                        <span className="text-xs text-gray-300 font-medium">{action.label}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* AI Assistant Widget */}
+                <AIAssistant />
+
+                {/* Achievements Preview */}
+                {user.achievements && user.achievements.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20 shadow-2xl"
                   >
-                    Edit Profile
-                  </motion.button>
-                ) : (
-                  <div className="flex gap-2">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                          <IconAward className="w-6 h-6 text-white" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-white">Achievements</h3>
+                      </div>
+                      <span className="text-sm text-yellow-400 font-medium">{user.achievements.length}</span>
+                    </div>
+
+                    <div className="space-y-3">
+                      {user.achievements.slice(0, 3).map((achievement) => (
+                        <motion.div
+                          key={achievement._id}
+                          whileHover={{ scale: 1.02 }}
+                          className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10"
+                        >
+                          <div className="text-2xl">{achievement.icon}</div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-white text-sm font-medium truncate">{achievement.title}</h4>
+                            <p className="text-gray-400 text-xs truncate">{achievement.description}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Profile Tab */}
+          {activeTab === 'profile' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-8 border border-white/20">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8">
+                  <div className="relative">
+                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-1">
+                      <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-6xl">
+                        👨‍💻
+                      </div>
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-green-400 rounded-full border-4 border-black"></div>
+                  </div>
+                  <div className="flex-1">
+                    {isEditingProfile ? (
+                      <div className="space-y-4">
+                        <input
+                          type="text"
+                          value={profileData.name || user?.name || ''}
+                          onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                          className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-2xl font-bold text-white focus:outline-none focus:border-purple-500"
+                          placeholder="Your Name"
+                        />
+                        <input
+                          type="text"
+                          value={profileData.title}
+                          onChange={(e) => setProfileData({ ...profileData, title: e.target.value })}
+                          className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:border-purple-500"
+                          placeholder="Your Title"
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <h2 className="text-3xl font-bold text-white mb-2">{profileData.name || user?.name || 'Creator Name'}</h2>
+                        <p className="text-gray-400 mb-4">{profileData.title}</p>
+                      </>
+                    )}
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {profileData.skills.map((skill, index) => (
+                        <span key={index} className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                  {!isEditingProfile ? (
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => {
-                        // Save logic here - you can add API call
-                        console.log('Saving profile:', profileData);
-                        setIsEditingProfile(false);
+                        setIsEditingProfile(true);
+                        if (!profileData.name && user?.name) {
+                          setProfileData({ ...profileData, name: user.name });
+                        }
                       }}
-                      className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold"
+                      className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
                     >
-                      Save
+                      Edit Profile
                     </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setIsEditingProfile(false)}
-                      className="px-6 py-3 bg-white/10 text-white rounded-xl font-semibold border border-white/20"
-                    >
-                      Cancel
-                    </motion.button>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                  <div className="text-3xl font-bold text-white mb-1">42</div>
-                  <div className="text-gray-400 text-sm">Projects</div>
-                </div>
-                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                  <div className="text-3xl font-bold text-white mb-1">156</div>
-                  <div className="text-gray-400 text-sm">Connections</div>
-                </div>
-                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                  <div className="text-3xl font-bold text-white mb-1">89%</div>
-                  <div className="text-gray-400 text-sm">Success Rate</div>
-                </div>
-                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                  <div className="text-3xl font-bold text-white mb-1">4.8</div>
-                  <div className="text-gray-400 text-sm">Rating</div>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-3">About</h3>
-                  {isEditingProfile ? (
-                    <textarea
-                      value={profileData.about}
-                      onChange={(e) => setProfileData({ ...profileData, about: e.target.value })}
-                      rows={4}
-                      className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:border-purple-500 resize-none"
-                      placeholder="Tell us about yourself..."
-                    />
                   ) : (
-                    <p className="text-gray-300 leading-relaxed">
-                      {profileData.about}
-                    </p>
+                    <div className="flex gap-2">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          // Save logic here - you can add API call
+                          console.log('Saving profile:', profileData);
+                          setIsEditingProfile(false);
+                        }}
+                        className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold"
+                      >
+                        Save
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setIsEditingProfile(false)}
+                        className="px-6 py-3 bg-white/10 text-white rounded-xl font-semibold border border-white/20"
+                      >
+                        Cancel
+                      </motion.button>
+                    </div>
                   )}
                 </div>
 
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-3">Contact Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center gap-3 text-gray-300">
-                      <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
-                        📧
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-500">Email</div>
-                        <div className="font-medium">{user?.email || 'creator@example.com'}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-300">
-                      <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
-                        🌐
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-xs text-gray-500">Website</div>
-                        {isEditingProfile ? (
-                          <input
-                            type="text"
-                            value={profileData.website}
-                            onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
-                            className="w-full px-2 py-1 bg-black/40 border border-white/10 rounded text-sm font-medium focus:outline-none focus:border-purple-500"
-                            placeholder="www.yourwebsite.com"
-                          />
-                        ) : (
-                          <div className="font-medium">{profileData.website}</div>
-                        )}
-                      </div>
-                    </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="text-3xl font-bold text-white mb-1">42</div>
+                    <div className="text-gray-400 text-sm">Projects</div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="text-3xl font-bold text-white mb-1">156</div>
+                    <div className="text-gray-400 text-sm">Connections</div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="text-3xl font-bold text-white mb-1">89%</div>
+                    <div className="text-gray-400 text-sm">Success Rate</div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="text-3xl font-bold text-white mb-1">4.8</div>
+                    <div className="text-gray-400 text-sm">Rating</div>
                   </div>
                 </div>
 
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-3">Social Media</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <motion.a
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      href="#"
-                      className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
-                    >
-                      <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
-                        🐙
-                      </div>
-                      <span className="text-sm text-white font-medium">GitHub</span>
-                    </motion.a>
-
-                    <motion.a
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      href="#"
-                      className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
-                    >
-                      <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
-                        💼
-                      </div>
-                      <span className="text-sm text-white font-medium">LinkedIn</span>
-                    </motion.a>
-
-                    <motion.a
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      href="#"
-                      className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
-                    >
-                      <div className="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center text-cyan-400">
-                        🐦
-                      </div>
-                      <span className="text-sm text-white font-medium">Twitter</span>
-                    </motion.a>
-
-                    <motion.a
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      href="#"
-                      className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
-                    >
-                      <div className="w-8 h-8 bg-pink-500/20 rounded-lg flex items-center justify-center text-pink-400">
-                        📷
-                      </div>
-                      <span className="text-sm text-white font-medium">Instagram</span>
-                    </motion.a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-
-        {/* Projects Tab */}
-        {activeTab === 'projects' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-white">Your Projects</h2>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowProjectModal(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
-              >
-                <IconPlus className="w-5 h-5" />
-                Create Project
-              </motion.button>
-            </div>
-
-            {user.projects && user.projects.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {user.projects.map((project, index) => (
-                  <motion.div
-                    key={project._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02, y: -5 }}
-                    className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20 shadow-xl cursor-pointer"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-white">{project.title}</h3>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${project.status === 'active'
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                        : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                        }`}>
-                        {project.status}
-                      </span>
-                    </div>
-
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between text-sm mb-2">
-                        <span className="text-gray-400">Progress</span>
-                        <span className="text-purple-400 font-semibold">{project.progress}%</span>
-                      </div>
-                      <div className="w-full bg-white/10 rounded-full h-2">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${project.progress}%` }}
-                          transition={{ duration: 1, delay: index * 0.1 }}
-                          className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
-                        />
-                      </div>
-                    </div>
-
-                    {project.team && project.team.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        <div className="flex -space-x-2">
-                          {project.team.slice(0, 3).map((member) => (
-                            <div
-                              key={member._id}
-                              className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 border-2 border-black flex items-center justify-center"
-                            >
-                              <span className="text-xs font-bold text-white">{member.name[0]}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <span className="text-xs text-gray-400">
-                          {project.team.length} team member{project.team.length > 1 ? 's' : ''}
-                        </span>
-                      </div>
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-3">About</h3>
+                    {isEditingProfile ? (
+                      <textarea
+                        value={profileData.about}
+                        onChange={(e) => setProfileData({ ...profileData, about: e.target.value })}
+                        rows={4}
+                        className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:border-purple-500 resize-none"
+                        placeholder="Tell us about yourself..."
+                      />
+                    ) : (
+                      <p className="text-gray-300 leading-relaxed">
+                        {profileData.about}
+                      </p>
                     )}
-                  </motion.div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-20">
-                <div className="w-20 h-20 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <IconFolder className="w-10 h-10 text-purple-400" />
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-3">Contact Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex items-center gap-3 text-gray-300">
+                        <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
+                          📧
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-500">Email</div>
+                          <div className="font-medium">{user?.email || 'creator@example.com'}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 text-gray-300">
+                        <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
+                          🌐
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-xs text-gray-500">Website</div>
+                          {isEditingProfile ? (
+                            <input
+                              type="text"
+                              value={profileData.website}
+                              onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
+                              className="w-full px-2 py-1 bg-black/40 border border-white/10 rounded text-sm font-medium focus:outline-none focus:border-purple-500"
+                              placeholder="www.yourwebsite.com"
+                            />
+                          ) : (
+                            <div className="font-medium">{profileData.website}</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-3">Social Media</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <motion.a
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        href="#"
+                        className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
+                      >
+                        <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
+                          🐙
+                        </div>
+                        <span className="text-sm text-white font-medium">GitHub</span>
+                      </motion.a>
+
+                      <motion.a
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        href="#"
+                        className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
+                      >
+                        <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
+                          💼
+                        </div>
+                        <span className="text-sm text-white font-medium">LinkedIn</span>
+                      </motion.a>
+
+                      <motion.a
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        href="#"
+                        className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
+                      >
+                        <div className="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center text-cyan-400">
+                          🐦
+                        </div>
+                        <span className="text-sm text-white font-medium">Twitter</span>
+                      </motion.a>
+
+                      <motion.a
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        href="#"
+                        className="flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all"
+                      >
+                        <div className="w-8 h-8 bg-pink-500/20 rounded-lg flex items-center justify-center text-pink-400">
+                          📷
+                        </div>
+                        <span className="text-sm text-white font-medium">Instagram</span>
+                      </motion.a>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">No Projects Yet</h3>
-                <p className="text-gray-400 mb-6">Start your first project and bring your ideas to life!</p>
+              </div>
+            </motion.div>
+          )}
+
+
+          {/* Projects Tab */}
+          {activeTab === 'projects' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-white">Your Projects</h2>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowProjectModal(true)}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
                 >
-                  Create Your First Project
+                  <IconPlus className="w-5 h-5" />
+                  Create Project
                 </motion.button>
               </div>
-            )}
-          </motion.div>
-        )}
 
-
-
-        {/* Calendar Tab */}
-        {activeTab === 'calendar' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <CalendarView />
-          </motion.div>
-        )}
-
-
-
-        {/* Team Tab */}
-        {activeTab === 'team' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <TeamAnalytics />
-          </motion.div>
-        )}
-
-
-
-
-
-        {/* Quick Capture Tab */}
-        {activeTab === 'capture' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <QuickCapture />
-          </motion.div>
-        )}
-
-        {/* Analytics Tab */}
-        {activeTab === 'analytics' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <h2 className="text-2xl font-bold text-white">Analytics & Insights</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { label: 'Projects Completed', value: user.projects?.filter(p => p.status === 'completed').length || 0, change: '+12%', icon: IconCheck, color: 'green' },
-                { label: 'Active Collaborations', value: user.teamMembers?.length || 0, change: '+5%', icon: IconUsers, color: 'blue' },
-                { label: 'Total Points Earned', value: user.points || 0, change: '+28%', icon: IconStar, color: 'yellow' },
-                { label: 'Success Rate', value: '94%', change: '+3%', icon: IconTrendingUp, color: 'purple' },
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 bg-${stat.color}-500/20 rounded-xl flex items-center justify-center`}>
-                      <stat.icon className={`w-6 h-6 text-${stat.color}-400`} />
-                    </div>
-                    <span className="text-green-400 text-sm font-medium">{stat.change}</span>
-                  </div>
-                  <h3 className="text-3xl font-bold text-white mb-1">{stat.value}</h3>
-                  <p className="text-gray-400 text-sm">{stat.label}</p>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Placeholder for charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20">
-                <h3 className="text-lg font-semibold text-white mb-4">Project Progress Over Time</h3>
-                <div className="h-64 flex items-center justify-center bg-white/5 rounded-xl">
-                  <p className="text-gray-400">Chart visualization coming soon</p>
-                </div>
-              </div>
-              <div className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20">
-                <h3 className="text-lg font-semibold text-white mb-4">Skills Distribution</h3>
-                <div className="h-64 flex items-center justify-center bg-white/5 rounded-xl">
-                  <p className="text-gray-400">Chart visualization coming soon</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Network Tab */}
-        {activeTab === 'network' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-white">Developer Network</h2>
-              <div className="flex items-center gap-3">
-                <button className="p-2 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">
-                  <IconFilter className="w-5 h-5 text-gray-300" />
-                </button>
-                <button className="p-2 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">
-                  <IconSearch className="w-5 h-5 text-gray-300" />
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {developerMatches.map((dev, index) => (
-                <motion.div
-                  key={dev.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20 shadow-xl"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                        <span className="text-lg font-bold text-white">{dev.avatar}</span>
+              {user.projects && user.projects.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {user.projects.map((project, index) => (
+                    <motion.div
+                      key={project._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      whileHover={{ scale: 1.02, y: -5 }}
+                      className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20 shadow-xl cursor-pointer"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-white">{project.title}</h3>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${project.status === 'active'
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                          : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                          }`}>
+                          {project.status}
+                        </span>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-white">{dev.name}</h3>
-                        <div className="flex items-center gap-1">
-                          <IconStar className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                          <span className="text-sm text-gray-400">{dev.rating}</span>
+
+                      <div className="mb-4">
+                        <div className="flex items-center justify-between text-sm mb-2">
+                          <span className="text-gray-400">Progress</span>
+                          <span className="text-purple-400 font-semibold">{project.progress}%</span>
+                        </div>
+                        <div className="w-full bg-white/10 rounded-full h-2">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${project.progress}%` }}
+                            transition={{ duration: 1, delay: index * 0.1 }}
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
+                          />
                         </div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400">
-                        {dev.matchScore}%
-                      </div>
-                      <p className="text-xs text-gray-400">Match</p>
-                    </div>
-                  </div>
 
-                  <div className="mb-4">
-                    <p className="text-xs text-gray-400 mb-2">Skills</p>
-                    <div className="flex flex-wrap gap-2">
-                      {dev.skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-lg text-xs font-medium border border-purple-500/30"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
-                    <span>{dev.projects} projects</span>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex-1 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium text-sm"
-                    >
-                      Connect
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="p-2 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors"
-                    >
-                      <IconBookmark className="w-5 h-5 text-gray-300" />
-                    </motion.button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Settings Tab */}
-        {activeTab === 'settings' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <h2 className="text-2xl font-bold text-white mb-6">Settings</h2>
-
-            {/* Security Settings */}
-            <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20">
-              <h3 className="text-xl font-semibold text-white mb-6">Security</h3>
-
-              <div className="space-y-4">
-                {/* Change Password */}
-                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <h4 className="text-white font-medium">Change Password</h4>
-                      <p className="text-sm text-gray-400">Update your password regularly for security</p>
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg border border-purple-500/30 transition-all"
-                    >
-                      Change
-                    </motion.button>
-                  </div>
+                      {project.team && project.team.length > 0 && (
+                        <div className="flex items-center gap-2">
+                          <div className="flex -space-x-2">
+                            {project.team.slice(0, 3).map((member) => (
+                              <div
+                                key={member._id}
+                                className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 border-2 border-black flex items-center justify-center"
+                              >
+                                <span className="text-xs font-bold text-white">{member.name[0]}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <span className="text-xs text-gray-400">
+                            {project.team.length} team member{project.team.length > 1 ? 's' : ''}
+                          </span>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
                 </div>
-
-                {/* Two-Factor Authentication */}
-                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-white font-medium">Two-Factor Authentication (2FA)</h4>
-                      <p className="text-sm text-gray-400">Add an extra layer of security to your account</p>
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg border border-green-500/30 transition-all"
-                    >
-                      Enable
-                    </motion.button>
+              ) : (
+                <div className="text-center py-20">
+                  <div className="w-20 h-20 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <IconFolder className="w-10 h-10 text-purple-400" />
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Connected Accounts */}
-            <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20">
-              <h3 className="text-xl font-semibold text-white mb-6">Connected Accounts</h3>
-
-              <div className="space-y-4">
-                {/* Google */}
-                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center text-red-400 text-xl">
-                        🔴
-                      </div>
-                      <div>
-                        <h4 className="text-white font-medium">Google</h4>
-                        <p className="text-sm text-gray-400">Connect your Google account</p>
-                      </div>
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg border border-white/10 transition-all"
-                    >
-                      Connect
-                    </motion.button>
-                  </div>
-                </div>
-
-                {/* GitHub */}
-                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 text-xl">
-                        🐙
-                      </div>
-                      <div>
-                        <h4 className="text-white font-medium">GitHub</h4>
-                        <p className="text-sm text-gray-400">Connect your GitHub account</p>
-                      </div>
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg border border-white/10 transition-all"
-                    >
-                      Connect
-                    </motion.button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Account Preferences */}
-            <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20">
-              <h3 className="text-xl font-semibold text-white mb-6">Preferences</h3>
-
-              <div className="space-y-4">
-                {/* Email Notifications */}
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
-                  <div>
-                    <h4 className="text-white font-medium">Email Notifications</h4>
-                    <p className="text-sm text-gray-400">Receive email updates about your activity</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" defaultChecked className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                  </label>
-                </div>
-
-                {/* Dark Mode */}
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
-                  <div>
-                    <h4 className="text-white font-medium">Dark Mode</h4>
-                    <p className="text-sm text-gray-400">Use dark theme across the dashboard</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" defaultChecked className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Danger Zone */}
-            <div className="bg-red-500/10 backdrop-blur-2xl rounded-3xl p-6 border border-red-500/30">
-              <h3 className="text-xl font-semibold text-red-400 mb-6">Danger Zone</h3>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-white font-medium">Delete Account</h4>
-                    <p className="text-sm text-gray-400">Permanently delete your account and all data</p>
-                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">No Projects Yet</h3>
+                  <p className="text-gray-400 mb-6">Start your first project and bring your ideas to life!</p>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg border border-red-500/30 transition-all"
+                    onClick={() => setShowProjectModal(true)}
+                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
                   >
-                    Delete Account
+                    Create Your First Project
                   </motion.button>
                 </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </div>
+              )}
+            </motion.div>
+          )}
 
-      {/* Project Creation Modal */}
-      <AnimatePresence>
-        {showProjectModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setShowProjectModal(false)}
-          >
+
+
+          {/* Calendar Tab */}
+          {activeTab === 'calendar' && (
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-black/95 backdrop-blur-xl rounded-3xl p-8 border border-white/20 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white">Create New Project</h2>
-                <button
-                  onClick={() => setShowProjectModal(false)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-                >
-                  <IconX className="w-6 h-6 text-gray-400" />
-                </button>
+              <CalendarView />
+            </motion.div>
+          )}
+
+
+
+          {/* Team Tab */}
+          {activeTab === 'team' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <TeamAnalytics />
+            </motion.div>
+          )}
+
+
+
+
+
+          {/* Quick Capture Tab */}
+          {activeTab === 'capture' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <QuickCapture />
+            </motion.div>
+          )}
+
+          {/* Analytics Tab */}
+          {activeTab === 'analytics' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <h2 className="text-2xl font-bold text-white">Analytics & Insights</h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  { label: 'Projects Completed', value: user.projects?.filter(p => p.status === 'completed').length || 0, change: '+12%', icon: IconCheck, color: 'green' },
+                  { label: 'Active Collaborations', value: user.teamMembers?.length || 0, change: '+5%', icon: IconUsers, color: 'blue' },
+                  { label: 'Total Points Earned', value: user.points || 0, change: '+28%', icon: IconStar, color: 'yellow' },
+                  { label: 'Success Rate', value: '94%', change: '+3%', icon: IconTrendingUp, color: 'purple' },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className={`w-12 h-12 bg-${stat.color}-500/20 rounded-xl flex items-center justify-center`}>
+                        <stat.icon className={`w-6 h-6 text-${stat.color}-400`} />
+                      </div>
+                      <span className="text-green-400 text-sm font-medium">{stat.change}</span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-white mb-1">{stat.value}</h3>
+                    <p className="text-gray-400 text-sm">{stat.label}</p>
+                  </motion.div>
+                ))}
               </div>
 
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Project Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter project name..."
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
+              {/* Placeholder for charts */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20">
+                  <h3 className="text-lg font-semibold text-white mb-4">Project Progress Over Time</h3>
+                  <div className="h-64 flex items-center justify-center bg-white/5 rounded-xl">
+                    <p className="text-gray-400">Chart visualization coming soon</p>
+                  </div>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
-                  <textarea
-                    rows={4}
-                    placeholder="Describe your project idea..."
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
-                  <select className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    <option value="">Select category...</option>
-                    <option value="web">Web Development</option>
-                    <option value="mobile">Mobile App</option>
-                    <option value="ai">AI/ML</option>
-                    <option value="blockchain">Blockchain</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div className="flex gap-4">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
-                  >
-                    Create Project
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setShowProjectModal(false)}
-                    className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-semibold border border-white/10"
-                  >
-                    Cancel
-                  </motion.button>
+                <div className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20">
+                  <h3 className="text-lg font-semibold text-white mb-4">Skills Distribution</h3>
+                  <div className="h-64 flex items-center justify-center bg-white/5 rounded-xl">
+                    <p className="text-gray-400">Chart visualization coming soon</p>
+                  </div>
                 </div>
               </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
 
-      {/* Floating Quick Notes Button */}
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setActiveTab('capture')}
-        className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center z-40 hover:shadow-purple-500/50 transition-all"
-        title="Quick Notes"
-      >
-        <IconNote className="w-8 h-8 text-white" />
-      </motion.button>
-    </div>
-  );
+          {/* Network Tab */}
+          {activeTab === 'network' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-white">Developer Network</h2>
+                <div className="flex items-center gap-3">
+                  <button className="p-2 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">
+                    <IconFilter className="w-5 h-5 text-gray-300" />
+                  </button>
+                  <button className="p-2 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">
+                    <IconSearch className="w-5 h-5 text-gray-300" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {developerMatches.map((dev, index) => (
+                  <motion.div
+                    key={dev.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20 shadow-xl"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                          <span className="text-lg font-bold text-white">{dev.avatar}</span>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">{dev.name}</h3>
+                          <div className="flex items-center gap-1">
+                            <IconStar className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                            <span className="text-sm text-gray-400">{dev.rating}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400">
+                          {dev.matchScore}%
+                        </div>
+                        <p className="text-xs text-gray-400">Match</p>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <p className="text-xs text-gray-400 mb-2">Skills</p>
+                      <div className="flex flex-wrap gap-2">
+                        {dev.skills.map((skill) => (
+                          <span
+                            key={skill}
+                            className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-lg text-xs font-medium border border-purple-500/30"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
+                      <span>{dev.projects} projects</span>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex-1 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium text-sm"
+                      >
+                        Connect
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="p-2 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors"
+                      >
+                        <IconBookmark className="w-5 h-5 text-gray-300" />
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <h2 className="text-2xl font-bold text-white mb-6">Settings</h2>
+
+              {/* Security Settings */}
+              <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20">
+                <h3 className="text-xl font-semibold text-white mb-6">Security</h3>
+
+                <div className="space-y-4">
+                  {/* Change Password */}
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h4 className="text-white font-medium">Change Password</h4>
+                        <p className="text-sm text-gray-400">Update your password regularly for security</p>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg border border-purple-500/30 transition-all"
+                      >
+                        Change
+                      </motion.button>
+                    </div>
+                  </div>
+
+                  {/* Two-Factor Authentication */}
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-white font-medium">Two-Factor Authentication (2FA)</h4>
+                        <p className="text-sm text-gray-400">Add an extra layer of security to your account</p>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg border border-green-500/30 transition-all"
+                      >
+                        Enable
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Connected Accounts */}
+              <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20">
+                <h3 className="text-xl font-semibold text-white mb-6">Connected Accounts</h3>
+
+                <div className="space-y-4">
+                  {/* Google */}
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center text-red-400 text-xl">
+                          🔴
+                        </div>
+                        <div>
+                          <h4 className="text-white font-medium">Google</h4>
+                          <p className="text-sm text-gray-400">Connect your Google account</p>
+                        </div>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg border border-white/10 transition-all"
+                      >
+                        Connect
+                      </motion.button>
+                    </div>
+                  </div>
+
+                  {/* GitHub */}
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 text-xl">
+                          🐙
+                        </div>
+                        <div>
+                          <h4 className="text-white font-medium">GitHub</h4>
+                          <p className="text-sm text-gray-400">Connect your GitHub account</p>
+                        </div>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg border border-white/10 transition-all"
+                      >
+                        Connect
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Account Preferences */}
+              <div className="bg-black/60 backdrop-blur-2xl rounded-3xl p-6 border border-white/20">
+                <h3 className="text-xl font-semibold text-white mb-6">Preferences</h3>
+
+                <div className="space-y-4">
+                  {/* Email Notifications */}
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div>
+                      <h4 className="text-white font-medium">Email Notifications</h4>
+                      <p className="text-sm text-gray-400">Receive email updates about your activity</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" defaultChecked className="sr-only peer" />
+                      <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                    </label>
+                  </div>
+
+                  {/* Dark Mode */}
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div>
+                      <h4 className="text-white font-medium">Dark Mode</h4>
+                      <p className="text-sm text-gray-400">Use dark theme across the dashboard</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" defaultChecked className="sr-only peer" />
+                      <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="bg-red-500/10 backdrop-blur-2xl rounded-3xl p-6 border border-red-500/30">
+                <h3 className="text-xl font-semibold text-red-400 mb-6">Danger Zone</h3>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-white font-medium">Delete Account</h4>
+                      <p className="text-sm text-gray-400">Permanently delete your account and all data</p>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg border border-red-500/30 transition-all"
+                    >
+                      Delete Account
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Project Creation Modal */}
+        <AnimatePresence>
+          {showProjectModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+              onClick={() => setShowProjectModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-black/95 backdrop-blur-xl rounded-3xl p-8 border border-white/20 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-white">Create New Project</h2>
+                  <button
+                    onClick={() => setShowProjectModal(false)}
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <IconX className="w-6 h-6 text-gray-400" />
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Project Name</label>
+                    <input
+                      type="text"
+                      placeholder="Enter project name..."
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                    <textarea
+                      rows={4}
+                      placeholder="Describe your project idea..."
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                    <select className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                      <option value="">Select category...</option>
+                      <option value="web">Web Development</option>
+                      <option value="mobile">Mobile App</option>
+                      <option value="ai">AI/ML</option>
+                      <option value="blockchain">Blockchain</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
+                    >
+                      Create Project
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setShowProjectModal(false)}
+                      className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-semibold border border-white/10"
+                    >
+                      Cancel
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Floating Quick Notes Button */}
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setActiveTab('capture')}
+          className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center z-40 hover:shadow-purple-500/50 transition-all"
+          title="Quick Notes"
+        >
+          <IconNote className="w-8 h-8 text-white" />
+        </motion.button>
+      </div>
+      );
 }
