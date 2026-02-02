@@ -12,6 +12,8 @@ import PasswordInput from '../components/auth/PasswordInput';
 import RoleSelector from '../components/auth/RoleSelector';
 import CountrySelect from '../components/auth/CountrySelect';
 import SocialButton from '../components/auth/SocialButton';
+import TechnologySelector from '../components/auth/TechnologySelector';
+import IdeaInput from '../components/auth/IdeaInput';
 
 interface SignUpFormData {
   name: string;
@@ -23,6 +25,9 @@ interface SignUpFormData {
   role: 'creator' | 'innovator' | '';
   country: string;
   bio: string;
+  technologies: string[]; // For creators
+  idea: string; // For innovators
+  extractedTechnologies: string[]; // AI-extracted from innovator's idea
   agreedToTerms: boolean;
 }
 
@@ -41,11 +46,14 @@ export default function SignUp() {
     role: '',
     country: '',
     bio: '',
+    technologies: [],
+    idea: '',
+    extractedTechnologies: [],
     agreedToTerms: false
   });
   const [errors, setErrors] = useState<Partial<Record<keyof SignUpFormData | 'submit', string>>>({});
 
-  const totalSteps = 3;
+  const totalSteps = 4;
 
   const validateStep = (step: number): boolean => {
     const newErrors: Partial<Record<keyof SignUpFormData, string>> = {};
@@ -95,6 +103,21 @@ export default function SignUp() {
 
       if (!formData.country) {
         newErrors.country = 'Country is required';
+      }
+    }
+
+    if (step === 4) {
+      // Validate based on role
+      if (formData.role === 'creator') {
+        if (formData.technologies.length < 3) {
+          newErrors.technologies = 'Please select at least 3 technologies';
+        }
+      } else if (formData.role === 'innovator') {
+        if (!formData.idea.trim()) {
+          newErrors.idea = 'Please describe your idea';
+        } else if (formData.idea.trim().length < 50) {
+          newErrors.idea = 'Please provide more details (at least 50 characters)';
+        }
       }
 
       if (!formData.agreedToTerms) {
@@ -187,10 +210,46 @@ export default function SignUp() {
     }
   };
 
+  const handleTechnologiesChange = (technologies: string[]) => {
+    setFormData(prev => ({ ...prev, technologies }));
+    if (errors.technologies) {
+      setErrors(prev => ({ ...prev, technologies: '' }));
+    }
+  };
+
+  const handleIdeaChange = (idea: string) => {
+    setFormData(prev => ({ ...prev, idea }));
+    if (errors.idea) {
+      setErrors(prev => ({ ...prev, idea: '' }));
+    }
+  };
+
+  const handleAnalyzeIdea = async (idea: string): Promise<string[]> => {
+    try {
+      const response = await fetch('/api/analyze-idea', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idea })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.technologies) {
+        setFormData(prev => ({ ...prev, extractedTechnologies: data.technologies }));
+        return data.technologies;
+      }
+
+      return [];
+    } catch (error) {
+      console.error('Error analyzing idea:', error);
+      return [];
+    }
+  };
+
   return (
     <div className={`min-h-screen py-12 px-4 relative overflow-hidden transition-colors ${darkMode
-        ? 'bg-black'
-        : 'bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50'
+      ? 'bg-black'
+      : 'bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50'
       }`}>
       {/* Animated Background */}
       <div className="absolute inset-0 -z-10">
@@ -230,7 +289,7 @@ export default function SignUp() {
           className="mb-8"
         >
           <div className="flex items-center justify-center gap-4">
-            {[1, 2, 3].map((step) => (
+            {[1, 2, 3, 4].map((step) => (
               <div key={step} className="flex items-center">
                 <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 font-semibold transition-all ${currentStep > step
                   ? 'bg-purple-600 border-purple-600 text-white'
@@ -242,7 +301,7 @@ export default function SignUp() {
                   }`}>
                   {currentStep > step ? <IconCheck size={20} /> : step}
                 </div>
-                {step < 3 && (
+                {step < 4 && (
                   <div className={`w-16 md:w-24 h-0.5 ${currentStep > step
                     ? 'bg-purple-600'
                     : darkMode
@@ -262,6 +321,9 @@ export default function SignUp() {
             </span>
             <span className={`text-xs ${currentStep === 3 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Profile
+            </span>
+            <span className={`text-xs ${currentStep === 4 ? 'text-purple-500 font-medium' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {formData.role === 'creator' ? 'Tech Skills' : formData.role === 'innovator' ? 'Your Idea' : 'Details'}
             </span>
           </div>
         </motion.div>
@@ -422,6 +484,42 @@ export default function SignUp() {
                       {formData.bio.length}/500 characters
                     </p>
                   </div>
+                </motion.div>
+              )}
+
+              {/* Step 4: Technology Skills or Idea Description */}
+              {currentStep === 4 && (
+                <motion.div
+                  key="step4"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  {formData.role === 'creator' ? (
+                    <TechnologySelector
+                      selectedTechnologies={formData.technologies}
+                      onChange={handleTechnologiesChange}
+                      error={errors.technologies}
+                      darkMode={darkMode}
+                    />
+                  ) : formData.role === 'innovator' ? (
+                    <IdeaInput
+                      value={formData.idea}
+                      onChange={handleIdeaChange}
+                      onAnalyze={handleAnalyzeIdea}
+                      error={errors.idea}
+                      darkMode={darkMode}
+                      extractedTechnologies={formData.extractedTechnologies}
+                    />
+                  ) : (
+                    <div className={`p-8 text-center rounded-xl border ${darkMode ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'
+                      }`}>
+                      <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                        Please go back and select your role
+                      </p>
+                    </div>
+                  )}
 
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input
