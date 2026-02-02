@@ -162,19 +162,31 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project'
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  otp: {
+    type: String,
+    select: false, // Don't return by default
+  },
+  otpExpires: {
+    type: Date,
+    select: false,
+  },
 }, {
   timestamps: true,
 });
 
 // Add virtual field for joinedAt
-userSchema.virtual('joinedAt').get(function() {
+userSchema.virtual('joinedAt').get(function () {
   return this._id.getTimestamp();
 });
 
 // Ensure virtuals are included in JSON
 userSchema.set('toJSON', {
   virtuals: true,
-  transform: function(doc, ret) {
+  transform: function (doc, ret) {
     delete ret.password;
     delete ret.__v;
     return ret;
@@ -193,7 +205,7 @@ userSchema.index({ 'projectRequirements.complexity': 1 });
 userSchema.index({ 'projectRequirements.expertise': 1 });
 
 // Update timestamps on save
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   this.updatedAt = new Date();
   next();
 });

@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 async function analyzeProjectRequirements(description: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
+    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
       : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -88,19 +88,26 @@ export async function POST(req: Request) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
     // If user is an innovator and has project requirements, analyze them
     let analyzedRequirements = null;
     if (role === 'innovator' && projectRequirements?.description) {
       analyzedRequirements = await analyzeProjectRequirements(projectRequirements.description);
     }
 
-    // Create user
+    // Create user (unverified)
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
       role,
       country,
+      isVerified: false,
+      otp,
+      otpExpires,
       ...(role === 'coder' ? {
         developerStack
       } : {
@@ -113,44 +120,18 @@ export async function POST(req: Request) {
       })
     });
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+    // In a real app, send email with OTP here using nodemailer or Resend
+    console.log(`Development Mode OTP for ${email}: ${otp}`);
 
-    // Create response
-    const response = NextResponse.json(
-      { 
-        message: 'User created successfully',
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          projectRequirements: user.projectRequirements
-        }
+    // Return success but NO token
+    return NextResponse.json(
+      {
+        message: 'Account created. Please verify your email.',
+        otpSent: true,
+        email: user.email
       },
       { status: 201 }
     );
-
-    // Set cookie with more permissive settings for development
-    const isProduction = process.env.NODE_ENV === 'production';
-    console.log('Setting cookie with environment:', {
-      isProduction,
-      domain: req.headers.get('host')
-    });
-
-    response.cookies.set('token', token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7 // 7 days
-    });
-
-    return response;
   } catch (error) {
     console.error('Signup error:', error);
     return NextResponse.json(
