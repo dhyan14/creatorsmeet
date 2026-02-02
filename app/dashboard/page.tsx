@@ -266,15 +266,21 @@ export default function Dashboard() {
 
   if (loading || isAnalyzing) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-purple-950/20 to-black">
+      <div className={`h-screen flex flex-col items-center justify-center transition-colors ${darkMode
+        ? 'bg-gradient-to-br from-black via-purple-950/20 to-black'
+        : 'bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50'
+        }`}>
         <div className="relative">
-          <div className="w-20 h-20 border-4 border-purple-200/30 rounded-full"></div>
-          <div className="w-20 h-20 border-4 border-purple-500 rounded-full border-t-transparent animate-spin absolute top-0"></div>
+          <div className={`w-20 h-20 border-4 rounded-full ${darkMode ? 'border-purple-200/30' : 'border-purple-300/50'
+            }`}></div>
+          <div className={`w-20 h-20 border-4 rounded-full border-t-transparent animate-spin absolute top-0 ${darkMode ? 'border-purple-500' : 'border-purple-600'
+            }`}></div>
         </div>
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mt-6 text-gray-300 text-lg font-medium"
+          className={`mt-6 text-lg font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'
+            }`}
         >
           {isAnalyzing ? 'Analyzing your project requirements...' : 'Loading your dashboard...'}
         </motion.p>
@@ -284,11 +290,17 @@ export default function Dashboard() {
 
   if (error || !user) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-purple-950/20 to-black">
+      <div className={`h-screen flex flex-col items-center justify-center transition-colors ${darkMode
+        ? 'bg-gradient-to-br from-black via-purple-950/20 to-black'
+        : 'bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50'
+        }`}>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="text-center p-8 bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 max-w-md mx-auto"
+          className={`text-center p-8 backdrop-blur-xl rounded-2xl max-w-md mx-auto ${darkMode
+            ? 'bg-black/40 border border-white/10'
+            : 'bg-white/80 border border-gray-200 shadow-xl'
+            }`}
         >
           <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -311,12 +323,18 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="h-screen overflow-y-auto bg-gradient-to-br from-black via-purple-950/20 to-black">
+    <div className={`h-screen overflow-y-auto transition-colors duration-300 ${darkMode
+      ? 'bg-gradient-to-br from-black via-purple-950/20 to-black'
+      : 'bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50'
+      }`}>
       {/* Enhanced Header */}
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10"
+        className={`sticky top-0 z-50 backdrop-blur-xl transition-colors ${darkMode
+          ? 'bg-black/80 border-b border-white/10'
+          : 'bg-white/80 border-b border-gray-200'
+          }`}
       >
         <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -326,8 +344,8 @@ export default function Dashboard() {
                 <IconRocket className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-white">CreatorsMeet</h1>
-                <p className="text-xs text-gray-400">Dashboard</p>
+                <h1 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>CreatorsMeet</h1>
+                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Dashboard</p>
               </div>
             </div>
 
@@ -340,7 +358,10 @@ export default function Dashboard() {
                   placeholder="Search projects, developers..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors ${darkMode
+                    ? 'bg-white/5 border-white/10 text-white placeholder-gray-400'
+                    : 'bg-gray-100 border-gray-200 text-gray-900 placeholder-gray-500'
+                    }`}
                 />
               </div>
             </div>
@@ -431,6 +452,7 @@ export default function Dashboard() {
         setActiveTab={setActiveTab}
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
+        darkMode={darkMode}
       />
 
       {/* Main Content */}

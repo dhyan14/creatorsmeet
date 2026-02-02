@@ -20,9 +20,10 @@ interface SidebarProps {
     setActiveTab: (tab: any) => void;
     sidebarOpen: boolean;
     setSidebarOpen: (open: boolean) => void;
+    darkMode: boolean;
 }
 
-export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: SidebarProps) {
+export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen, darkMode }: SidebarProps) {
     const [isHovered, setIsHovered] = useState(false);
 
     const menuItems = [
@@ -56,7 +57,10 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                 onMouseLeave={() => setIsHovered(false)}
                 animate={{ width: isHovered ? 256 : 64 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className={`hidden lg:block fixed top-16 left-0 h-[calc(100vh-4rem)] bg-black/60 backdrop-blur-2xl border-r-[0.5px] border-white/10 z-40 overflow-hidden flex-shrink-0`}
+                className={`hidden lg:block fixed top-16 left-0 h-[calc(100vh-4rem)] backdrop-blur-2xl border-r-[0.5px] z-40 overflow-hidden flex-shrink-0 transition-colors ${darkMode
+                        ? 'bg-black/60 border-white/10'
+                        : 'bg-white/90 border-gray-200'
+                    }`}
             >
                 <div className="p-3 space-y-2 h-full flex flex-col">
                     {/* Navigation Items */}
@@ -122,7 +126,10 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                 initial={{ x: -300 }}
                 animate={{ x: sidebarOpen ? 0 : -300 }}
                 transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-                className="lg:hidden fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-black/60 backdrop-blur-2xl border-r-[0.5px] border-white/10 z-40 overflow-y-auto"
+                className={`lg:hidden fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 backdrop-blur-2xl border-r-[0.5px] z-40 overflow-y-auto transition-colors ${darkMode
+                        ? 'bg-black/60 border-white/10'
+                        : 'bg-white/90 border-gray-200'
+                    }`}
             >
                 <div className="p-4 space-y-2 h-full flex flex-col">
                     <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-4">
