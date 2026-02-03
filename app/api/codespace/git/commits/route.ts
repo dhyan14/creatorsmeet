@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -12,23 +15,25 @@ export async function GET(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const owner = searchParams.get('owner');
         const repo = searchParams.get('repo');
-        const page = searchParams.get('page') || '1';
-        const perPage = searchParams.get('perPage') || '30';
 
         if (!owner || !repo) {
             return NextResponse.json({ error: 'Owner and repo required' }, { status: 400 });
         }
 
-        // TODO: Get GitHub token from database
-        const githubToken = 'USER_GITHUB_TOKEN';
+        // Get GitHub token from request header
+        const authHeader = req.headers.get('x-github-token');
 
-        if (!githubToken) {
-            return NextResponse.json({ error: 'GitHub not connected' }, { status: 400 });
+        if (!authHeader) {
+            return NextResponse.json({
+                error: 'GitHub not connected. Please connect your GitHub account first.'
+            }, { status: 401 });
         }
+
+        const githubToken = authHeader;
 
         // Fetch commits from GitHub
         const response = await fetch(
-            `https://api.github.com/repos/${owner}/${repo}/commits?page=${page}&per_page=${perPage}`,
+            `https://api.github.com/repos/${owner}/${repo}/commits?per_page=50`,
             {
                 headers: {
                     'Authorization': `Bearer ${githubToken}`,
@@ -38,7 +43,9 @@ export async function GET(req: NextRequest) {
         );
 
         if (!response.ok) {
-            throw new Error('Failed to fetch commits');
+            const errorData = await response.json();
+            console.error('GitHub API error:', errorData);
+            throw new Error(errorData.message || 'Failed to fetch commits');
         }
 
         const commits = await response.json();
@@ -58,8 +65,9 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json({ commits: formattedCommits });
     } catch (error) {
-        console.error('Commits fetch error:', error);
-        return NextResponse.json({ error: 'Failed to fetch commits' }, { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.error('Commits fetch error:', errorMessage);
+        return NextResponse.json({ error: `Failed to fetch commits: ${errorMessage}` }, { status: 500 });
     }
 }
 
@@ -78,12 +86,13 @@ export async function POST(req: NextRequest) {
             }, { status: 400 });
         }
 
-        // TODO: Get GitHub token from database
-        const githubToken = 'USER_GITHUB_TOKEN';
+        // Get GitHub token from request header
+        const authHeader = req.headers.get('x-github-token');
 
-        if (!githubToken) {
-            return NextResponse.json({ error: 'GitHub not connected' }, { status: 400 });
+        if (!authHeader) {
+            return NextResponse.json({ error: 'GitHub not connected' }, { status: 401 });
         }
+        const githubToken = authHeader;
 
         // Create commit via GitHub API
         // This is a simplified version - full implementation would:

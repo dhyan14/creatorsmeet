@@ -44,8 +44,22 @@ const CommitViewer: React.FC<CommitViewerProps> = ({ owner, repo }) => {
         setError(null);
 
         try {
+            // Get GitHub token from sessionStorage
+            const githubToken = sessionStorage.getItem('github_token');
+
+            if (!githubToken) {
+                setError('GitHub not connected. Please connect your account first.');
+                setLoading(false);
+                return;
+            }
+
             const response = await fetch(
-                `/api/codespace/git/commits?owner=${owner}&repo=${repo}`
+                `/api/codespace/git/commits?owner=${owner}&repo=${repo}`,
+                {
+                    headers: {
+                        'x-github-token': githubToken
+                    }
+                }
             );
             const data = await response.json();
 
