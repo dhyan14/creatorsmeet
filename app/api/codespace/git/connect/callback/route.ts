@@ -96,16 +96,20 @@ export async function GET(req: NextRequest) {
             { headers: { 'Content-Type': 'text/html' } }
         );
     } catch (error) {
-        console.error('OAuth callback error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.error('OAuth callback error:', errorMessage, error);
         return new NextResponse(
             `<html><body><script>
+                console.error('OAuth Error:', '${errorMessage}');
                 if (window.opener) {
-                    window.opener.postMessage({ type: 'github_oauth_error', error: 'Connection failed' }, '*');
+                    window.opener.postMessage({ type: 'github_oauth_error', error: 'Connection failed: ${errorMessage}' }, '*');
                     window.close();
                 } else {
                     window.location.href = '/dashboard?git_error=connection_failed';
                 }
-            </script></body></html>`,
+            </script>
+            <p>Error: ${errorMessage}</p>
+            </body></html>`,
             { headers: { 'Content-Type': 'text/html' } }
         );
     }
