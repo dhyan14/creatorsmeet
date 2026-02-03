@@ -105,7 +105,7 @@ const GitPanel: React.FC<GitPanelProps> = ({
         }
     };
 
-    const handleRepositorySelect = async (owner: string, repo: string) => {
+    const handleRepositorySelect = async (owner: string, repo: string, branch: string) => {
         setConnectedRepo({ owner, name: repo });
         setView('changes');
     };
@@ -232,10 +232,10 @@ const GitPanel: React.FC<GitPanelProps> = ({
                         <button
                             onClick={() => setView('changes')}
                             className={`flex-1 px-3 py-1.5 text-xs font-medium rounded transition-colors ${view === 'changes'
-                                    ? 'bg-purple-600 text-white'
-                                    : darkMode
-                                        ? 'text-gray-400 hover:text-gray-200'
-                                        : 'text-gray-600 hover:text-gray-800'
+                                ? 'bg-purple-600 text-white'
+                                : darkMode
+                                    ? 'text-gray-400 hover:text-gray-200'
+                                    : 'text-gray-600 hover:text-gray-800'
                                 }`}
                         >
                             Changes
@@ -243,10 +243,10 @@ const GitPanel: React.FC<GitPanelProps> = ({
                         <button
                             onClick={() => setView('history')}
                             className={`flex-1 px-3 py-1.5 text-xs font-medium rounded transition-colors ${view === 'history'
-                                    ? 'bg-purple-600 text-white'
-                                    : darkMode
-                                        ? 'text-gray-400 hover:text-gray-200'
-                                        : 'text-gray-600 hover:text-gray-800'
+                                ? 'bg-purple-600 text-white'
+                                : darkMode
+                                    ? 'text-gray-400 hover:text-gray-200'
+                                    : 'text-gray-600 hover:text-gray-800'
                                 }`}
                         >
                             History
@@ -290,7 +290,7 @@ const GitPanel: React.FC<GitPanelProps> = ({
                             className="h-full"
                         >
                             <RepositoryBrowser
-                                onSelectRepository={handleRepositorySelect}
+                                onSelectRepo={handleRepositorySelect}
                             />
                         </motion.div>
                     ) : view === 'changes' ? (
@@ -309,8 +309,8 @@ const GitPanel: React.FC<GitPanelProps> = ({
                                         onChange={(e) => setCommitMessage(e.target.value)}
                                         placeholder="Commit message..."
                                         className={`w-full px-3 py-2 rounded-lg text-sm resize-none ${darkMode
-                                                ? 'bg-white/5 border border-white/10 text-white placeholder-gray-500'
-                                                : 'bg-white border border-gray-300 text-gray-900 placeholder-gray-400'
+                                            ? 'bg-white/5 border border-white/10 text-white placeholder-gray-500'
+                                            : 'bg-white border border-gray-300 text-gray-900 placeholder-gray-400'
                                             } focus:outline-none focus:ring-2 focus:ring-purple-500`}
                                         rows={3}
                                     />
@@ -318,10 +318,10 @@ const GitPanel: React.FC<GitPanelProps> = ({
                                         onClick={handleCommit}
                                         disabled={!commitMessage.trim() || stagedFiles.size === 0}
                                         className={`w-full mt-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${commitMessage.trim() && stagedFiles.size > 0
-                                                ? 'bg-purple-600 text-white hover:bg-purple-700'
-                                                : darkMode
-                                                    ? 'bg-white/5 text-gray-500 cursor-not-allowed'
-                                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                            ? 'bg-purple-600 text-white hover:bg-purple-700'
+                                            : darkMode
+                                                ? 'bg-white/5 text-gray-500 cursor-not-allowed'
+                                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                                             }`}
                                     >
                                         <IconGitCommit size={16} className="inline mr-2" />
