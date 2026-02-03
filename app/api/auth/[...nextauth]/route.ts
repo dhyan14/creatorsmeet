@@ -24,7 +24,7 @@ const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       try {
         console.log('SignIn callback triggered for:', user.email);
-        
+
         // Always allow OAuth sign in - let the adapter handle user creation
         return true;
       } catch (error) {
@@ -40,12 +40,12 @@ const authOptions: NextAuthOptions = {
           session.user.email = token.email as string || session.user.email;
           session.user.name = token.name as string || session.user.name;
           session.user.image = token.picture as string || session.user.image;
-          
+
           // Try to fetch additional data from custom User model if available
           try {
             await dbConnect();
             const fullUser = await User.findOne({ email: session.user.email }).lean();
-            
+
             if (fullUser) {
               session.user.role = (fullUser as any).role;
               session.user._id = (fullUser as any)._id.toString();
@@ -103,4 +103,4 @@ const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, authOptions };
