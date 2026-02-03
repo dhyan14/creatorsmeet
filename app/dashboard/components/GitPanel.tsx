@@ -56,6 +56,7 @@ const GitPanel: React.FC<GitPanelProps> = ({
     onPush,
     onPull,
     onRefresh,
+    onFileTreeLoad,
     darkMode = true
 }) => {
     const [commitMessage, setCommitMessage] = useState('');

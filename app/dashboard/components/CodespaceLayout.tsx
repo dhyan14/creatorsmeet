@@ -241,6 +241,24 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
         console.log('Refreshing Git status...');
     };
 
+    const handleFileTreeLoad = (tree: any[], repoInfo: { owner: string; repo: string; branch: string }) => {
+        const convertToFileNodes = (items: any[]): FileNode[] => {
+            return items.map((item, index) => {
+                const node: FileNode = {
+                    id: item.sha || `${repoInfo.repo}-${item.path}-${index}`,
+                    name: item.name,
+                    type: item.type === 'tree' ? 'folder' : 'file',
+                    path: item.path
+                };
+                if (item.type === 'tree' && item.children) {
+                    node.children = convertToFileNodes(item.children);
+                }
+                return node;
+            });
+        };
+        setFiles(convertToFileNodes(tree));
+    };
+
     // Terminal operations
     const handleTerminalCommand = async (command: string): Promise<string> => {
         // Implement backend API call
