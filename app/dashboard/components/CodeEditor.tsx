@@ -52,13 +52,18 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         return icons[language] || <IconFile size={14} className="text-gray-400" />;
     };
 
-    const handleEditorDidMount = (editor: any) => {
+    const handleEditorDidMount = (editor: any, monaco: any) => {
         editorRef.current = editor;
 
-        // Add keyboard shortcuts
-        editor.addCommand(window.monaco.KeyMod.CtrlCmd | window.monaco.KeyCode.KeyS, () => {
-            if (activeTabId) {
-                onSave(activeTabId);
+        // Add keyboard shortcuts using editor's addAction method
+        editor.addAction({
+            id: 'save-file',
+            label: 'Save File',
+            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
+            run: () => {
+                if (activeTabId) {
+                    onSave(activeTabId);
+                }
             }
         });
     };
@@ -88,12 +93,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                             initial={{ opacity: 0, y: -5 }}
                             animate={{ opacity: 1, y: 0 }}
                             className={`flex items-center gap-2 px-3 py-2 border-r cursor-pointer min-w-[120px] max-w-[200px] group ${tab.id === activeTabId
-                                    ? darkMode
-                                        ? 'bg-[#1e1e1e] border-b-2 border-b-purple-500'
-                                        : 'bg-white border-b-2 border-b-purple-500'
-                                    : darkMode
-                                        ? 'bg-[#2d2d2d] hover:bg-[#1e1e1e] border-white/5'
-                                        : 'bg-gray-50 hover:bg-white border-gray-200'
+                                ? darkMode
+                                    ? 'bg-[#1e1e1e] border-b-2 border-b-purple-500'
+                                    : 'bg-white border-b-2 border-b-purple-500'
+                                : darkMode
+                                    ? 'bg-[#2d2d2d] hover:bg-[#1e1e1e] border-white/5'
+                                    : 'bg-gray-50 hover:bg-white border-gray-200'
                                 }`}
                             onClick={() => onTabChange(tab.id)}
                         >
@@ -155,8 +160,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className={`absolute bottom-4 right-4 flex items-center gap-2 px-3 py-2 rounded-lg shadow-lg ${darkMode
-                                        ? 'bg-gray-800 text-gray-200 border border-white/10'
-                                        : 'bg-white text-gray-800 border border-gray-200'
+                                    ? 'bg-gray-800 text-gray-200 border border-white/10'
+                                    : 'bg-white text-gray-800 border border-gray-200'
                                     }`}
                             >
                                 <span className="text-xs">Unsaved changes</span>
@@ -186,8 +191,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
             {/* Status Bar */}
             {activeTab && (
                 <div className={`px-3 py-1.5 text-xs flex items-center justify-between border-t ${darkMode
-                        ? 'bg-[#007acc] text-white border-[#007acc]'
-                        : 'bg-blue-600 text-white border-blue-600'
+                    ? 'bg-[#007acc] text-white border-[#007acc]'
+                    : 'bg-blue-600 text-white border-blue-600'
                     }`}>
                     <div className="flex items-center gap-4">
                         <span className="font-medium">{activeTab.language.toUpperCase()}</span>
