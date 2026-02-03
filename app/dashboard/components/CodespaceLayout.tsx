@@ -247,8 +247,7 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
                 const node: FileNode = {
                     id: item.sha || `${repoInfo.repo}-${item.path}-${index}`,
                     name: item.name,
-                    type: item.type === 'tree' ? 'folder' : 'file',
-                    path: item.path
+                    type: item.type === 'tree' ? 'folder' : 'file'
                 };
                 if (item.type === 'tree' && item.children) {
                     node.children = convertToFileNodes(item.children);
