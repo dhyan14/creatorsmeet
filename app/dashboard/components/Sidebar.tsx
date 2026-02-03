@@ -9,6 +9,7 @@ import {
     IconUsers,
     IconCalendar,
     IconUsersGroup,
+    IconCode,
     IconSettings,
     IconLogout,
     IconMenu2,
@@ -29,6 +30,7 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
     const menuItems = [
         { id: 'overview', label: 'Overview', icon: IconLayoutDashboard, color: 'purple' },
         { id: 'projects', label: 'Projects', icon: IconRocket, color: 'cyan' },
+        { id: 'codespace', label: 'Codespace', icon: IconCode, color: 'green' },
         { id: 'calendar', label: 'Calendar', icon: IconCalendar, color: 'pink' },
         { id: 'team', label: 'Team', icon: IconUsersGroup, color: 'violet' },
         { id: 'network', label: 'Network', icon: IconUsers, color: 'teal' },
@@ -58,8 +60,8 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                 animate={{ width: isHovered ? 256 : 64 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 className={`hidden lg:block fixed top-16 left-0 h-[calc(100vh-4rem)] backdrop-blur-2xl border-r-[0.5px] z-40 overflow-hidden flex-shrink-0 transition-colors ${darkMode
-                        ? 'bg-black/60 border-white/10'
-                        : 'bg-white/90 border-gray-200'
+                    ? 'bg-black/60 border-white/10'
+                    : 'bg-white/90 border-gray-200'
                     }`}
             >
                 <div className="p-3 space-y-2 h-full flex flex-col">
@@ -127,8 +129,8 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
                 animate={{ x: sidebarOpen ? 0 : -300 }}
                 transition={{ type: 'spring', stiffness: 100, damping: 20 }}
                 className={`lg:hidden fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 backdrop-blur-2xl border-r-[0.5px] z-40 overflow-y-auto transition-colors ${darkMode
-                        ? 'bg-black/60 border-white/10'
-                        : 'bg-white/90 border-gray-200'
+                    ? 'bg-black/60 border-white/10'
+                    : 'bg-white/90 border-gray-200'
                     }`}
             >
                 <div className="p-4 space-y-2 h-full flex flex-col">

@@ -45,6 +45,7 @@ import AIAssistant from './components/AIAssistant';
 import MeetingScheduler from './components/MeetingScheduler';
 import LearningHub from './components/LearningHub';
 import QuickCapture from './components/QuickCapture';
+import CodespaceLayout from './components/CodespaceLayout';
 import Sidebar from './components/Sidebar';
 
 interface ProjectRequirements {
@@ -129,7 +130,7 @@ export default function Dashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'projects' | 'analytics' | 'network' | 'calendar' | 'team' | 'capture' | 'settings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'projects' | 'codespace' | 'analytics' | 'network' | 'calendar' | 'team' | 'capture' | 'settings'>('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [darkMode, setDarkMode] = useState(true); // Dark mode state
@@ -1090,6 +1091,17 @@ export default function Dashboard() {
             </motion.div>
           )}
 
+
+          {/* Codespace Tab */}
+          {activeTab === 'codespace' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="h-[calc(100vh-8rem)]"
+            >
+              <CodespaceLayout />
+            </motion.div>
+          )}
 
 
           {/* Calendar Tab */}

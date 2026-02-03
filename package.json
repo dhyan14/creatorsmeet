@@ -12,6 +12,7 @@
     "@auth/mongodb-adapter": "^3.0.0",
     "@heroicons/react": "^2.2.0",
     "@huggingface/inference": "^3.14.0",
+    "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@react-three/drei": "^9.96.5",
     "@react-three/fiber": "^8.15.16",
@@ -24,6 +25,7 @@
     "framer-motion": "^11.18.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.330.0",
+    "monaco-editor": "^0.50.0",
     "mongodb": "^6.16.0",
     "mongoose": "^8.15.0",
     "next": "14.1.0",
@@ -31,6 +33,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
+    "simple-git": "^3.25.0",
     "tailwind-merge": "^2.6.0",
     "three": "^0.161.0"
   },
