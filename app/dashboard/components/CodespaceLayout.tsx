@@ -400,6 +400,7 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
                             onPush={handlePush}
                             onPull={handlePull}
                             onRefresh={handleRefresh}
+                            onFileTreeLoad={handleFileTreeLoad}
                             darkMode={darkMode}
                         />
                     </div>

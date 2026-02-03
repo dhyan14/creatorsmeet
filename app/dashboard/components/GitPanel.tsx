@@ -42,6 +42,7 @@ interface GitPanelProps {
     onPush: () => void;
     onPull: () => void;
     onRefresh: () => void;
+    onFileTreeLoad?: (tree: any[], repoInfo: { owner: string; repo: string; branch: string }) => void;
     darkMode?: boolean;
 }
 
