@@ -356,52 +356,54 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
 
     return (
         <div className={`h-screen flex flex-col ${darkMode ? 'bg-[#1e1e1e]' : 'bg-gray-100'}`}>
-            {/* Top Bar */}
-            <div className={`h-12 flex items-center justify-between px-4 border-b ${darkMode ? 'bg-[#252526] border-white/10' : 'bg-white border-gray-200'
-                }`}>
-                <div className="flex items-center gap-4">
-                    <h1 className={`text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent`}>
-                        Codespace
-                    </h1>
-                    <div className="flex items-center gap-2">
+            {/* Top Bar - Hide in fullscreen */}
+            {!isFullscreen && (
+                <div className={`h-12 flex items-center justify-between px-4 border-b ${darkMode ? 'bg-[#252526] border-white/10' : 'bg-white border-gray-200'
+                    }`}>
+                    <div className="flex items-center gap-4">
+                        <h1 className={`text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent`}>
+                            Codespace
+                        </h1>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setShowExplorer(!showExplorer)}
+                                className={`p-2 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                                title={showExplorer ? 'Hide Explorer' : 'Show Explorer'}
+                            >
+                                <IconLayoutSidebarLeftCollapse size={18} />
+                            </button>
+                            <button
+                                onClick={() => setShowGit(!showGit)}
+                                className={`p-2 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                                title={showGit ? 'Hide Git Panel' : 'Show Git Panel'}
+                            >
+                                <IconGitBranch size={18} />
+                            </button>
+                            <button
+                                onClick={() => setShowTerminal(!showTerminal)}
+                                className={`p-2 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                                title={showTerminal ? 'Hide Terminal' : 'Show Terminal'}
+                            >
+                                <IconTerminal2 size={18} />
+                            </button>
+                        </div>
+                    </div>
+                    <div>
                         <button
-                            onClick={() => setShowExplorer(!showExplorer)}
+                            onClick={toggleFullscreen}
                             className={`p-2 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                            title={showExplorer ? 'Hide Explorer' : 'Show Explorer'}
+                            title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
                         >
-                            <IconLayoutSidebarLeftCollapse size={18} />
-                        </button>
-                        <button
-                            onClick={() => setShowGit(!showGit)}
-                            className={`p-2 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                            title={showGit ? 'Hide Git Panel' : 'Show Git Panel'}
-                        >
-                            <IconGitBranch size={18} />
-                        </button>
-                        <button
-                            onClick={() => setShowTerminal(!showTerminal)}
-                            className={`p-2 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                            title={showTerminal ? 'Hide Terminal' : 'Show Terminal'}
-                        >
-                            <IconTerminal2 size={18} />
+                            {isFullscreen ? <IconMinimize size={18} /> : <IconMaximize size={18} />}
                         </button>
                     </div>
                 </div>
-                <div>
-                    <button
-                        onClick={toggleFullscreen}
-                        className={`p-2 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                        title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
-                    >
-                        {isFullscreen ? <IconMinimize size={18} /> : <IconMaximize size={18} />}
-                    </button>
-                </div>
-            </div>
+            )}
 
             {/* Main Content Area */}
             <div className="flex-1 flex overflow-hidden">
-                {/* File Explorer */}
-                {showExplorer && (
+                {/* File Explorer - Hide in fullscreen */}
+                {showExplorer && !isFullscreen && (
                     <div className="w-64 border-r border-white/10 flex-shrink-0">
                         <FileExplorer
                             files={files}
@@ -430,8 +432,8 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
                         />
                     </div>
 
-                    {/* Terminal */}
-                    {showTerminal && (
+                    {/* Terminal - Hide in fullscreen */}
+                    {showTerminal && !isFullscreen && (
                         <div className="h-64 border-t border-white/10">
                             <Terminal
                                 onCommand={handleTerminalCommand}
@@ -441,8 +443,8 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
                     )}
                 </div>
 
-                {/* Git Panel */}
-                {showGit && (
+                {/* Git Panel - Hide in fullscreen */}
+                {showGit && !isFullscreen && (
                     <div className="w-80 border-l border-white/10 flex-shrink-0">
                         <GitPanel
                             files={gitFiles}
