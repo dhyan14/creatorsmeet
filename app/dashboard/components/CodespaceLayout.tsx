@@ -254,14 +254,68 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
     };
 
     const handleCommit = async (message: string) => {
-        const newCommit: GitCommit = {
-            hash: Math.random().toString(36).substring(7),
-            message,
-            author: 'Current User',
-            date: new Date()
-        };
-        setGitCommits(prev => [newCommit, ...prev]);
-        setGitFiles([]);
+        if (!currentGitRepo) {
+            console.error('No repository connected');
+            return;
+        }
+
+        // Get all modified (dirty) tabs
+        const modifiedTabs = tabs.filter(tab => tab.isDirty);
+
+        if (modifiedTabs.length === 0) {
+            console.warn('No modified files to commit');
+            return;
+        }
+
+        // Prepare files for commit
+        const files = modifiedTabs.map(tab => ({
+            path: tab.id.split('-').slice(1).join('/'), // Extract path from file id
+            content: tab.content
+        }));
+
+        try {
+            const githubToken = sessionStorage.getItem('github_token');
+            if (!githubToken) {
+                console.error('GitHub token not found');
+                return;
+            }
+
+            const response = await fetch('/api/codespace/git/commits', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-github-token': githubToken
+                },
+                body: JSON.stringify({
+                    owner: currentGitRepo.owner,
+                    repo: currentGitRepo.repo,
+                    message,
+                    files,
+                    branch: currentGitRepo.branch || 'main'
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Commit failed:', data.error);
+                return;
+            }
+
+            console.log('Commit created successfully:', data.sha);
+
+            // Mark tabs as no longer dirty
+            setTabs(prev => prev.map(tab =>
+                modifiedTabs.find(mt => mt.id === tab.id)
+                    ? { ...tab, isDirty: false }
+                    : tab
+            ));
+
+            // Clear git files (staged files)
+            setGitFiles([]);
+        } catch (error) {
+            console.error('Failed to create commit:', error);
+        }
     };
 
     const handlePush = async () => {
