@@ -61,8 +61,11 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
     const [showTerminal, setShowTerminal] = useState(true);
     const [isFullscreen, setIsFullscreen] = useState(false);
 
+    // State to track current GitHub repo
+    const [currentGitRepo, setCurrentGitRepo] = useState<{ owner: string; repo: string; branch: string } | null>(null);
+
     // File operations
-    const handleFileSelect = (file: FileNode) => {
+    const handleFileSelect = async (file: FileNode) => {
         if (file.type === 'file') {
             // Check if tab already exists
             const existingTab = tabs.find(tab => tab.id === file.id);
@@ -70,11 +73,43 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
             if (existingTab) {
                 setActiveTabId(file.id);
             } else {
+                let fileContent = file.content || '';
+                let language = file.language || 'plaintext';
+
+                // If we have a current GitHub repo and the file doesn't have content yet, fetch it
+                if (currentGitRepo && !file.content) {
+                    try {
+                        const githubToken = sessionStorage.getItem('github_token');
+                        if (githubToken) {
+                            // Use file id which contains the path information
+                            const filePath = file.id.split('-').slice(1).join('-'); // Extract path from id
+
+                            const response = await fetch(
+                                `/api/codespace/git/file?owner=${currentGitRepo.owner}&repo=${currentGitRepo.repo}&path=${encodeURIComponent(filePath)}&branch=${currentGitRepo.branch}`,
+                                {
+                                    headers: {
+                                        'x-github-token': githubToken
+                                    }
+                                }
+                            );
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                fileContent = data.content || '';
+                                language = getLanguageFromExtension(file.name);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Failed to fetch file from GitHub:', error);
+                        fileContent = `// Failed to load file content from GitHub\n// Error: ${error}`;
+                    }
+                }
+
                 const newTab: EditorTab = {
                     id: file.id,
                     name: file.name,
-                    content: file.content || '',
-                    language: file.language || 'plaintext',
+                    content: fileContent,
+                    language: language,
                     isDirty: false
                 };
                 setTabs(prev => [...prev, newTab]);
@@ -242,20 +277,22 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
     };
 
     const handleFileTreeLoad = (tree: any[], repoInfo: { owner: string; repo: string; branch: string }) => {
-        const convertToFileNodes = (items: any[]): FileNode[] => {
+        const convertToFileNodes = (items: any[], parentPath: string = ''): FileNode[] => {
             return items.map((item, index) => {
+                const fullPath = parentPath ? `${parentPath}/${item.name}` : item.name;
                 const node: FileNode = {
-                    id: item.sha || `${repoInfo.repo}-${item.path}-${index}`,
+                    id: `${repoInfo.repo}-${fullPath}`,
                     name: item.name,
                     type: item.type === 'tree' ? 'folder' : 'file'
                 };
                 if (item.type === 'tree' && item.children) {
-                    node.children = convertToFileNodes(item.children);
+                    node.children = convertToFileNodes(item.children, fullPath);
                 }
                 return node;
             });
         };
         setFiles(convertToFileNodes(tree));
+        setCurrentGitRepo(repoInfo);
     };
 
     // Terminal operations
