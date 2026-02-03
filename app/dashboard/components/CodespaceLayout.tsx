@@ -10,11 +10,14 @@ import {
     IconLayoutSidebarLeftCollapse,
     IconLayoutSidebarRightCollapse,
     IconTerminal2,
-    IconGitBranch
+    IconGitBranch,
+    IconMaximize,
+    IconMinimize
 } from '@tabler/icons-react';
 
 interface CodespaceLayoutProps {
     darkMode?: boolean;
+    onFullscreenChange?: (isFullscreen: boolean) => void;
 }
 
 const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) => {
@@ -56,6 +59,7 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
     const [showExplorer, setShowExplorer] = useState(true);
     const [showGit, setShowGit] = useState(true);
     const [showTerminal, setShowTerminal] = useState(true);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     // File operations
     const handleFileSelect = (file: FileNode) => {
@@ -262,6 +266,40 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
         return languageMap[ext || ''] || 'plaintext';
     };
 
+    // Fullscreen toggle
+    const toggleFullscreen = () => {
+        setIsFullscreen(!isFullscreen);
+    };
+
+    // ESC key listener for fullscreen
+    useEffect(() => {
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isFullscreen) {
+                setIsFullscreen(false);
+            }
+        };
+
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [isFullscreen]);
+
+    // File upload handler
+    const handleFileUpload = async (uploadedFiles: File[]) => {
+        console.log('Uploading files:', uploadedFiles);
+        // TODO: Implement file upload API call
+
+        // For now, add files to the tree
+        const newFiles: FileNode[] = uploadedFiles.map(file => ({
+            id: Date.now().toString() + Math.random(),
+            name: file.name,
+            type: 'file',
+            content: '', // Will be loaded async
+            language: getLanguageFromExtension(file.name)
+        }));
+
+        setFiles(prev => [...prev, ...newFiles]);
+    };
+
     return (
         <div className={`h-screen flex flex-col ${darkMode ? 'bg-[#1e1e1e]' : 'bg-gray-100'}`}>
             {/* Top Bar */}
@@ -295,6 +333,15 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
                         </button>
                     </div>
                 </div>
+                <div>
+                    <button
+                        onClick={toggleFullscreen}
+                        className={`p-2 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                        title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+                    >
+                        {isFullscreen ? <IconMinimize size={18} /> : <IconMaximize size={18} />}
+                    </button>
+                </div>
             </div>
 
             {/* Main Content Area */}
@@ -308,6 +355,7 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
                             onFileCreate={handleFileCreate}
                             onFileDelete={handleFileDelete}
                             onFileRename={handleFileRename}
+                            onFileUpload={handleFileUpload}
                             selectedFileId={activeTabId || undefined}
                             darkMode={darkMode}
                         />

@@ -12,7 +12,9 @@ import {
     IconTrash,
     IconEdit,
     IconChevronRight,
-    IconChevronDown
+    IconChevronDown,
+    IconUpload,
+    IconFolderUp
 } from '@tabler/icons-react';
 
 interface FileNode {
@@ -30,6 +32,7 @@ interface FileExplorerProps {
     onFileCreate: (parentId: string | null, type: 'file' | 'folder', name: string) => void;
     onFileDelete: (fileId: string) => void;
     onFileRename: (fileId: string, newName: string) => void;
+    onFileUpload?: (files: File[]) => void;
     selectedFileId?: string;
     darkMode?: boolean;
 }
@@ -40,6 +43,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
     onFileCreate,
     onFileDelete,
     onFileRename,
+    onFileUpload,
     selectedFileId,
     darkMode = true
 }) => {
@@ -47,6 +51,9 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
     const [contextMenu, setContextMenu] = useState<{ x: number; y: number; fileId: string } | null>(null);
     const [renamingId, setRenamingId] = useState<string | null>(null);
     const [newName, setNewName] = useState('');
+    const [isDragging, setIsDragging] = useState(false);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const folderInputRef = React.useRef<HTMLInputElement>(null);
 
     const toggleFolder = (folderId: string) => {
         setExpandedFolders(prev => {
@@ -137,8 +144,8 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
                                 }
                             }}
                             className={`flex-1 px-2 py-0.5 rounded text-sm ${darkMode
-                                    ? 'bg-white/10 text-white border border-white/20'
-                                    : 'bg-gray-100 text-gray-900 border border-gray-300'
+                                ? 'bg-white/10 text-white border border-white/20'
+                                : 'bg-gray-100 text-gray-900 border border-gray-300'
                                 } focus:outline-none focus:ring-2 focus:ring-purple-500`}
                             autoFocus
                         />
@@ -186,13 +193,84 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
                     >
                         <IconFolder size={16} />
                     </button>
+                    {onFileUpload && (
+                        <>
+                            <button
+                                onClick={() => fileInputRef.current?.click()}
+                                className={`p-1 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                                title="Upload Files"
+                            >
+                                <IconUpload size={16} />
+                            </button>
+                            <button
+                                onClick={() => folderInputRef.current?.click()}
+                                className={`p-1 rounded hover:bg-white/10 transition-colors ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                                title="Upload Folder"
+                            >
+                                <IconFolderUp size={16} />
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
 
             {/* File Tree */}
-            <div className="flex-1 overflow-y-auto p-2">
+            <div
+                className={`flex-1 overflow-y-auto p-2 relative ${isDragging ? 'bg-purple-500/10 border-2 border-dashed border-purple-500' : ''}`}
+                onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDragging(false);
+                    if (onFileUpload && e.dataTransfer.files.length > 0) {
+                        onFileUpload(Array.from(e.dataTransfer.files));
+                    }
+                }}
+            >
+                {isDragging && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-purple-500/20 backdrop-blur-sm z-10">
+                        <div className="text-center">
+                            <IconUpload className="w-12 h-12 text-purple-400 mx-auto mb-2" />
+                            <p className="text-sm text-purple-400 font-medium">Drop files to upload</p>
+                        </div>
+                    </div>
+                )}
                 {renderFileTree(files)}
             </div>
+
+            {/* Hidden File Inputs */}
+            {onFileUpload && (
+                <>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        onChange={(e) => {
+                            if (e.target.files && e.target.files.length > 0) {
+                                onFileUpload(Array.from(e.target.files));
+                            }
+                        }}
+                        className="hidden"
+                    />
+                    <input
+                        ref={folderInputRef}
+                        type="file"
+                        /* @ts-ignore */
+                        webkitdirectory=""
+                        directory=""
+                        multiple
+                        onChange={(e) => {
+                            if (e.target.files && e.target.files.length > 0) {
+                                onFileUpload(Array.from(e.target.files));
+                            }
+                        }}
+                        className="hidden"
+                    />
+                </>
+            )}
 
             {/* Context Menu */}
             {contextMenu && (
@@ -205,8 +283,8 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className={`fixed z-50 ${darkMode
-                                ? 'bg-gray-900 border-white/20'
-                                : 'bg-white border-gray-200'
+                            ? 'bg-gray-900 border-white/20'
+                            : 'bg-white border-gray-200'
                             } border rounded-lg shadow-xl py-1 min-w-[160px]`}
                         style={{ top: contextMenu.y, left: contextMenu.x }}
                     >
@@ -220,8 +298,8 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
                                 setContextMenu(null);
                             }}
                             className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 ${darkMode
-                                    ? 'text-gray-200 hover:bg-white/10'
-                                    : 'text-gray-800 hover:bg-gray-100'
+                                ? 'text-gray-200 hover:bg-white/10'
+                                : 'text-gray-800 hover:bg-gray-100'
                                 }`}
                         >
                             <IconEdit size={14} />
@@ -233,8 +311,8 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
                                 setContextMenu(null);
                             }}
                             className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 ${darkMode
-                                    ? 'text-red-400 hover:bg-red-500/10'
-                                    : 'text-red-600 hover:bg-red-50'
+                                ? 'text-red-400 hover:bg-red-500/10'
+                                : 'text-red-600 hover:bg-red-50'
                                 }`}
                         >
                             <IconTrash size={14} />
