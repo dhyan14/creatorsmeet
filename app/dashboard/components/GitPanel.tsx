@@ -107,6 +107,30 @@ const GitPanel: React.FC<GitPanelProps> = ({
 
     const handleRepositorySelect = async (owner: string, repo: string, branch: string) => {
         setConnectedRepo({ owner, name: repo });
+
+        // Fetch repository file tree
+        try {
+            const githubToken = sessionStorage.getItem('github_token');
+            if (githubToken) {
+                const response = await fetch(
+                    `/api/codespace/git/tree?owner=${owner}&repo=${repo}&branch=${branch}`,
+                    {
+                        headers: {
+                            'x-github-token': githubToken
+                        }
+                    }
+                );
+                const data = await response.json();
+
+                if (data.tree && onFileTreeLoad) {
+                    // Notify parent component (CodespaceLayout) to load files
+                    onFileTreeLoad(data.tree, { owner, repo, branch });
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load repository tree:', error);
+        }
+
         setView('changes');
     };
 
