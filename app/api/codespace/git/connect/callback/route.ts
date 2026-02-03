@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
         if (!session?.user) {
-            // Redirect to login if not authenticated
             return NextResponse.redirect(new URL('/signin', req.url));
         }
 
@@ -19,17 +18,23 @@ export async function GET(req: NextRequest) {
         const error = searchParams.get('error');
 
         if (error) {
-            // Handle OAuth error
-            const dashboardUrl = new URL('/dashboard', req.url);
-            dashboardUrl.searchParams.set('git_error', error);
-            return NextResponse.redirect(dashboardUrl);
+            return new NextResponse(
+                `<html><body><script>
+                    if (window.opener) {
+                        window.opener.postMessage({ type: 'github_oauth_error', error: '${error}' }, '*');
+                        window.close();
+                    } else {
+                        window.location.href = '/dashboard?git_error=${error}';
+                    }
+                </script></body></html>`,
+                { headers: { 'Content-Type': 'text/html' } }
+            );
         }
 
         if (!code) {
             return NextResponse.redirect(new URL('/dashboard', req.url));
         }
 
-        // Exchange code for access token
         const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
             method: 'POST',
             headers: {
@@ -47,14 +52,21 @@ export async function GET(req: NextRequest) {
         const tokenData = await tokenResponse.json();
 
         if (tokenData.error) {
-            const dashboardUrl = new URL('/dashboard', req.url);
-            dashboardUrl.searchParams.set('git_error', tokenData.error_description || 'OAuth failed');
-            return NextResponse.redirect(dashboardUrl);
+            return new NextResponse(
+                `<html><body><script>
+                    if (window.opener) {
+                        window.opener.postMessage({ type: 'github_oauth_error', error: '${tokenData.error_description || 'OAuth failed'}' }, '*');
+                        window.close();
+                    } else {
+                        window.location.href = '/dashboard?git_error=oauth_failed';
+                    }
+                </script></body></html>`,
+                { headers: { 'Content-Type': 'text/html' } }
+            );
         }
 
         const accessToken = tokenData.access_token;
 
-        // Get user info from GitHub
         const userResponse = await fetch('https://api.github.com/user', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -64,20 +76,37 @@ export async function GET(req: NextRequest) {
 
         const githubUser = await userResponse.json();
 
-        // TODO: Save encrypted token and GitHub username to user in database
-        // For now, store in session or temporary storage
-        console.log('GitHub OAuth successful for user:', githubUser.login);
-
-        // Redirect back to dashboard with success
-        const dashboardUrl = new URL('/dashboard', req.url);
-        dashboardUrl.searchParams.set('git_connected', 'true');
-        dashboardUrl.searchParams.set('github_username', githubUser.login);
-
-        return NextResponse.redirect(dashboardUrl);
+        return new NextResponse(
+            `<html><body><script>
+                if (window.opener) {
+                    window.opener.postMessage({ 
+                        type: 'github_oauth_success', 
+                        username: '${githubUser.login}',
+                        token: '${accessToken}'
+                    }, '*');
+                    window.close();
+                } else {
+                    sessionStorage.setItem('github_token', '${accessToken}');
+                    sessionStorage.setItem('github_username', '${githubUser.login}');
+                    window.location.href = '/dashboard?git_connected=true&github_username=${githubUser.login}';
+                }
+            </script>
+            <p>Connected! Closing window...</p>
+            </body></html>`,
+            { headers: { 'Content-Type': 'text/html' } }
+        );
     } catch (error) {
         console.error('OAuth callback error:', error);
-        const dashboardUrl = new URL('/dashboard', req.url);
-        dashboardUrl.searchParams.set('git_error', 'Connection failed');
-        return NextResponse.redirect(dashboardUrl);
+        return new NextResponse(
+            `<html><body><script>
+                if (window.opener) {
+                    window.opener.postMessage({ type: 'github_oauth_error', error: 'Connection failed' }, '*');
+                    window.close();
+                } else {
+                    window.location.href = '/dashboard?git_error=connection_failed';
+                }
+            </script></body></html>`,
+            { headers: { 'Content-Type': 'text/html' } }
+        );
     }
 }

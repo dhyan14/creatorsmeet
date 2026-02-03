@@ -47,7 +47,20 @@ const RepositoryBrowser: React.FC<RepositoryBrowserProps> = ({
         setError(null);
 
         try {
-            const response = await fetch('/api/codespace/git/repositories');
+            // Get GitHub token from sessionStorage
+            const githubToken = sessionStorage.getItem('github_token');
+
+            if (!githubToken) {
+                setError('GitHub not connected. Please connect your account first.');
+                setLoading(false);
+                return;
+            }
+
+            const response = await fetch('/api/codespace/git/repositories', {
+                headers: {
+                    'x-github-token': githubToken
+                }
+            });
             const data = await response.json();
 
             if (data.error) {
@@ -134,8 +147,8 @@ const RepositoryBrowser: React.FC<RepositoryBrowserProps> = ({
                                 whileHover={{ scale: 1.01 }}
                                 onClick={() => handleSelectRepo(repo)}
                                 className={`p-3 rounded-lg cursor-pointer transition-all ${selectedRepo?.owner === repo.owner && selectedRepo?.repo === repo.name
-                                        ? 'bg-purple-500/20 border-2 border-purple-500/50'
-                                        : 'bg-white/5 border border-white/10 hover:bg-white/10'
+                                    ? 'bg-purple-500/20 border-2 border-purple-500/50'
+                                    : 'bg-white/5 border border-white/10 hover:bg-white/10'
                                     }`}
                             >
                                 <div className="flex items-start justify-between mb-2">

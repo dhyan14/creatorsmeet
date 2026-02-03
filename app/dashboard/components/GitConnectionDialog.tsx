@@ -50,12 +50,35 @@ const GitConnectionDialog: React.FC<GitConnectionDialogProps> = ({
                     `width=${width},height=${height},left=${left},top=${top}`
                 );
 
-                // Listen for OAuth completion
+                // Listen for OAuth completion via postMessage
+                const handleMessage = (event: MessageEvent) => {
+                    if (event.data.type === 'github_oauth_success') {
+                        // Store token in sessionStorage
+                        sessionStorage.setItem('github_token', event.data.token);
+                        sessionStorage.setItem('github_username', event.data.username);
+
+                        // Update UI
+                        onConnect(event.data.username);
+                        setLoading(false);
+                        onClose();
+
+                        // Clean up
+                        window.removeEventListener('message', handleMessage);
+                    } else if (event.data.type === 'github_oauth_error') {
+                        setError(event.data.error || 'Failed to connect to GitHub');
+                        setLoading(false);
+                        window.removeEventListener('message', handleMessage);
+                    }
+                };
+
+                window.addEventListener('message', handleMessage);
+
+                // Also check if popup was closed manually
                 const checkPopup = setInterval(() => {
                     if (popup?.closed) {
                         clearInterval(checkPopup);
-                        // Check if connection was successful
-                        checkConnection();
+                        window.removeEventListener('message', handleMessage);
+                        setLoading(false);
                     }
                 }, 500);
             }

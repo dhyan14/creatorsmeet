@@ -9,14 +9,16 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // TODO: Get GitHub token from database
-        const githubToken = 'USER_GITHUB_TOKEN'; // Replace with actual token retrieval
+        const authHeader = req.headers.get('x-github-token');
 
-        if (!githubToken) {
-            return NextResponse.json({ error: 'GitHub not connected' }, { status: 400 });
+        if (!authHeader) {
+            return NextResponse.json({
+                error: 'GitHub not connected. Please connect your GitHub account first.'
+            }, { status: 401 });
         }
 
-        // Fetch user's repositories from GitHub
+        const githubToken = authHeader;
+
         const response = await fetch('https://api.github.com/user/repos?per_page=100&sort=updated', {
             headers: {
                 'Authorization': `Bearer ${githubToken}`,
@@ -25,13 +27,12 @@ export async function GET(req: NextRequest) {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch repositories');
+            throw new Error('Failed to fetch repositories from GitHub');
         }
 
         const repos = await response.json();
 
-        // Transform to needed format
-        const formattedRepos = repos.map((repo: any) => ({
+        const repositories = repos.map((repo: any) => ({
             id: repo.id,
             name: repo.name,
             fullName: repo.full_name,
@@ -43,35 +44,11 @@ export async function GET(req: NextRequest) {
             updatedAt: repo.updated_at
         }));
 
-        return NextResponse.json({ repositories: formattedRepos });
+        return NextResponse.json({ repositories });
     } catch (error) {
-        console.error('Repositories fetch error:', error);
-        return NextResponse.json({ error: 'Failed to fetch repositories' }, { status: 500 });
-    }
-}
-
-export async function POST(req: NextRequest) {
-    try {
-        const session = await getServerSession(authOptions);
-        if (!session?.user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-        const { owner, repo, branch = 'main' } = await req.json();
-
-        if (!owner || !repo) {
-            return NextResponse.json({ error: 'Owner and repo required' }, { status: 400 });
-        }
-
-        // TODO: Clone repository to user's workspace
-        // For now, return success
+        console.error('Error fetching repositories:', error);
         return NextResponse.json({
-            success: true,
-            message: `Repository ${owner}/${repo} connected`,
-            branch
-        });
-    } catch (error) {
-        console.error('Repository connect error:', error);
-        return NextResponse.json({ error: 'Failed to connect repository' }, { status: 500 });
+            error: 'Failed to fetch repositories'
+        }, { status: 500 });
     }
 }
