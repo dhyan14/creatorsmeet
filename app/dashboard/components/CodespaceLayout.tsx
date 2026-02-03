@@ -136,6 +136,20 @@ const CodespaceLayout: React.FC<CodespaceLayoutProps> = ({ darkMode = true }) =>
         setTabs(prev => prev.map(tab =>
             tab.id === tabId ? { ...tab, content, isDirty: true } : tab
         ));
+
+        // Add to git files (changes) if not already there
+        const filePath = tabId.split('-').slice(1).join('/');
+        setGitFiles(prev => {
+            const exists = prev.find(f => f.path === filePath);
+            if (!exists) {
+                return [...prev, {
+                    path: filePath,
+                    status: 'modified',
+                    staged: false
+                }];
+            }
+            return prev;
+        });
     };
 
     const handleSave = async (tabId: string) => {
