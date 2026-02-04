@@ -97,10 +97,19 @@ export async function POST(req: Request) {
       otpExpires
     });
 
-    // In development, log OTP (in production, send email)
-    console.log(`Development Mode OTP for ${email}: ${otp}`);
-
-    // TODO: Send email with OTP using Resend or SendGrid
+    // Send OTP email
+    try {
+      const { sendOTPEmail } = await import('@/lib/email');
+      await sendOTPEmail({
+        to: email,
+        name: name,
+        otp: otp
+      });
+      console.log(`OTP email sent successfully to ${email}`);
+    } catch (emailError) {
+      console.error('Failed to send OTP email:', emailError);
+      // Continue anyway - user is created, they can request new OTP
+    }
 
     return NextResponse.json(
       {

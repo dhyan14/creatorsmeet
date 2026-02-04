@@ -1,99 +1,97 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
-import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+export const dynamic = 'force-dynamic';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
         const { email, otp } = await req.json();
 
         if (!email || !otp) {
             return NextResponse.json(
-                { message: 'Email and OTP are required' },
+                { error: 'Email and OTP are required' },
                 { status: 400 }
             );
         }
 
+        // Validate OTP format (6 digits)
+        if (!/^\d{6}$/.test(otp)) {
+            return NextResponse.json(
+                { error: 'Invalid OTP format' },
+                { status: 400 }
+            );
+        }
+
+        // Connect to database
         await dbConnect();
 
-        // Find user with matching email and select OTP fields
-        const user = await User.findOne({ email }).select('+otp +otpExpires');
+        // Find user by email
+        const user = await User.findOne({
+            email: email.toLowerCase()
+        }).select('+otp +otpExpires');
 
         if (!user) {
             return NextResponse.json(
-                { message: 'User not found' },
+                { error: 'User not found' },
                 { status: 404 }
             );
         }
 
-        if (user.isVerified) {
+        // Check if user is already verified
+        if (user.emailVerified) {
             return NextResponse.json(
-                { message: 'User already verified' },
+                { error: 'Email already verified' },
                 { status: 400 }
             );
         }
 
-        // Check OTP
+        // Check if OTP exists
+        if (!user.otp || !user.otpExpires) {
+            return NextResponse.json(
+                { error: 'No OTP found. Please request a new one.' },
+                { status: 400 }
+            );
+        }
+
+        // Check if OTP is expired
+        if (new Date() > user.otpExpires) {
+            return NextResponse.json(
+                { error: 'OTP has expired. Please request a new one.' },
+                { status: 400 }
+            );
+        }
+
+        // Verify OTP
         if (user.otp !== otp) {
             return NextResponse.json(
-                { message: 'Invalid OTP' },
+                { error: 'Invalid OTP' },
                 { status: 400 }
             );
         }
 
-        // Check expiry
-        if (user.otpExpires && user.otpExpires < new Date()) {
-            return NextResponse.json(
-                { message: 'OTP expired' },
-                { status: 400 }
-            );
-        }
-
-        // Verify user and clear OTP
-        user.isVerified = true;
+        // Mark email as verified
+        user.emailVerified = new Date();
         user.otp = undefined;
         user.otpExpires = undefined;
         await user.save();
 
-        // Generate JWT token
-        const token = jwt.sign(
-            { userId: user._id },
-            JWT_SECRET,
-            { expiresIn: '7d' }
-        );
-
-        // Create response
-        const response = NextResponse.json(
-            {
-                message: 'Email verified successfully',
-                user: {
-                    _id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    role: user.role
-                }
-            },
-            { status: 200 }
-        );
-
-        // Set cookie
-        const isProduction = process.env.NODE_ENV === 'production';
-        response.cookies.set('token', token, {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? 'strict' : 'lax',
-            path: '/',
-            maxAge: 60 * 60 * 24 * 7 // 7 days
-        });
-
-        return response;
+        return NextResponse.json({
+            success: true,
+            message: 'Email verified successfully',
+            user: {
+                id: user._id,
+                email: user.email,
+                username: user.username,
+                name: user.name,
+                emailVerified: true
+            }
+        }, { status: 200 });
 
     } catch (error) {
         console.error('OTP verification error:', error);
         return NextResponse.json(
-            { message: 'Verification failed' },
+            { error: 'Failed to verify OTP' },
             { status: 500 }
         );
     }
