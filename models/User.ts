@@ -18,6 +18,10 @@ export interface IUser extends Document {
   setupStep: number; // 1: basic, 2: username, 3: password (OAuth), 4: role, 5: profile
   needsPassword: boolean; // true if OAuth user needs password
 
+  // OTP fields
+  otp?: string;
+  otpExpires?: Date;
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -91,6 +95,14 @@ const UserSchema = new Schema<IUser>(
     needsPassword: {
       type: Boolean,
       default: false
+    },
+    otp: {
+      type: String,
+      select: false // Don't return by default in queries
+    },
+    otpExpires: {
+      type: Date,
+      select: false // Don't return by default in queries
     }
   },
   {
