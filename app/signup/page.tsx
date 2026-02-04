@@ -9,6 +9,7 @@ import {
 } from '@tabler/icons-react';
 import FormInput from '../components/auth/FormInput';
 import PasswordInput from '../components/auth/PasswordInput';
+import UsernameInput from '../components/auth/UsernameInput';
 import RoleSelector from '../components/auth/RoleSelector';
 import CountrySelect from '../components/auth/CountrySelect';
 import SocialButton from '../components/auth/SocialButton';
@@ -68,10 +69,10 @@ export default function SignUp() {
 
       if (!formData.username.trim()) {
         newErrors.username = 'Username is required';
-      } else if (formData.username.length < 3) {
-        newErrors.username = 'Username must be at least 3 characters';
-      } else if (!/^[a-z0-9_]+$/.test(formData.username)) {
-        newErrors.username = 'Username must be lowercase letters, numbers, and underscores only';
+      } else if (formData.username.length < 3 || formData.username.length > 20) {
+        newErrors.username = 'Username must be between 3 and 20 characters';
+      } else if (!/^[a-z0-9_-]+$/.test(formData.username.toLowerCase())) {
+        newErrors.username = 'Username can only contain letters, numbers, underscores, and hyphens';
       }
 
       if (!formData.email.trim()) {
@@ -399,17 +400,24 @@ export default function SignUp() {
                     icon={<IconUser size={20} />}
                   />
 
-                  <FormInput
-                    label="Username"
-                    type="text"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    placeholder="johndoe"
-                    error={errors.username}
-                    darkMode={darkMode}
-                    icon={<span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>@</span>}
-                  />
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Username
+                    </label>
+                    <UsernameInput
+                      value={formData.username}
+                      onChange={(value) => {
+                        setFormData(prev => ({ ...prev, username: value }));
+                        if (errors.username) {
+                          setErrors(prev => ({ ...prev, username: '' }));
+                        }
+                      }}
+                      darkMode={darkMode}
+                    />
+                    {errors.username && (
+                      <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+                    )}
+                  </div>
 
                   <FormInput
                     label="Email"
