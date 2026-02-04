@@ -89,6 +89,7 @@ export async function POST(req: Request) {
         message: 'Login successful',
         user: {
           email: user.email,
+          username: user.username,
           name: user.name,
           role: user.role
         }
