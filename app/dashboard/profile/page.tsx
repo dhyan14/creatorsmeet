@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 interface UserProfile {
   name: string;
+  username: string; // ADD username field
   email: string;
   role: string;
   bio: string;
@@ -115,7 +116,7 @@ export default function ProfilePage() {
           <div className="w-20 h-20 border-4 border-purple-200/30 rounded-full"></div>
           <div className="w-20 h-20 border-4 border-purple-500 rounded-full border-t-transparent animate-spin absolute top-0"></div>
         </div>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="mt-6 text-gray-300 text-lg font-medium"
@@ -179,7 +180,7 @@ export default function ProfilePage() {
       <div className="space-y-6 p-4 sm:p-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4"
@@ -207,7 +208,7 @@ export default function ProfilePage() {
           </motion.div>
 
           {/* Profile Content */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -216,7 +217,7 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left Column - Photo and Basic Info */}
               <div className="space-y-6">
-                <motion.div 
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   className="relative w-40 h-40 mx-auto"
                 >
@@ -227,7 +228,7 @@ export default function ProfilePage() {
                     className="rounded-2xl object-cover border-4 border-gradient-to-r from-purple-500 to-pink-500"
                   />
                   {isEditing && (
-                    <motion.label 
+                    <motion.label
                       whileHover={{ scale: 1.1 }}
                       className="absolute bottom-2 right-2 bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-xl text-white hover:from-purple-700 hover:to-pink-700 cursor-pointer shadow-lg"
                     >
@@ -244,7 +245,7 @@ export default function ProfilePage() {
                     </motion.label>
                   )}
                 </motion.div>
-                
+
                 <div className="text-center">
                   {isEditing ? (
                     <input
@@ -256,14 +257,20 @@ export default function ProfilePage() {
                   ) : (
                     <h2 className="text-2xl sm:text-3xl font-bold text-white">{profileData.name}</h2>
                   )}
-                  <div className="mt-2">
+
+                  {/* Username with @ symbol */}
+                  <p className="text-purple-300 text-sm mt-1 font-medium">
+                    @{profileData.username}
+                  </p>
+
+                  <div className="mt-3">
                     <span className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 rounded-xl text-sm font-medium border border-purple-500/30">
                       {profileData.role}
                     </span>
                   </div>
                 </div>
 
-                <motion.div 
+                <motion.div
                   whileHover={{ scale: 1.02 }}
                   className="bg-white/10 rounded-2xl p-4 border border-white/20 backdrop-blur-sm"
                 >
@@ -282,7 +289,7 @@ export default function ProfilePage() {
               {/* Right Column - Details */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Bio */}
-                <motion.div 
+                <motion.div
                   whileHover={{ scale: 1.02, y: -2 }}
                   className="bg-white/10 rounded-2xl p-6 border border-white/20 backdrop-blur-sm"
                 >
@@ -307,7 +314,7 @@ export default function ProfilePage() {
                 </motion.div>
 
                 {/* Contact Information */}
-                <motion.div 
+                <motion.div
                   whileHover={{ scale: 1.02, y: -2 }}
                   className="bg-white/10 rounded-2xl p-6 border border-white/20 backdrop-blur-sm"
                 >
@@ -321,6 +328,15 @@ export default function ProfilePage() {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
+                      <label className="text-gray-300 text-sm font-medium block mb-2">Username</label>
+                      <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-3">
+                        <svg className="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                        </svg>
+                        <p className="text-white font-medium">@{profileData.username}</p>
+                      </div>
+                    </div>
+                    <div>
                       <label className="text-gray-300 text-sm font-medium block mb-2">Email</label>
                       {isEditing ? (
                         <input
@@ -333,6 +349,8 @@ export default function ProfilePage() {
                         <p className="text-white font-medium">{profileData.email}</p>
                       )}
                     </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                     <div>
                       <label className="text-gray-300 text-sm font-medium block mb-2">Country</label>
                       {isEditing ? (
@@ -350,7 +368,7 @@ export default function ProfilePage() {
                 </motion.div>
 
                 {/* Skills */}
-                <motion.div 
+                <motion.div
                   whileHover={{ scale: 1.02, y: -2 }}
                   className="bg-white/10 rounded-2xl p-6 border border-white/20 backdrop-blur-sm"
                 >
@@ -373,7 +391,7 @@ export default function ProfilePage() {
                       </motion.span>
                     )) || <p className="text-gray-400">No skills added yet</p>}
                     {isEditing && (
-                      <motion.button 
+                      <motion.button
                         whileHover={{ scale: 1.05 }}
                         onClick={() => {
                           const newSkill = prompt('Enter new skill:');
@@ -393,7 +411,7 @@ export default function ProfilePage() {
                 </motion.div>
 
                 {/* Social Links */}
-                <motion.div 
+                <motion.div
                   whileHover={{ scale: 1.02, y: -2 }}
                   className="bg-white/10 rounded-2xl p-6 border border-white/20 backdrop-blur-sm"
                 >
@@ -417,7 +435,7 @@ export default function ProfilePage() {
                           placeholder="username"
                         />
                       ) : (
-                        <a 
+                        <a
                           href={`https://github.com/${profileData.github}`}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -438,7 +456,7 @@ export default function ProfilePage() {
                           placeholder="username"
                         />
                       ) : (
-                        <a 
+                        <a
                           href={`https://linkedin.com/in/${profileData.linkedin}`}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -455,7 +473,7 @@ export default function ProfilePage() {
 
             {/* Action Buttons */}
             {isEditing && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="flex flex-col sm:flex-row justify-end gap-4 mt-8"
