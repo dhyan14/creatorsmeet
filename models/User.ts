@@ -98,7 +98,4 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-// Create case-insensitive index for username
-UserSchema.index({ username: 1 }, { unique: true, collation: { locale: 'en', strength: 2 } });
-
 export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
