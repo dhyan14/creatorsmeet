@@ -2,73 +2,51 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
-import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-
-async function analyzeProjectRequirements(description: string) {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-      : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
-    const response = await fetch(`${baseUrl}/api/project/analyze`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ projectIdea: description }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to analyze project requirements');
-    }
-
-    const analysis = await response.json();
-
-    // Map expertise to allowed enum values
-    const expertiseMap: { [key: string]: string } = {
-      'Full Stack Development': 'Web Development',
-      'Frontend Development': 'Web Development',
-      'Backend Development': 'Web Development',
-      'DevOps Engineering': 'Technical Architecture',
-      'System Architecture': 'Technical Architecture',
-      'Product Management': 'Product Development',
-      'Machine Learning': 'AI/ML Development',
-      'App Development': 'Mobile Development',
-    };
-
-    const mappedExpertise = expertiseMap[analysis.expertise] || analysis.expertise;
-
-    // Validate that the expertise is one of the allowed values
-    const allowedExpertise = [
-      'Technical Architecture',
-      'Product Development',
-      'AI/ML Development',
-      'Mobile Development',
-      'Web Development'
-    ];
-
-    return {
-      technologies: analysis.technologies.map((tech: any) => tech.name),
-      complexity: analysis.complexity,
-      expertise: allowedExpertise.includes(mappedExpertise) ? mappedExpertise : 'Web Development', // Default to Web Development if not in allowed list
-    };
-  } catch (error) {
-    console.error('Project analysis error:', error);
-    return null;
-  }
-}
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, password, role, country, projectRequirements, developerStack } = body;
+    const { name, email, username, password, role } = body;
 
     // Validate required fields
-    if (!name || !email || !password || !role || !country) {
+    if (!name || !email || !username || !password) {
       return NextResponse.json(
-        { message: 'Missing required fields' },
+        { message: 'Name, email, username, and password are required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate email format
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { message: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
+
+    // Validate username format
+    const usernameRegex = /^[a-z0-9_-]+$/;
+    if (!usernameRegex.test(username.toLowerCase())) {
+      return NextResponse.json(
+        { message: 'Username can only contain letters, numbers, underscores, and hyphens' },
+        { status: 400 }
+      );
+    }
+
+    if (username.length < 3 || username.length > 20) {
+      return NextResponse.json(
+        { message: 'Username must be between 3 and 20 characters' },
+        { status: 400 }
+      );
+    }
+
+    // Validate password
+    if (password.length < 8) {
+      return NextResponse.json(
+        { message: 'Password must be at least 8 characters' },
         { status: 400 }
       );
     }
@@ -76,11 +54,23 @@ export async function POST(req: Request) {
     // Connect to database
     await dbConnect();
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    // Check if email already exists
+    const existingEmail = await User.findOne({ email: email.toLowerCase() });
+    if (existingEmail) {
       return NextResponse.json(
-        { message: 'User already exists' },
+        { message: 'Email already registered' },
+        { status: 409 }
+      );
+    }
+
+    // Check if username already exists (case-insensitive)
+    const existingUsername = await User.findOne({
+      username: username.toLowerCase()
+    }).collation({ locale: 'en', strength: 2 });
+
+    if (existingUsername) {
+      return NextResponse.json(
+        { message: 'Username already taken' },
         { status: 409 }
       );
     }
@@ -88,54 +78,67 @@ export async function POST(req: Request) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate OTP
+    // Generate OTP for email verification
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // If user is an innovator and has project requirements, analyze them
-    let analyzedRequirements = null;
-    if (role === 'innovator' && projectRequirements?.description) {
-      analyzedRequirements = await analyzeProjectRequirements(projectRequirements.description);
-    }
-
-    // Create user (unverified)
+    // Create user
     const user = await User.create({
       name,
-      email,
+      email: email.toLowerCase(),
+      username: username.toLowerCase(),
       password: hashedPassword,
-      role,
-      country,
-      isVerified: false,
+      role: role || null,
+      setupStep: role ? 5 : 4, // If role provided, ready for profile, else needs role selection
+      profileCompleted: false,
+      needsPassword: false,
+      emailVerified: null,
       otp,
-      otpExpires,
-      ...(role === 'coder' ? {
-        developerStack
-      } : {
-        projectRequirements: analyzedRequirements ? {
-          ...projectRequirements,
-          technologies: analyzedRequirements.technologies,
-          complexity: analyzedRequirements.complexity,
-          expertise: analyzedRequirements.expertise,
-        } : projectRequirements
-      })
+      otpExpires
     });
 
-    // In a real app, send email with OTP here using nodemailer or Resend
+    // In development, log OTP (in production, send email)
     console.log(`Development Mode OTP for ${email}: ${otp}`);
 
-    // Return success but NO token
+    // TODO: Send email with OTP using Resend or SendGrid
+
     return NextResponse.json(
       {
-        message: 'Account created. Please verify your email.',
+        message: 'Account created successfully. Please verify your email.',
         otpSent: true,
-        email: user.email
+        user: {
+          id: user._id,
+          email: user.email,
+          username: user.username,
+          name: user.name,
+          setupStep: user.setupStep
+        }
       },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error('Signup error:', error);
+
+    // Handle Mongoose validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((err: any) => err.message);
+      return NextResponse.json(
+        { message: messages.join(', ') },
+        { status: 400 }
+      );
+    }
+
+    // Handle duplicate key errors
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      return NextResponse.json(
+        { message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists` },
+        { status: 409 }
+      );
+    }
+
     return NextResponse.json(
-      { message: 'Error creating user' },
+      { message: 'Error creating account' },
       { status: 500 }
     );
   }

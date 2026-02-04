@@ -1,215 +1,104 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
-const milestoneSchema = new mongoose.Schema({
-  name: String,
-  status: {
-    type: String,
-    enum: ['completed', 'in-progress', 'upcoming'],
-    default: 'upcoming'
-  },
-  date: Date,
-  description: String
-});
+export interface IUser extends Document {
+  username: string;
+  email: string;
+  password: string | null;
+  name: string;
+  role: 'developer' | 'creator' | null;
+  emailVerified: Date | null;
+  image: string | null;
 
-const projectSchema = new mongoose.Schema({
-  name: String,
-  description: String,
-  progress: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 100
-  },
-  startDate: Date,
-  endDate: Date,
-  milestones: [milestoneSchema],
-  tasks: [{
-    title: String,
-    description: String,
-    status: {
+  // OAuth fields
+  googleId?: string;
+  githubId?: string;
+
+  // Profile setup tracking
+  profileCompleted: boolean;
+  setupStep: number; // 1: basic, 2: username, 3: password (OAuth), 4: role, 5: profile
+  needsPassword: boolean; // true if OAuth user needs password
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const UserSchema = new Schema<IUser>(
+  {
+    username: {
       type: String,
-      enum: ['todo', 'in-progress', 'completed'],
-      default: 'todo'
+      required: [true, 'Username is required'],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      minlength: [3, 'Username must be at least 3 characters'],
+      maxlength: [20, 'Username must not exceed 20 characters'],
+      match: [/^[a-z0-9_-]+$/, 'Username can only contain lowercase letters, numbers, underscores, and hyphens'],
+      index: true
     },
-    assignedTo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email'],
+      index: true
+    },
+    password: {
+      type: String,
+      default: null,
+      minlength: [8, 'Password must be at least 8 characters']
+    },
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+      trim: true,
+      maxlength: [100, 'Name must not exceed 100 characters']
+    },
+    role: {
+      type: String,
+      enum: ['developer', 'creator', null],
+      default: null
+    },
+    emailVerified: {
+      type: Date,
+      default: null
+    },
+    image: {
+      type: String,
+      default: null
+    },
+    googleId: {
+      type: String,
+      sparse: true,
+      unique: true
+    },
+    githubId: {
+      type: String,
+      sparse: true,
+      unique: true
+    },
+    profileCompleted: {
+      type: Boolean,
+      default: false
+    },
+    setupStep: {
+      type: Number,
+      default: 1,
+      min: 1,
+      max: 5
+    },
+    needsPassword: {
+      type: Boolean,
+      default: false
     }
-  }]
-});
-
-const performanceSchema = new mongoose.Schema({
-  communicationScore: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 100
   },
-  collaborationScore: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 100
-  },
-  deliverySpeed: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 100
-  },
-  codeQuality: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 100
-  },
-  lastUpdated: {
-    type: Date,
-    default: Date.now
+  {
+    timestamps: true
   }
-});
+);
 
-const aiMentorSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  expertise: [{
-    type: String,
-    required: true
-  }],
-  avatar: {
-    type: String,
-    required: true
-  },
-  description: String,
-  assignedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+// Create case-insensitive index for username
+UserSchema.index({ username: 1 }, { unique: true, collation: { locale: 'en', strength: 2 } });
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please provide a name'],
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: [true, 'Please provide an email'],
-    unique: true,
-    trim: true,
-    lowercase: true,
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password'],
-  },
-  role: {
-    type: String,
-    enum: ['innovator', 'coder', 'mentor', 'company'],
-    required: [true, 'Please specify your role'],
-  },
-  bio: {
-    type: String,
-    default: '',
-  },
-  skills: {
-    type: [String],
-    default: [],
-  },
-  country: {
-    type: String,
-    default: '',
-  },
-  github: {
-    type: String,
-    default: '',
-  },
-  linkedin: {
-    type: String,
-    default: '',
-  },
-  profileImage: {
-    type: String,
-    default: '/default-avatar.png',
-  },
-  projectRequirements: {
-    description: String,
-    technologies: [String],
-    complexity: String,
-    expertise: String,
-    preferredStack: String,
-    lastAnalyzed: Date,
-  },
-  matchedWith: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
-  aiMentor: aiMentorSchema,
-  currentProject: projectSchema,
-  performance: performanceSchema,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  },
-  activeProject: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Project'
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-  otp: {
-    type: String,
-    select: false, // Don't return by default
-  },
-  otpExpires: {
-    type: Date,
-    select: false,
-  },
-}, {
-  timestamps: true,
-});
-
-// Add virtual field for joinedAt
-userSchema.virtual('joinedAt').get(function () {
-  return this._id.getTimestamp();
-});
-
-// Ensure virtuals are included in JSON
-userSchema.set('toJSON', {
-  virtuals: true,
-  transform: function (doc, ret) {
-    delete ret.password;
-    delete ret.__v;
-    return ret;
-  }
-});
-
-// Ensure virtuals are included when using lean()
-userSchema.set('toObject', { virtuals: true });
-
-// Add indexes for better query performance
-userSchema.index({ role: 1 });
-userSchema.index({ 'developerStack.technologies': 1 });
-userSchema.index({ 'currentProject.tasks.status': 1 });
-userSchema.index({ 'projectRequirements.technologies': 1 });
-userSchema.index({ 'projectRequirements.complexity': 1 });
-userSchema.index({ 'projectRequirements.expertise': 1 });
-
-// Update timestamps on save
-userSchema.pre('save', function (next) {
-  this.updatedAt = new Date();
-  next();
-});
-
-const User = mongoose.models.User || mongoose.model('User', userSchema);
-
-export default User; 
+export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
