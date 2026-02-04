@@ -56,19 +56,32 @@ export async function POST(req: NextRequest) {
 
         // Check if OTP is expired
         if (new Date() > user.otpExpires) {
+            console.log('[OTP Verify] OTP expired:', { now: new Date(), expires: user.otpExpires });
             return NextResponse.json(
                 { error: 'OTP has expired. Please request a new one.' },
                 { status: 400 }
             );
         }
 
-        // Verify OTP
-        if (user.otp !== otp) {
+        console.log('[OTP Verify] Comparing OTPs:', {
+            receivedOTP: otp,
+            receivedType: typeof otp,
+            storedOTP: user.otp,
+            storedType: typeof user.otp,
+            match: user.otp === otp,
+            strictMatch: String(user.otp) === String(otp)
+        });
+
+        // Verify OTP (compare as strings to handle type mismatches)
+        if (String(user.otp) !== String(otp)) {
+            console.log('[OTP Verify] OTP mismatch!');
             return NextResponse.json(
                 { error: 'Invalid OTP' },
                 { status: 400 }
             );
         }
+
+        console.log('[OTP Verify] OTP verified successfully!');
 
         // Mark email as verified
         user.emailVerified = new Date();
