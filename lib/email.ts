@@ -22,7 +22,7 @@ export async function sendOTPEmail({ to, name, otp }: SendOTPEmailParams) {
         const resend = getResendClient();
 
         const { data, error } = await resend.emails.send({
-            from: 'CreatorsMeet <noreply@creatorsmeet.in>',
+            from: 'onboarding@resend.dev', // Resend's verified test domain - works immediately
             to: [to],
             subject: 'Verify Your Email - CreatorsMeet',
             html: `
@@ -109,14 +109,14 @@ export async function sendOTPEmail({ to, name, otp }: SendOTPEmailParams) {
         });
 
         if (error) {
-            console.error('Resend email error:', error);
+            console.error('❌ [OTP Email] Resend API error:', error);
             throw new Error('Failed to send email');
         }
 
-        console.log('OTP email sent successfully:', data);
+        console.log('✅ [OTP Email] Email sent successfully! ID:', data);
         return { success: true, data };
     } catch (error) {
-        console.error('Error sending OTP email:', error);
+        console.error('❌ [OTP Email] Unexpected error:', error);
         throw error;
     }
 }
