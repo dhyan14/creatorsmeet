@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { cookies } from 'next/headers';
+import { verify } from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // GitHub OAuth configuration
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
@@ -9,8 +11,19 @@ const GITHUB_REDIRECT_URI = process.env.NEXTAUTH_URL + '/api/codespace/git/conne
 
 export async function GET(req: NextRequest) {
     try {
-        const session = await getServerSession(authOptions);
-        if (!session?.user) {
+        // Verify JWT token from cookies
+        const cookieStore = cookies();
+        const token = cookieStore.get('token');
+
+        if (!token?.value) {
+            console.log('[Git Connect] No token found');
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        try {
+            verify(token.value, JWT_SECRET);
+        } catch (error) {
+            console.log('[Git Connect] Invalid token');
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
@@ -19,10 +32,11 @@ export async function GET(req: NextRequest) {
 
         if (code) {
             // Handle OAuth callback
-            return handleOAuthCallback(code, session.user.email!);
+            return handleOAuthCallback(code);
         } else {
             // Initiate OAuth flow
             const authUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_REDIRECT_URI}&scope=repo,user`;
+            console.log('[Git Connect] Returning auth URL');
             return NextResponse.json({ authUrl });
         }
     } catch (error) {
@@ -33,8 +47,17 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     try {
-        const session = await getServerSession(authOptions);
-        if (!session?.user) {
+        // Verify JWT token from cookies
+        const cookieStore = cookies();
+        const token = cookieStore.get('token');
+
+        if (!token?.value) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        try {
+            verify(token.value, JWT_SECRET);
+        } catch (error) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
@@ -52,7 +75,7 @@ export async function POST(req: NextRequest) {
     }
 }
 
-async function handleOAuthCallback(code: string, userEmail: string) {
+async function handleOAuthCallback(code: string) {
     try {
         // Exchange code for access token
         const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
