@@ -33,11 +33,20 @@ const GitConnectionDialog: React.FC<GitConnectionDialogProps> = ({
         setError(null);
 
         try {
+            console.log('[Git Connect] Fetching auth URL...');
             // Get auth URL from API
             const response = await fetch('/api/codespace/git/connect');
             const data = await response.json();
 
+            console.log('[Git Connect] Response:', data);
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to get auth URL');
+            }
+
             if (data.authUrl) {
+                console.log('[Git Connect] Opening popup with URL:', data.authUrl);
+
                 // Open OAuth popup
                 const width = 600;
                 const height = 700;
@@ -50,8 +59,19 @@ const GitConnectionDialog: React.FC<GitConnectionDialogProps> = ({
                     `width=${width},height=${height},left=${left},top=${top}`
                 );
 
+                if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+                    console.error('[Git Connect] Popup was blocked!');
+                    setError('Popup was blocked. Please allow popups for this site and try again.');
+                    setLoading(false);
+                    return;
+                }
+
+                console.log('[Git Connect] Popup opened successfully');
+
                 // Listen for OAuth completion via postMessage
                 const handleMessage = (event: MessageEvent) => {
+                    console.log('[Git Connect] Received message:', event.data);
+
                     if (event.data.type === 'github_oauth_success') {
                         // Store token in sessionStorage
                         sessionStorage.setItem('github_token', event.data.token);
@@ -76,14 +96,18 @@ const GitConnectionDialog: React.FC<GitConnectionDialogProps> = ({
                 // Also check if popup was closed manually
                 const checkPopup = setInterval(() => {
                     if (popup?.closed) {
+                        console.log('[Git Connect] Popup was closed');
                         clearInterval(checkPopup);
                         window.removeEventListener('message', handleMessage);
                         setLoading(false);
                     }
                 }, 500);
+            } else {
+                throw new Error('No auth URL received from server');
             }
         } catch (err) {
-            setError('Failed to connect to GitHub');
+            console.error('[Git Connect] Error:', err);
+            setError(err instanceof Error ? err.message : 'Failed to connect to GitHub');
             setLoading(false);
         }
     };
