@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // GitHub OAuth configuration
+export const dynamic = 'force-dynamic';
+
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const GITHUB_REDIRECT_URI = process.env.NEXTAUTH_URL + '/api/codespace/git/connect/callback';
