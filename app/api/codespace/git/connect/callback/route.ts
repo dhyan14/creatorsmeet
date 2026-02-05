@@ -171,6 +171,7 @@ export async function GET(req: NextRequest) {
         );
     } catch (error) {
         console.error('OAuth callback error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return new NextResponse(
             `
             <!DOCTYPE html>
@@ -182,11 +183,16 @@ export async function GET(req: NextRequest) {
                 <script>
                     window.opener.postMessage({
                         type: 'github_oauth_error',
-                        error: 'Authentication failed'
+                        error: 'Authentication failed: ${errorMessage.replace(/'/g, "\\'")}'
                     }, window.location.origin);
-                    window.close();
+                    // Don't close immediately so we can read the error if needed
+                    setTimeout(() => window.close(), 3000);
                 </script>
-                <p>Authentication failed. This window will close automatically...</p>
+                <div style="font-family: system-ui; padding: 20px; color: #ef4444; text-align: center;">
+                    <h2>Authentication Failed</h2>
+                    <p>${errorMessage}</p>
+                    <p style="font-size: 0.8em; color: #666;">Closing in 3 seconds...</p>
+                </div>
             </body>
             </html>
             `,
