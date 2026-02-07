@@ -1,16 +1,12 @@
 FROM codercom/code-server:latest
 
-# Set environment variables
+# Set password
 ENV PASSWORD=${PASSWORD:-creatorsmeet2024}
 
-# Create config that uses PORT from environment
-RUN mkdir -p /home/coder/.config/code-server && \
-    echo "bind-addr: 0.0.0.0:\${PORT:-8080}" > /home/coder/.config/code-server/config.yaml && \
-    echo "auth: password" >> /home/coder/.config/code-server/config.yaml && \
-    echo "password: \${PASSWORD:-creatorsmeet2024}" >> /home/coder/.config/code-server/config.yaml && \
-    echo "cert: false" >> /home/coder/.config/code-server/config.yaml
+# Copy wrapper script
+COPY --chmod=755 entrypoint.sh /usr/local/bin/entrypoint.sh
 
 EXPOSE 8080
 
-# Start code-server (it will read config.yaml)
-CMD /usr/bin/code-server
+# Use wrapper script
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
