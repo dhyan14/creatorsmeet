@@ -1,0 +1,10 @@
+FROM codercom/code-server:latest
+
+# Set password via environment variable
+ENV PASSWORD=${PASSWORD:-creatorsmeet2024}
+
+# Railway uses PORT environment variable
+ENV PORT=${PORT:-8080}
+
+# Start code-server with dynamic port
+CMD code-server --bind-addr 0.0.0.0:${PORT} --auth password
