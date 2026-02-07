@@ -45,7 +45,7 @@ import AIAssistant from './components/AIAssistant';
 import MeetingScheduler from './components/MeetingScheduler';
 import LearningHub from './components/LearningHub';
 import QuickCapture from './components/QuickCapture';
-import CodespaceLayout from './components/CodespaceLayout';
+import VSCodeEmbed from './components/VSCodeEmbed';
 import Sidebar from './components/Sidebar';
 import MeetingsView from './components/MeetingsView';
 import CommunityView from './components/CommunityView';
