@@ -1489,7 +1489,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Project Creation Modal */}
+        {/* Project Creation Modal - Enhanced */}
         <AnimatePresence>
           {showProjectModal && (
             <motion.div
@@ -1500,14 +1500,23 @@ export default function Dashboard() {
               onClick={() => setShowProjectModal(false)}
             >
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.95, opacity: 0, y: 20 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-black/95 backdrop-blur-xl rounded-3xl p-8 border border-white/20 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                className="bg-gradient-to-br from-black/95 via-purple-900/10 to-black/95 backdrop-blur-2xl rounded-3xl p-8 border border-purple-500/30 shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
               >
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">Create New Project</h2>
+                {/* Header */}
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                      <IconRocket className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-3xl font-bold text-white">Create New Project</h2>
+                      <p className="text-sm text-gray-400 mt-1">Turn your ideas into reality</p>
+                    </div>
+                  </div>
                   <button
                     onClick={() => setShowProjectModal(false)}
                     className="p-2 hover:bg-white/10 rounded-lg transition-colors"
@@ -1516,54 +1525,200 @@ export default function Dashboard() {
                   </button>
                 </div>
 
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Project Name</label>
-                    <input
-                      type="text"
-                      placeholder="Enter project name..."
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    />
+                {/* Form Content */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Left Column - Main Fields */}
+                  <div className="lg:col-span-2 space-y-6">
+                    {/* Project Name */}
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2">
+                        <IconTarget className="w-4 h-4 text-purple-400" />
+                        Project Name *
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter a catchy project name..."
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                      />
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2">
+                        <IconNote className="w-4 h-4 text-purple-400" />
+                        Description *
+                      </label>
+                      <textarea
+                        rows={4}
+                        placeholder="Describe your project vision, goals, and key features..."
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none transition-all"
+                      />
+                    </div>
+
+                    {/* Category & Priority */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2">
+                          <IconFolder className="w-4 h-4 text-purple-400" />
+                          Category
+                        </label>
+                        <select className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                          <option value="">Select category...</option>
+                          <option value="web">🌐 Web Development</option>
+                          <option value="mobile">📱 Mobile App</option>
+                          <option value="ai">🤖 AI/ML</option>
+                          <option value="blockchain">⛓️ Blockchain</option>
+                          <option value="game">🎮 Game Development</option>
+                          <option value="iot">📡 IoT</option>
+                          <option value="other">💡 Other</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2">
+                          <IconStar className="w-4 h-4 text-purple-400" />
+                          Priority
+                        </label>
+                        <select className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                          <option value="low">🟢 Low</option>
+                          <option value="medium">🟡 Medium</option>
+                          <option value="high">🟠 High</option>
+                          <option value="urgent">🔴 Urgent</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Tech Stack Tags */}
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2">
+                        <IconCode className="w-4 h-4 text-purple-400" />
+                        Tech Stack
+                      </label>
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {['React', 'Node.js', 'TypeScript', 'MongoDB', 'Next.js', 'Python'].map((tech) => (
+                          <motion.button
+                            key={tech}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="px-3 py-1.5 bg-purple-500/20 border border-purple-500/30 text-purple-300 rounded-lg text-xs font-medium hover:bg-purple-500/30 transition-all"
+                          >
+                            {tech}
+                          </motion.button>
+                        ))}
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Add custom tech (press Enter)"
+                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                      />
+                    </div>
+
+                    {/* Due Date */}
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2">
+                        <IconCalendar className="w-4 h-4 text-purple-400" />
+                        Target Completion Date
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                      />
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
-                    <textarea
-                      rows={4}
-                      placeholder="Describe your project idea..."
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
-                    />
-                  </div>
+                  {/* Right Column - Quick Options */}
+                  <div className="space-y-6">
+                    {/* Project Template */}
+                    <div className="bg-purple-500/10 border border-purple-500/30 rounded-2xl p-4">
+                      <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                        <IconBulb className="w-4 h-4 text-purple-400" />
+                        Quick Templates
+                      </h3>
+                      <div className="space-y-2">
+                        {[
+                          { icon: '💼', name: 'Startup MVP', color: 'purple' },
+                          { icon: '🛍️', name: 'E-commerce', color: 'pink' },
+                          { icon: '📱', name: 'Mobile App', color: 'blue' },
+                          { icon: '🤖', name: 'AI Project', color: 'green' },
+                        ].map((template) => (
+                          <motion.button
+                            key={template.name}
+                            whileHover={{ scale: 1.02, x: 3 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="w-full flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-all text-left"
+                          >
+                            <span className="text-xl">{template.icon}</span>
+                            <span className="text-sm text-white font-medium">{template.name}</span>
+                          </motion.button>
+                        ))}
+                      </div>
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
-                    <select className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                      <option value="">Select category...</option>
-                      <option value="web">Web Development</option>
-                      <option value="mobile">Mobile App</option>
-                      <option value="ai">AI/ML</option>
-                      <option value="blockchain">Blockchain</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
+                    {/* Collaboration Settings */}
+                    <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                      <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                        <IconUsers className="w-4 h-4 text-blue-400" />
+                        Collaboration
+                      </h3>
+                      <div className="space-y-3">
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-purple-500 focus:ring-offset-0"
+                          />
+                          <span className="text-sm text-gray-300">Open for collaborators</span>
+                        </label>
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-purple-500 focus:ring-offset-0"
+                          />
+                          <span className="text-sm text-gray-300">Public project</span>
+                        </label>
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-purple-500 focus:ring-offset-0"
+                          />
+                          <span className="text-sm text-gray-300">Enable AI assistance</span>
+                        </label>
+                      </div>
+                    </div>
 
-                  <div className="flex gap-4">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold"
-                    >
-                      Create Project
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setShowProjectModal(false)}
-                      className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-semibold border border-white/10"
-                    >
-                      Cancel
-                    </motion.button>
+                    {/* Project Goals */}
+                    <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                      <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                        <IconChartBar className="w-4 h-4 text-green-400" />
+                        Initial Goals
+                      </h3>
+                      <input
+                        type="text"
+                        placeholder="Set first milestone..."
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all mb-2"
+                      />
+                      <p className="text-xs text-gray-500">Add milestones after creation</p>
+                    </div>
                   </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4 mt-8 pt-6 border-t border-white/10">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 py-3.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
+                  >
+                    <IconPlus className="w-5 h-5" />
+                    Create Project
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowProjectModal(false)}
+                    className="px-8 py-3.5 bg-white/5 hover:bg-white/10 text-white rounded-xl font-semibold border border-white/10"
+                  >
+                    Cancel
+                  </motion.button>
                 </div>
               </motion.div>
             </motion.div>
