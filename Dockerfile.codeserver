@@ -3,9 +3,8 @@ FROM codercom/code-server:latest
 # Set password via environment variable
 ENV PASSWORD=${PASSWORD:-creatorsmeet2024}
 
-# Copy entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Copy entrypoint script with execute permissions
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
 
 # Expose port
 EXPOSE 8080
