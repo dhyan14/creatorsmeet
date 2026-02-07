@@ -1564,13 +1564,13 @@ export default function Dashboard() {
                         </label>
                         <select className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
                           <option value="">Select category...</option>
-                          <option value="web">🌐 Web Development</option>
-                          <option value="mobile">📱 Mobile App</option>
-                          <option value="ai">🤖 AI/ML</option>
-                          <option value="blockchain">⛓️ Blockchain</option>
-                          <option value="game">🎮 Game Development</option>
-                          <option value="iot">📡 IoT</option>
-                          <option value="other">💡 Other</option>
+                          <option value="web">Web Development</option>
+                          <option value="mobile">Mobile App</option>
+                          <option value="ai">AI/ML</option>
+                          <option value="blockchain">Blockchain</option>
+                          <option value="game">Game Development</option>
+                          <option value="iot">IoT</option>
+                          <option value="other">Other</option>
                         </select>
                       </div>
 
@@ -1580,10 +1580,10 @@ export default function Dashboard() {
                           Priority
                         </label>
                         <select className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
-                          <option value="low">🟢 Low</option>
-                          <option value="medium">🟡 Medium</option>
-                          <option value="high">🟠 High</option>
-                          <option value="urgent">🔴 Urgent</option>
+                          <option value="low">Low Priority</option>
+                          <option value="medium">Medium Priority</option>
+                          <option value="high">High Priority</option>
+                          <option value="urgent">Urgent</option>
                         </select>
                       </div>
                     </div>
