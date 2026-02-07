@@ -132,7 +132,7 @@ export default function Dashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'projects' | 'codespace' | 'analytics' | 'network' | 'calendar' | 'team' | 'capture' | 'settings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'projects' | 'codespace' | 'meetings' | 'community' | 'analytics' | 'network' | 'calendar' | 'team' | 'capture' | 'settings'>('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [darkMode, setDarkMode] = useState(true); // Dark mode state
