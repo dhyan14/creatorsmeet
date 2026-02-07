@@ -1101,7 +1101,7 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               className="h-[calc(100vh-8rem)]"
             >
-              <CodespaceLayout />
+              <VSCodeEmbed />
             </motion.div>
           )}
 
