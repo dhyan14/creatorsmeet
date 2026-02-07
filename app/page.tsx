@@ -1,28 +1,30 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import React, { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence } from 'framer-motion'
 import { Header } from '@/components/ui/header'
 import GridBackground from '@/components/ui/grid-background'
 import { HowItWorks } from '@/components/sections/how-it-works'
 import DevelopersSection from '@/components/sections/developers'
 import { ContactSection } from '@/components/sections/contact'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import Link from 'next/link'
 
-// @ts-ignore -- Ignoring type errors since types will be handled by Vercel build
+// @ts-ignore
 export default function Home() {
   const router = useRouter();
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Parallax effect for hero
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  // Smooth spring physics for parallax
+  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  const y = useSpring(useTransform(scrollY, [0, 500], [0, 150]), springConfig);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   useEffect(() => {
-    // Only add mouse tracking on desktop devices
+    setIsLoaded(true);
+
     if (window.innerWidth < 768) return;
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -36,497 +38,566 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const handleSignUp = () => {
-    router.push('/signup-select');
-  };
+  return (
+    <div className=\"min-h-screen bg-black text-white overflow-hidden\">
+      < Header />
+      <GridBackground>
+        <main className=\"relative w-full\">
+        {/* Enhanced Hero Section with Advanced Animations */}
+        <section className=\"relative z-10 min-h-screen flex items-center justify-center pt-32 pb-16\">
+        {/* Animated Particles Background */}
+        <div className=\"absolute inset-0 overflow-hidden pointer-events-none\">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className=\"absolute w-1 h-1 bg-purple-500/30 rounded-full\"
+        animate={{
+          x: [Math.random() * window.innerWidth, Math.random() * window.innerWidth],
+          y: [Math.random() * window.innerHeight, Math.random() * window.innerHeight],
+        }}
+        transition={{
+          duration: Math.random() * 10 + 20,
+          repeat: Infinity,
+          repeatType: \"reverse\",
+                  }}
+        style={{
+          left: Math.random() * 100 + '%',
+          top: Math.random() * 100 + '%',
+        }}
+                />
+              ))}
+      </div>
 
-  const handleLogin = () => {
-    router.push('/signin');
+  {/* Glowing Orbs with Mouse Tracking */ }
+  <motion.div
+    style={{
+      x: mousePosition.x * 2,
+      y: mousePosition.y * 2,
+    }}
+    className=\"absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl pointer-events-none\"
+  animate = {{
+    scale: [1, 1.2, 1],
+      opacity: [0.3, 0.5, 0.3],
+              }
+}
+transition = {{
+  duration: 4,
+    repeat: Infinity,
+      repeatType: \"reverse\",
+}}
+            />
+  < motion.div
+style = {{
+  x: -mousePosition.x * 2,
+    y: -mousePosition.y * 2,
+              }}
+className =\"absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl pointer-events-none\"
+animate = {{
+  scale: [1.2, 1, 1.2],
+    opacity: [0.5, 0.3, 0.5],
+              }}
+transition = {{
+  duration: 4,
+    repeat: Infinity,
+      repeatType: \"reverse\",
+  delay: 0.5,
+              }}
+            />
+
+  < motion.div
+style = {{ y, opacity }}
+className =\"container mx-auto px-6 lg:px-8 max-w-7xl relative z-10\"
+  >
+  {/* Animated Badge */ }
+  < motion.div
+initial = {{ opacity: 0, y: -20 }}
+animate = {{ opacity: 1, y: 0 }}
+transition = {{ duration: 0.6 }}
+className =\"flex justify-center mb-8\"
+  >
+  <motion.div
+    whileHover={{ scale: 1.05 }}
+    className=\"inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 backdrop-blur-sm\"
+      >
+      <span className=\"relative flex h-2 w-2\">
+        < span className =\"animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75\"></span>
+          < span className =\"relative inline-flex rounded-full h-2 w-2 bg-purple-500\"></span>
+                  </span >
+  <span className=\"text-sm text-purple-300\">Powered by Youdex Technologies</span>
+                </motion.div >
+              </motion.div >
+
+  {/* Main Headline with Typing Effect */ }
+  < div className =\"flex flex-col items-center justify-center mb-12\">
+    < motion.div
+initial = {{ opacity: 0, y: 20 }}
+animate = {{ opacity: 1, y: 0 }}
+transition = {{ duration: 0.8, delay: 0.2 }}
+className =\"text-center w-full\"
+  >
+  <h1 className=\"text-5xl md:text-7xl lg:text-8xl font-bold text-white pb-6 leading-tight max-w-6xl mx-auto\">
+                    Where{
+\" \"}
+  < motion.span
+  className =\"inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400\"
+  animate = {{
+    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                      }
+}
+transition = {{
+  duration: 5,
+    repeat: Infinity,
+      repeatType: \"reverse\",
+}}
+style = {{
+  backgroundSize: '200% 200%',
+                      }}
+                    >
+  Innovators
+                    </motion.span >
+{
+\" \"}Meet{\" \"}
+  <motion.span
+                      className=\"inline-block bg-clip-text text-transparent bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400\"
+                      animate = {{
+  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                      }}
+transition = {{
+  duration: 5,
+    repeat: Infinity,
+      repeatType: \"reverse\",
+  delay: 0.5,
+                      }}
+style = {{
+  backgroundSize: '200% 200%',
+                      }}
+                    >
+  Developers
+                    </motion.span >
+                  </h1 >
+
+  <motion.p
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 0.4, duration: 0.8 }}
+    className=\"mt-8 text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed\"
+      >
+      Transform your brilliant ideas into reality with AI - powered matching. 
+                    Connect with skilled developers and build groundbreaking projects together.
+                  </motion.p >
+                </motion.div >
+              </div >
+
+  {/* CTA Buttons with Magnetic Effect */ }
+  < motion.div
+initial = {{ opacity: 0, y: 20 }}
+animate = {{ opacity: 1, y: 0 }}
+transition = {{ duration: 0.8, delay: 0.6 }}
+className =\"flex flex-col sm:flex-row gap-6 justify-center mb-20\"
+  >
+  <Link href=\"/signup-select\">
+    < motion.button
+whileHover = {{
+  scale: 1.05,
+    boxShadow: \"0 25px 70px -15px rgba(168, 85, 247, 0.6)\",
+}}
+whileTap = {{ scale: 0.95 }}
+className =\"group relative bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white py-5 px-12 rounded-full text-lg font-bold transition-all overflow-hidden\"
+style = {{ backgroundSize: '200% 100%' }}
+animate = {{
+  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                    }}
+transition = {{
+  backgroundPosition: {
+    duration: 3,
+      repeat: Infinity,
+        repeatType: \"reverse\",
+  },
+}}
+                  >
+  <span className=\"relative z-10 flex items-center gap-3\">
+                      Start Creating
+  < motion.svg
+className =\"w-5 h-5\" 
+fill =\"none\" 
+stroke =\"currentColor\" 
+viewBox =\"0 0 24 24\"
+animate = {{ x: [0, 5, 0] }}
+transition = {{ duration: 1.5, repeat: Infinity }}
+                      >
+  <path strokeLinecap=\"round\" strokeLinejoin=\"round\" strokeWidth={2} d=\"M13 7l5 5m0 0l-5 5m5-5H6\" />
+                      </motion.svg >
+                    </span >
+  <div className=\"absolute inset-0 bg-gradient-to-r from-purple-700 via-pink-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity\" />
+                  </motion.button >
+                </Link >
+
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    className=\"border-2 border-purple-500/50 hover:border-purple-500 hover:bg-purple-500/10 text-white py-5 px-12 rounded-full text-lg font-bold transition-all backdrop-blur-sm relative overflow-hidden group\"
+      >
+      <span className=\"relative z-10\">Explore Platform</span>
+        < motion.div
+className =\"absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/20 to-purple-500/0\"
+animate = {{ x: ['-100%', '100%'] }}
+transition = {{
+  duration: 2, repeat: Infinity, repeatType: \"loop\" }}
+    />
+                </motion.button >
+              </motion.div >
+
+    {/* Animated Stats Counter */ }
+    < motion.div
+  initial = {{ opacity: 0, y: 30 }
+}
+animate = {{ opacity: 1, y: 0 }}
+transition = {{ duration: 0.8, delay: 0.8 }}
+className =\"grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto\"
+  >
+  { [\n                  {
+    end: 10000, label: \"Creators\", suffix: \"+\" },\n                  { end: 500, label: \"Projects\", suffix: \"+\" },\n                  { end: 98, label: \"Success Rate\", suffix: \"%\" },\n                  { end: 50, label: \"Countries\", suffix: \"+\" },\n                ].map((stat, index) => (\n                  <StatCounter key={stat.label} {...stat} delay={index * 0.1} />\n                ))}\n              </motion.div>
+            </motion.div >
+
+    {/* Scroll Indicator */ }
+    < motion.div
+  initial = {{ opacity: 0 }
+}
+animate = {{ opacity: 1 }}
+transition = {{ delay: 1.5 }}
+className =\"absolute bottom-8 left-1/2 -translate-x-1/2\"
+  >
+  <motion.div
+    animate={{ y: [0, 10, 0] }}
+    transition={{ duration: 2, repeat: Infinity }}
+    className=\"w-6 h-10 rounded-full border-2 border-purple-500/50 flex items-start justify-center p-2\"
+      >
+      <motion.div
+        animate={{ y: [0, 12, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className=\"w-1.5 h-1.5 rounded-full bg-purple-500\"
+          />
+              </motion.div >
+            </motion.div >
+          </section >
+
+  {/* How It Works - Interactive Process */ }
+  < section className =\"relative py-32 overflow-hidden\">
+    < div className =\"absolute inset-0 bg-gradient-to-b from-purple-900/10 via-transparent to-purple-900/10\" />
+
+      < div className =\"container mx-auto px-6 lg:px-8 max-w-6xl relative\">
+        < motion.div
+initial = {{ opacity: 0, y: 20 }}
+whileInView = {{ opacity: 1, y: 0 }}
+viewport = {{ once: true }}
+className =\"text-center mb-20\"
+  >
+  <h2 className=\"text-5xl md:text-6xl font-bold mb-6\">
+                  How{
+\" \"}
+  < span className =\"bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400\">
+  CreatorsMeet
+                  </span >
+  {
+  \" \"}Works
+                </h2>
+    <p className=\"text-xl text-gray-300 max-w-2xl mx-auto\">
+                  From idea to reality in four simple steps
+                </p >
+              </motion.div >
+
+    <div className=\"grid md:grid-cols-2 lg:grid-cols-4 gap-8\">
+  {
+    [\n                  {
+    \n                    step: \"01\",\n                    icon: \"💡\",\n                    title: \"Share Your Idea\",\n                    description: \"Innovators describe their project vision and requirements\",\n                  },\n                  {\n                    step: \"02\",\n                    icon: \"🤖\",\n                    title: \"AI Matching\",\n                    description: \"Our AI finds the perfect developers based on skills and interests\",\n                  },\n                  {\n                    step: \"03\",\n                    icon: \"🤝\",\n                    title: \"Collaborate\",\n                    description: \"Work together using built-in tools and real-time communication\",\n                  },\n                  {\n                    step: \"04\",\n                    icon: \"🚀\",\n                    title: \"Launch & Succeed\",\n                    description: \"Build, test, and launch your groundbreaking project\",\n                  },\n                ].map((item, index) => (\n                  <ProcessCard key={item.step} {...item} index={index} />\n                ))}\n              </div>
+            </div>
+          </section >
+
+      {/* Developers Showcase */ }
+      < DevelopersSection />
+
+      {/* Platform Features */ }
+      < section className =\"relative py-32 overflow-hidden\">
+      < div className =\"container mx-auto px-6 lg:px-8 max-w-6xl\">
+      < motion.div
+                initial = {{ opacity: 0, y: 20 }}
+  whileInView = {{ opacity: 1, y: 0 }
+}
+viewport = {{ once: true }}
+className =\"text-center mb-20\"
+  >
+  <h2 className=\"text-5xl md:text-6xl font-bold mb-6\">
+                  Powerful{
+\" \"}
+  < span className =\"bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400\">
+  Features
+                  </span >
+                </h2 >
+    <p className=\"text-xl text-gray-300 max-w-2xl mx-auto\">
+                  Everything you need to collaborate and build amazing projects
+                </p >
+              </motion.div >
+
+    <div className=\"grid md:grid-cols-2 lg:grid-cols-3 gap-8\">
+  {
+    [\n                  {
+    \n                    icon: \"🎯\",\n                    title: \"Smart Matching\",\n                    description: \"AI-powered algorithm connects you with the perfect collaborators\",\n                    color: \"purple\",\n                  },\n                  {\n                    icon: \"💬\",\n                    title: \"Real-time Chat\",\n                    description: \"Instant messaging and video calls integrated into the platform\",\n                    color: \"pink\",\n                  },\n                  {\n                    icon: \"📊\",\n                    title: \"Project Dashboard\",\n                    description: \"Track progress and manage tasks with intuitive tools\",\n                    color: \"blue\",\n                  },\n                  {\n                    icon: \"🔐\",\n                    title: \"Secure Platform\",\n                    description: \"Enterprise-grade security keeps your ideas protected\",\n                    color: \"purple\",\n                  },\n                  {\n                    icon: \"📁\",\n                    title: \"File Sharing\",\n                    description: \"Share documents, code, and assets seamlessly\",\n                    color: \"pink\",\n                  },\n                  {\n                    icon: \"📈\",\n                    title: \"Analytics\",\n                    description: \"Detailed insights into team performance and project metrics\",\n                    color: \"blue\",\n                  },\n                ].map((feature, index) => (\n                  <FeatureCard key={feature.title} {...feature} index={index} />\n                ))}\n              </div>
+            </div>
+          </section >
+
+      {/* How It Works (existing component) */ }
+      < HowItWorks />
+
+      {/* Contact Section */ }
+      < ContactSection />
+
+      {/* CTA Section */ }
+      < section className =\"relative py-32 overflow-hidden\">
+      < div className =\"absolute inset-0 bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20\" />
+      < div className =\"container mx-auto px-6 lg:px-8 max-w-5xl relative\">
+      < motion.div
+                initial = {{ opacity: 0, scale: 0.95 }}
+  whileInView = {{ opacity: 1, scale: 1 }
+}
+viewport = {{ once: true }}
+className =\"relative rounded-3xl p-16 border border-purple-500/20 overflow-hidden\"
+style = {{
+  background: 'radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.1), transparent 70%)',
+                }}
+              >
+  <div className=\"absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10\" />
+
+    < div className =\"relative z-10 text-center\">
+      < h2 className =\"text-5xl md:text-6xl font-bold mb-6\">
+                    Ready to Build the{
+\" \"}
+  < span className =\"bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400\">
+  Future ?
+                    </span >
+                  </h2 >
+    <p className=\"text-xl text-gray-300 mb-10 max-w-2xl mx-auto\">
+                    Join thousands of innovators and developers creating groundbreaking projects together
+                  </p >
+
+    <div className=\"flex flex-col sm:flex-row gap-6 justify-center\">
+      < Link href =\"/signup-select\">
+        < motion.button
+  whileHover = {{ scale: 1.05 }
+}
+whileTap = {{ scale: 0.95 }}
+className =\"bg-white text-purple-600 py-5 px-12 rounded-full text-lg font-bold hover:bg-gray-100 transition-all shadow-xl\"
+  >
+  Get Started Free
+                      </motion.button >
+                    </Link >
+  <Link href=\"/signin\">
+    < motion.button
+whileHover = {{ scale: 1.05 }}
+whileTap = {{ scale: 0.95 }}
+className =\"border-2 border-white/30 hover:border-white/60 text-white py-5 px-12 rounded-full text-lg font-bold transition-all\"
+  >
+  Sign In
+                      </motion.button >
+                    </Link >
+                  </div >
+                </div >
+              </motion.div >
+            </div >
+          </section >
+
+  {/* Enhanced Footer with Youdex Technologies */ }
+  < footer className =\"relative py-16 border-t border-white/10\">
+    < div className =\"container mx-auto px-6 lg:px-8\">
+      < div className =\"max-w-6xl mx-auto\">
+        < div className =\"grid md:grid-cols-4 gap-12 mb-12\">
+{/* Logo & Description */ }
+<div className=\"md:col-span-2\">
+  < div className =\"flex items-center gap-3 mb-4\">
+    < img src =\"/logo.png\" alt=\"CreatorsMeet\" className=\"w-10 h-10\" />
+      < span className =\"text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400\">
+CreatorsMeet
+                      </span >
+                    </div >
+  <p className=\"text-gray-400 mb-6 max-w-md\">
+                      Connecting innovators with developers to build groundbreaking projects. 
+                      Powered by cutting - edge AI technology.
+                    </p >
+  <div className=\"flex items-center gap-2 text-sm text-gray-500\">
+    < span > A product of</span >
+      <span className=\"font-semibold text-purple-400\">Youdex Technologies</span>
+                    </div >
+                  </div >
+
+  {/* Links */ }
+  < div >
+  <h3 className=\"text-white font-semibold mb-4\">Product</h3>
+    < ul className =\"space-y-2\">
+{
+  ['Features', 'Pricing', 'How it Works', 'FAQ'].map((item) => (
+    <li key={item}>
+      <a href=\"#\" className=\"text-gray-400 hover:text-purple-400 transition-colors\">
+      {item}
+    </a>
+                        </li >
+                      ))
+}
+                    </ul >
+                  </div >
+
+                  <div>
+                    <h3 className=\"text-white font-semibold mb-4\">Company</h3>
+                    <ul className=\"space-y-2\">
+{
+  ['About Us', 'Careers', 'Blog', 'Contact'].map((item) => (
+    <li key={item}>
+      <a href=\"#\" className=\"text-gray-400 hover:text-purple-400 transition-colors\">
+      {item}
+    </a>
+                        </li >
+                      ))
+}
+                    </ul >
+                  </div >
+                </div >
+
+  {/* Bottom Bar */ }
+  < div className =\"pt-8 border-t border-white/10\">
+    < div className =\"flex flex-col md:flex-row justify-between items-center gap-4\">
+      < p className =\"text-gray-500 text-sm text-center md:text-left\">
+                      © { new Date().getFullYear() } Youdex Technologies.All rights reserved.
+                    </p >
+  <div className=\"flex gap-6 text-sm\">
+    < a href =\"#\" className=\"text-gray-400 hover:text-purple-400 transition-colors\">
+                        Privacy Policy
+                      </a >
+  <a href=\"#\" className=\"text-gray-400 hover:text-purple-400 transition-colors\">
+                        Terms of Service
+                      </a >
+                    </div >
+                  </div >
+                </div >
+              </div >
+            </div >
+          </footer >
+        </main >
+      </GridBackground >
+    </div >
+  )
+}
+
+// Stat Counter Component with Animation
+function StatCounter({ end, label, suffix, delay }: { end: number; label: string; suffix: string; delay: number }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    let startTime: number;
+    const duration = 2000;
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+
+      setCount(Math.floor(progress * end));
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    const timeoutId = setTimeout(() => {
+      requestAnimationFrame(animate);
+    }, delay * 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [isInView, end, delay]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay }}
+      whileHover={{ scale: 1.05 }}
+      className=\"text-center p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all\"
+        >
+        <div className=\"text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400 mb-2\">
+  { count.toLocaleString() } { suffix }
+      </div >
+    <div className=\"text-sm text-gray-400 font-medium\">{label}</div>
+    </motion.div >
+  );
+}
+
+// Process Card Component
+function ProcessCard({ step, icon, title, description, index }: any) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      whileHover={{ y: -10 }}
+      className=\"relative group\"
+        >
+        <div className=\"absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all opacity-0 group-hover:opacity-100\" />
+
+          < div className =\"relative p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm h-full hover:border-purple-500/30 transition-all\">
+            < div className =\"text-6xl mb-4 group-hover:scale-110 transition-transform\">{icon}</div>
+              < div className =\"text-purple-400 font-bold text-sm mb-2\">STEP {step}</div>
+                < h3 className =\"text-2xl font-bold mb-3 text-white\">{title}</h3>
+                  < p className =\"text-gray-300 leading-relaxed\">{description}</p>
+      </div >
+
+    {/* Connecting Line (except for last item) */ }
+  {
+    index < 3 && (
+      <div className=\"hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-purple-500/50 to-transparent\" />
+      )
+  }
+    </motion.div >
+  );
+}
+
+// Feature Card Component
+function FeatureCard({ icon, title, description, color, index }: any) {
+  const colors = {
+    purple: 'from-purple-600/20 to-pink-600/20',
+    pink: 'from-pink-600/20 to-purple-600/20',
+    blue: 'from-blue-600/20 to-purple-600/20',
   };
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      <Header />
-      <GridBackground>
-        <main className="relative w-full">
-          {/* Enhanced Hero Section */}
-          <section className="relative z-10 min-h-screen flex items-center justify-center pt-32 sm:pt-36 md:pt-40 pb-16 sm:pb-20 md:pb-0">
-            {/* Animated Background Orbs */}
-            <motion.div
-              style={{
-                x: mousePosition.x,
-                y: mousePosition.y,
-              }}
-              className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-purple-500/20 rounded-full blur-3xl pointer-events-none hidden sm:block"
-            />
-            <motion.div
-              style={{
-                x: -mousePosition.x,
-                y: -mousePosition.y,
-              }}
-              className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-pink-500/20 rounded-full blur-3xl pointer-events-none hidden sm:block"
-            />
-
-            <motion.div
-              style={{ y, opacity }}
-              className="container mx-auto px-6 sm:px-6 lg:px-8 mt-12 sm:mt-16 md:mt-0 max-w-[1400px]"
-            >
-              {/* Main Heading */}
-              <div className="flex flex-col items-center justify-center mb-8 md:mb-12">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-center w-full"
-                >
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white pb-6 leading-tight max-w-[1000px] mx-auto px-2">
-                    Transform{" "}
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-gradient">
-                      Ideas
-                    </span>{" "}
-                    Into Reality
-                  </h1>
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    className="mt-6 sm:mt-8 text-lg sm:text-xl md:text-xl text-gray-300 max-w-[700px] mx-auto leading-relaxed px-2"
-                  >
-                    Connect with talented developers and innovators. Build groundbreaking projects with AI-powered matching and seamless collaboration tools.
-                  </motion.p>
-                </motion.div>
-              </div>
-
-              {/* CTA Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex flex-col sm:flex-row gap-6 justify-center mb-16 sm:mb-20 px-4"
-              >
-                <Link href="/signup-select">
-                  <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: "0 20px 60px -15px rgba(168, 85, 247, 0.4)" }}
-                    whileTap={{ scale: 0.95 }}
-                    className="group relative bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 sm:py-4 px-8 sm:px-10 rounded-full text-lg sm:text-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/50 overflow-hidden w-full sm:w-auto min-h-[56px] flex items-center justify-center"
-                  >
-                    <span className="relative z-10 flex items-center justify-center gap-3">
-                      Get Started Free
-                      <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-pink-700 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </motion.button>
-                </Link>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="border-2 border-purple-500/50 hover:border-purple-500 hover:bg-purple-500/10 text-white py-4 sm:py-4 px-8 sm:px-10 rounded-full text-lg sm:text-lg font-semibold transition-all backdrop-blur-sm w-full sm:w-auto min-h-[56px] flex items-center justify-center"
-                >
-                  Watch Demo
-                </motion.button>
-              </motion.div>
-
-              {/* Feature Pills */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="flex flex-wrap gap-4 sm:gap-4 justify-center items-center max-w-3xl mx-auto mb-16 sm:mb-20 px-4"
-              >
-                {[
-                  { icon: "🤖", text: "AI Matching" },
-                  { icon: "⚡", text: "Real-time Collaboration" },
-                  { icon: "🔒", text: "Secure & Private" },
-                  { icon: "🌍", text: "Global Network" },
-                ].map((feature, index) => (
-                  <motion.div
-                    key={feature.text}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.9 + index * 0.1 }}
-                    className="flex items-center gap-3 px-4 sm:px-4 py-3 bg-white/5 border border-white/10 rounded-full text-sm sm:text-sm text-gray-300 backdrop-blur-sm hover:bg-white/10 transition-colors min-h-[48px]"
-                  >
-                    <span className="text-lg sm:text-lg">{feature.icon}</span>
-                    <span className="whitespace-nowrap font-medium">{feature.text}</span>
-                  </motion.div>
-                ))}
-              </motion.div>
-
-              {/* Stats Section */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1 }}
-                className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-6 max-w-5xl mx-auto px-4"
-              >
-                {[
-                  { value: "10K+", label: "Active Users" },
-                  { value: "500+", label: "Projects Built" },
-                  { value: "98%", label: "Success Rate" },
-                  { value: "50+", label: "Countries" },
-                ].map((stat, index) => (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.1 + index * 0.1 }}
-                    whileHover={{ scale: 1.05 }}
-                    className="text-center p-6 sm:p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all min-h-[100px] flex flex-col justify-center"
-                  >
-                    <div className="text-3xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400 mb-2">
-                      {stat.value}
-                    </div>
-                    <div className="text-sm sm:text-sm text-gray-400 font-medium">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-
-            {/* Scroll Indicator */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, y: [0, 10, 0] }}
-              transition={{
-                opacity: { delay: 1.5, duration: 0.5 },
-                y: { duration: 2, repeat: Infinity, repeatType: "reverse" },
-              }}
-              className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
-            >
-              <div className="w-6 h-10 rounded-full border-2 border-purple-500/50 flex items-start justify-center p-2">
-                <motion.div
-                  animate={{ y: [0, 12, 0] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                  }}
-                  className="w-1.5 h-1.5 rounded-full bg-purple-500"
-                />
-              </div>
-            </motion.div>
-          </section>
-
-          {/* Features Grid Section */}
-          <section className="relative py-20 sm:py-24 overflow-hidden">
-            <div className="container mx-auto px-6 sm:px-6 lg:px-8 max-w-[1200px]">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="text-center mb-16 sm:mb-16"
-              >
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 px-2">
-                  Everything You Need to{" "}
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-                    Succeed
-                  </span>
-                </h2>
-                <p className="text-gray-300 text-lg sm:text-lg max-w-2xl mx-auto px-2 leading-relaxed">
-                  Powerful features designed to help you collaborate, innovate, and build amazing projects together.
-                </p>
-              </motion.div>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6">
-                {[
-                  {
-                    icon: "🎯",
-                    title: "Smart Matching",
-                    description: "AI-powered algorithm matches innovators with developers based on skills, interests, and project requirements.",
-                  },
-                  {
-                    icon: "💬",
-                    title: "Real-time Chat",
-                    description: "Communicate instantly with your team members through integrated messaging and video calls.",
-                  },
-                  {
-                    icon: "📊",
-                    title: "Project Management",
-                    description: "Track progress, manage tasks, and monitor milestones with our intuitive dashboard.",
-                  },
-                  {
-                    icon: "🔐",
-                    title: "Secure Platform",
-                    description: "Enterprise-grade security ensures your ideas and data are always protected.",
-                  },
-                  {
-                    icon: "🤝",
-                    title: "Team Collaboration",
-                    description: "Work together seamlessly with file sharing, code repositories, and collaborative tools.",
-                  },
-                  {
-                    icon: "📈",
-                    title: "Analytics & Insights",
-                    description: "Get detailed insights into team performance and project progress with analytics.",
-                  },
-                ].map((feature, index) => (
-                  <motion.div
-                    key={feature.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ y: -5, scale: 1.02 }}
-                    className="group p-6 sm:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300 min-h-[280px] flex flex-col"
-                  >
-                    <div className="text-5xl sm:text-5xl mb-4 sm:mb-4 group-hover:scale-110 transition-transform">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-xl sm:text-xl font-bold mb-3 sm:mb-3 text-white group-hover:text-purple-400 transition-colors">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-300 leading-relaxed text-base sm:text-base flex-grow">
-                      {feature.description}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Other Sections */}
-          <HowItWorks />
-          <DevelopersSection />
-
-          {/* Testimonials Section */}
-          <section className="relative py-20 sm:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/5 to-transparent" />
-            <div className="container mx-auto px-6 sm:px-6 lg:px-8 max-w-[1200px] relative">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="text-center mb-16 sm:mb-16"
-              >
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 px-2">
-                  Loved by{" "}
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-                    Innovators
-                  </span>
-                  {" "}& Developers
-                </h2>
-                <p className="text-gray-300 text-lg sm:text-lg max-w-2xl mx-auto px-2 leading-relaxed">
-                  Join thousands of creators who are already building their dreams on our platform.
-                </p>
-              </motion.div>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6">
-                {[
-                  {
-                    name: "Sarah Chen",
-                    role: "Product Designer",
-                    image: "SC",
-                    content: "CreatorsMeet connected me with an amazing developer. Together we built a successful SaaS product that now has 1000+ users!",
-                    rating: 5,
-                  },
-                  {
-                    name: "Mike Rodriguez",
-                    role: "Full Stack Developer",
-                    image: "MR",
-                    content: "The AI matching is incredibly accurate. I've worked on 5 projects through this platform and each collaboration was seamless.",
-                    rating: 5,
-                  },
-                  {
-                    name: "Emily Watson",
-                    role: "Startup Founder",
-                    image: "EW",
-                    content: "This platform turned my idea into reality. The project management tools and collaboration features are top-notch!",
-                    rating: 5,
-                  },
-                ].map((testimonial, index) => (
-                  <motion.div
-                    key={testimonial.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ y: -5 }}
-                    className="p-6 sm:p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-purple-500/30 transition-all min-h-[280px] flex flex-col"
-                  >
-                    <div className="flex items-center gap-1 mb-4 sm:mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <svg key={i} className="w-5 h-5 sm:w-5 sm:h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                        </svg>
-                      ))}
-                    </div>
-                    <p className="text-gray-300 mb-6 sm:mb-6 leading-relaxed italic text-base sm:text-base flex-grow">
-                      "{testimonial.content}"
-                    </p>
-                    <div className="flex items-center gap-3 mt-auto">
-                      <div className="w-12 h-12 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center font-bold text-white text-base sm:text-base">
-                        {testimonial.image}
-                      </div>
-                      <div>
-                        <div className="font-semibold text-white text-base sm:text-base">{testimonial.name}</div>
-                        <div className="text-sm sm:text-sm text-gray-400">{testimonial.role}</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <ContactSection />
-
-          {/* CTA Section */}
-          <section className="relative py-20 sm:py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10" />
-            <div className="container mx-auto px-6 sm:px-6 lg:px-8 max-w-[1200px] relative">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="glass-effect bg-gradient-to-r from-purple-900/30 to-pink-900/30 backdrop-blur-xl rounded-3xl p-8 sm:p-8 md:p-12 lg:p-16 border border-purple-500/20 text-center"
-              >
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-6 px-2">
-                  Ready to Turn Your{" "}
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-                    Ideas Into Reality?
-                  </span>
-                </h2>
-                <p className="text-gray-300 text-lg sm:text-lg mb-8 sm:mb-8 max-w-2xl mx-auto px-2 leading-relaxed">
-                  Join thousands of innovators and developers who are already building the future together.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-6 justify-center px-2">
-                  <Link href="/signup-select">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="bg-white text-purple-600 py-4 sm:py-4 px-8 sm:px-10 rounded-full text-lg sm:text-lg font-semibold hover:bg-gray-100 transition-all shadow-lg w-full sm:w-auto min-h-[56px] flex items-center justify-center"
-                    >
-                      Get Started Now
-                    </motion.button>
-                  </Link>
-                  <Link href="/signin">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="border-2 border-white/30 hover:border-white/60 text-white py-4 sm:py-4 px-8 sm:px-10 rounded-full text-lg sm:text-lg font-semibold transition-all backdrop-blur-sm w-full sm:w-auto min-h-[56px] flex items-center justify-center"
-                    >
-                      Sign In
-                    </motion.button>
-                  </Link>
-                </div>
-              </motion.div>
-            </div>
-          </section>
-
-          {/* Enhanced Footer */}
-          <footer className="relative py-12 sm:py-16 border-t border-white/10">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="max-w-6xl mx-auto">
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
-                  {/* Logo & Description */}
-                  <div className="sm:col-span-2 lg:col-span-2">
-                    <div className="flex items-center gap-3 mb-4">
-                      <img
-                        src="/logo.png"
-                        alt="CreatorsMeet Logo"
-                        className="w-8 h-8 sm:w-10 sm:h-10"
-                      />
-                      <span className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-                        CreatorsMeet
-                      </span>
-                    </div>
-                    <p className="text-gray-400 mb-6 max-w-md text-sm sm:text-base">
-                      Connecting innovators with developers to build groundbreaking projects.
-                      Your gateway to collaborative innovation.
-                    </p>
-                    <div className="flex gap-3 sm:gap-4">
-                      {[
-                        { icon: "M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z", label: "GitHub" },
-                        { icon: "M8 3C9.1 3 10 3.9 10 5s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 2.5c.83 0 1.5-.67 1.5-1.5S8.83 2.5 8 2.5 6.5 3.17 6.5 4 7.17 5.5 8 5.5M8 8c-1.86 0-5.5 1.07-5.5 3.2V14h11v-2.8C13.5 9.07 9.86 8 8 8m0 2.14c1.08 0 2.35.41 3.14 1.04.71.57 1.36 1.25 1.36 2.42v.4H3.5v-.4c0-1.17.65-1.85 1.36-2.42.79-.63 2.06-1.04 3.14-1.04M15.83 8C17.14 8 20 9.07 20 11.2V14h-3v-2.8c0-1.1-.65-1.99-1.61-2.52-.19-.1-.38-.18-.56-.28m-.83-.87c-.55-.15-1.12-.23-1.67-.23", label: "LinkedIn" },
-                        { icon: "M22.46 6c-.85.38-1.75.63-2.7.74.97-.58 1.72-1.5 2.07-2.6-.91.54-1.92.93-2.99 1.14-.86-.92-2.08-1.49-3.43-1.49-2.59 0-4.69 2.1-4.69 4.69 0 .37.04.73.12 1.07-3.9-.2-7.35-2.06-9.66-4.9-.4.69-.63 1.5-.63 2.36 0 1.63.83 3.07 2.09 3.91-.77-.02-1.49-.24-2.13-.59v.06c0 2.27 1.62 4.17 3.77 4.6-.39.1-.81.16-1.24.16-.3 0-.6-.03-.89-.08.6 1.88 2.35 3.25 4.42 3.29-1.62 1.27-3.66 2.03-5.88 2.03-.38 0-.76-.02-1.13-.07 2.1 1.35 4.59 2.14 7.27 2.14 8.72 0 13.49-7.23 13.49-13.49 0-.21 0-.41-.01-.61.93-.67 1.73-1.5 2.37-2.45z", label: "Twitter" },
-                      ].map((social, i) => (
-                        <motion.a
-                          key={i}
-                          whileHover={{ scale: 1.1, y: -2 }}
-                          href="#"
-                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-purple-400 hover:border-purple-500/30 transition-all"
-                        >
-                          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d={social.icon} />
-                          </svg>
-                        </motion.a>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Quick Links */}
-                  <div>
-                    <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Product</h3>
-                    <ul className="space-y-2">
-                      {['Features', 'Pricing', 'How it Works', 'FAQ'].map((item) => (
-                        <li key={item}>
-                          <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-sm sm:text-base">
-                            {item}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Company */}
-                  <div>
-                    <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Company</h3>
-                    <ul className="space-y-2">
-                      {['About Us', 'Careers', 'Blog', 'Contact'].map((item) => (
-                        <li key={item}>
-                          <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-sm sm:text-base">
-                            {item}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Bottom Bar */}
-                <div className="pt-6 sm:pt-8 border-t border-white/10">
-                  <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 mb-4">
-                    <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">
-                      © {new Date().getFullYear()} CreatorsMeet. All rights reserved.
-                    </p>
-                    <div className="flex flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm justify-center sm:justify-end">
-                      <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                        Privacy Policy
-                      </a>
-                      <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                        Terms of Service
-                      </a>
-                      <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                        Cookie Policy
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Developer Credit */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center pt-4 border-t border-white/5"
-                  >
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Crafted with <span className="text-red-400 animate-pulse">♥</span> by{" "}
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-semibold">
-                        Chaitya Belani
-                      </span>
-                    </p>
-                  </motion.div>
-                </div>
-              </div>
-            </div>
-          </footer>
-        </main>
-      </GridBackground>
-    </div>
-  )
-} 
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      whileHover={{ y: -5, scale: 1.02 }}
+      className=\"group p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-purple-500/30 transition-all relative overflow-hidden\"
+        >
+      <motion.div
+        className={`absolute inset-0 bg-gradient-to-br ${colors[color as keyof typeof colors]} opacity-0 group-hover:opacity-100 transition-opacity`}
+        animate={{
+          backgroundPosition: ['0% 0%', '100% 100%'],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          repeatType: \"reverse\",
+        }}
+      />
+      
+      <div className=\"relative z-10\">
+    < div className =\"text-5xl mb-4 group-hover:scale-110 transition-transform\">{icon}</div>
+      < h3 className =\"text-xl font-bold mb-3 text-white\">{title}</h3>
+        < p className =\"text-gray-300 leading-relaxed\">{description}</p>
+      </div >
+    </motion.div >
+  );
+}
+"
