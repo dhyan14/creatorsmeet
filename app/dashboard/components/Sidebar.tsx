@@ -14,6 +14,8 @@ import {
     IconLogout,
     IconMenu2,
     IconX,
+    IconVideo,
+    IconMessages,
 } from '@tabler/icons-react';
 
 interface SidebarProps {
@@ -31,6 +33,8 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
         { id: 'overview', label: 'Overview', icon: IconLayoutDashboard, color: 'purple' },
         { id: 'projects', label: 'Projects', icon: IconRocket, color: 'cyan' },
         { id: 'codespace', label: 'Codespace', icon: IconCode, color: 'green' },
+        { id: 'meetings', label: 'Meetings', icon: IconVideo, color: 'orange' },
+        { id: 'community', label: 'Community', icon: IconMessages, color: 'indigo' },
         { id: 'calendar', label: 'Calendar', icon: IconCalendar, color: 'pink' },
         { id: 'team', label: 'Team', icon: IconUsersGroup, color: 'violet' },
         { id: 'network', label: 'Network', icon: IconUsers, color: 'teal' },

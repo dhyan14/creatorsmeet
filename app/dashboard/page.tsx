@@ -47,6 +47,8 @@ import LearningHub from './components/LearningHub';
 import QuickCapture from './components/QuickCapture';
 import CodespaceLayout from './components/CodespaceLayout';
 import Sidebar from './components/Sidebar';
+import MeetingsView from './components/MeetingsView';
+import CommunityView from './components/CommunityView';
 
 interface ProjectRequirements {
   description: string;
@@ -1103,6 +1105,25 @@ export default function Dashboard() {
             </motion.div>
           )}
 
+          {/* Meetings Tab */}
+          {activeTab === 'meetings' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <MeetingsView />
+            </motion.div>
+          )}
+
+          {/* Community Tab */}
+          {activeTab === 'community' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <CommunityView />
+            </motion.div>
+          )}
 
           {/* Calendar Tab */}
           {activeTab === 'calendar' && (
