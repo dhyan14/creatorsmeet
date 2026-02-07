@@ -4,8 +4,8 @@ import React from 'react';
 import { IconBrandVscode, IconExternalLink } from '@tabler/icons-react';
 
 export default function VSCodeEmbed() {
-    // Your Render code-server URL
-    const codeServerUrl = 'https://code-server-mlje.onrender.com';
+    // Custom domain for code-server
+    const codeServerUrl = 'https://codespace.creatorsmeet.in';
 
     return (
         <div className="h-full w-full bg-[#1e1e1e] flex flex-col">
