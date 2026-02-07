@@ -49,6 +49,7 @@ import VSCodeEmbed from './components/VSCodeEmbed';
 import Sidebar from './components/Sidebar';
 import MeetingsView from './components/MeetingsView';
 import CommunityView from './components/CommunityView';
+import TeamInviteDialog from './components/TeamInviteDialog';
 
 interface ProjectRequirements {
   description: string;
@@ -151,6 +152,8 @@ export default function Dashboard() {
       instagram: ''
     }
   });
+  const [showTeamInvite, setShowTeamInvite] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   // Mock data for enhanced features
   const [notifications, setNotifications] = useState<Notification[]>([
@@ -1026,7 +1029,7 @@ export default function Dashboard() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                       whileHover={{ scale: 1.02, y: -5 }}
-                      className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20 shadow-xl cursor-pointer"
+                      className="bg-black/60 backdrop-blur-2xl rounded-2xl p-6 border border-white/20 shadow-xl"
                     >
                       <div className="flex items-start justify-between mb-4">
                         <h3 className="text-lg font-semibold text-white">{project.title}</h3>
@@ -1053,23 +1056,39 @@ export default function Dashboard() {
                         </div>
                       </div>
 
-                      {project.team && project.team.length > 0 && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex -space-x-2">
-                            {project.team.slice(0, 3).map((member) => (
-                              <div
-                                key={member._id}
-                                className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 border-2 border-black flex items-center justify-center"
-                              >
-                                <span className="text-xs font-bold text-white">{member.name[0]}</span>
+                      <div className="space-y-3">
+                        {project.team && project.team.length > 0 && (
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="flex -space-x-2">
+                                {project.team.slice(0, 3).map((member) => (
+                                  <div
+                                    key={member._id}
+                                    className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 border-2 border-black flex items-center justify-center"
+                                  >
+                                    <span className="text-xs font-bold text-white">{member.name[0]}</span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                              <span className="text-xs text-gray-400">
+                                {project.team.length} member{project.team.length > 1 ? 's' : ''}
+                              </span>
+                            </div>
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => {
+                                setSelectedProject(project);
+                                setShowTeamInvite(true);
+                              }}
+                              className="flex items-center gap-1 px-3 py-1.5 bg-purple-500/20 text-purple-400 rounded-lg text-xs font-medium hover:bg-purple-500/30 transition-colors border border-purple-500/30"
+                            >
+                              <IconUsers className="w-3.5 h-3.5" />
+                              Invite
+                            </motion.button>
                           </div>
-                          <span className="text-xs text-gray-400">
-                            {project.team.length} team member{project.team.length > 1 ? 's' : ''}
-                          </span>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </motion.div>
                   ))}
                 </div>
@@ -1550,6 +1569,16 @@ export default function Dashboard() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Team Invite Dialog */}
+        <TeamInviteDialog
+          isOpen={showTeamInvite}
+          onClose={() => {
+            setShowTeamInvite(false);
+            setSelectedProject(null);
+          }}
+          projectTitle={selectedProject?.title || ''}
+        />
 
         {/* Floating Quick Notes Button */}
         <motion.button
