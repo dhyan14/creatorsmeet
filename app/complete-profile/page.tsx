@@ -27,9 +27,7 @@ export default function CompleteProfile() {
         name: '',
         username: '',
         password: '',
-        role: '' as 'creator' | 'innov
-
-ator' | '',
+        role: '' as 'creator' | 'innovator' | '',
         skills: [] as string[],
         interests: [] as string[],
         technologies: [] as string[],
@@ -191,8 +189,8 @@ ator' | '',
                                         <motion.div
                                             animate={{ scale: isActive ? 1.1 : 1 }}
                                             className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${isCompleted ? 'bg-green-500 border-green-500' :
-                                                    isActive ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-transparent' :
-                                                        'bg-white/5 border-white/20'
+                                                isActive ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-transparent' :
+                                                    'bg-white/5 border-white/20'
                                                 }`}
                                         >
                                             {isCompleted ? <IconCheck className="w-6 h-6 text-white" /> :
