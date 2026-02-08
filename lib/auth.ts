@@ -87,13 +87,17 @@ export const authOptions: NextAuthOptions = {
             return token;
         },
         async redirect({ url, baseUrl }) {
-            // For OAuth callbacks, always redirect to complete-profile first
+            console.log('Redirect callback - URL:', url, 'BaseURL:', baseUrl); // Debug log
+
+            // For OAuth callbacks, always redirect to complete-profile
             // The complete-profile page will check if profile is already complete
             // and redirect to dashboard if needed
 
-            // Check if this is an OAuth callback (contains 'callback' in URL)
-            if (url.includes('/api/auth/callback/') || url.includes('?callbackUrl=')) {
-                // Let the complete-profile page handle the logic
+            // Check if this is an OAuth callback or signin/signup redirect
+            if (url.includes('/api/auth/callback/') ||
+                url.includes('/signin') ||
+                url.includes('/signup')) {
+                console.log('OAuth detected, redirecting to complete-profile');
                 return `${baseUrl}/complete-profile`;
             }
 
