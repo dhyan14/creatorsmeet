@@ -16,7 +16,7 @@ export default function CompleteProfile() {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [formData, setFormData] = useState({
         username: '',
-        role: '' as 'developer' | 'creator' | '',
+        role: '' as 'creator' | 'innovator' | '',
         skills: [] as string[],
         interests: [] as string[],
         technologies: [] as string[],
@@ -92,7 +92,7 @@ export default function CompleteProfile() {
         }
     };
 
-    const handleRoleChange = (role: 'developer' | 'creator') => {
+    const handleRoleChange = (role: 'creator' | 'innovator') => {
         setFormData(prev => ({ ...prev, role }));
         if (errors.role) {
             setErrors(prev => ({ ...prev, role: '' }));
