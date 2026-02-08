@@ -87,31 +87,22 @@ export const authOptions: NextAuthOptions = {
             return token;
         },
         async redirect({ url, baseUrl }) {
-            // If redirecting after sign in, check if profile is complete
-            try {
-                // Extract email from the URL if present (OAuth callback includes it)
-                const urlObj = new URL(url.startsWith('http') ? url : `${baseUrl}${url}`);
-                const email = urlObj.searchParams.get('email');
+            // For OAuth callbacks, always redirect to complete-profile first
+            // The complete-profile page will check if profile is already complete
+            // and redirect to dashboard if needed
 
-                if (email) {
-                    await dbConnect();
-                    const user = await User.findOne({ email }).lean();
-
-                    if (user && !(user as any).profileCompleted) {
-                        // Profile not complete - redirect to complete-profile
-                        return `${baseUrl}/complete-profile`;
-                    }
-                }
-            } catch (error) {
-                console.error('Error in redirect callback:', error);
+            // Check if this is an OAuth callback (contains 'callback' in URL)
+            if (url.includes('/api/auth/callback/') || url.includes('?callbackUrl=')) {
+                // Let the complete-profile page handle the logic
+                return `${baseUrl}/complete-profile`;
             }
 
             // Allow callback URLs from same origin
             if (url.startsWith(baseUrl)) return url;
             // Allow relative callback URLs  
             else if (url.startsWith('/')) return `${baseUrl}${url}`;
-            //Default to dashboard if logged in
-            return `${baseUrl}/dashboard`;
+            // Default to complete-profile for safety
+            return `${baseUrl}/complete-profile`;
         },
     },
     pages: {
