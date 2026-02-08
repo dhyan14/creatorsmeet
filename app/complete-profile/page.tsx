@@ -284,34 +284,34 @@ export default function CompleteProfile() {
                                             error={errors.skills} darkMode={true} />
                                         <p className="text-xs text-gray-400 mt-1">
                                             {formData.role === 'creator'
-                                                ? 'Add your main technical skills (e.g., React, Python, UI/UX Design)'
-                                                : 'Add areas you\'re interested in or experienced with'}
+                                                ? 'Your technical skills (e.g., React, Python, UI/UX Design)'
+                                                : 'Business domains you\'re passionate about (e.g., Healthcare, Finance, Education)'}
                                         </p>
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium mb-2 text-gray-300">
-                                            {formData.role === 'creator' ? 'Also Interested In (Optional)' : formData.role === 'innovator' ? 'Additional Interests (Optional)' : 'Interests (Optional)'}
-                                        </label>
-                                        <TechnologySelector selectedTechnologies={formData.interests}
-                                            onChange={(interests) => setFormData(prev => ({ ...prev, interests }))}
-                                            darkMode={true} />
-                                        <p className="text-xs text-gray-400 mt-1">
-                                            {formData.role === 'creator'
-                                                ? 'Other topics or technologies that interest you'
-                                                : 'What else excites you or you want to explore?'}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">
-                                            {formData.role === 'creator' ? 'Preferred Technologies (Optional)' : formData.role === 'innovator' ? 'Industry Focus (Optional)' : 'Preferred Technologies (Optional)'}
+                                            {formData.role === 'creator' ? 'Technologies (Optional)' : formData.role === 'innovator' ? 'Technologies (Optional)' : 'Technologies (Optional)'}
                                         </label>
                                         <TechnologySelector selectedTechnologies={formData.technologies}
                                             onChange={(technologies) => setFormData(prev => ({ ...prev, technologies }))}
                                             darkMode={true} />
                                         <p className="text-xs text-gray-400 mt-1">
                                             {formData.role === 'creator'
-                                                ? 'Technologies you prefer to work with'
-                                                : 'Which industries or sectors interest you most?'}
+                                                ? 'Tools & frameworks you prefer to work with'
+                                                : 'Technologies you\'re familiar with or interested in learning'}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2 text-gray-300">
+                                            {formData.role === 'creator' ? 'Project Ideas (Optional)' : formData.role === 'innovator' ? 'Ideas (Optional)' : 'Ideas (Optional)'}
+                                        </label>
+                                        <TechnologySelector selectedTechnologies={formData.interests}
+                                            onChange={(interests) => setFormData(prev => ({ ...prev, interests }))}
+                                            darkMode={true} />
+                                        <p className="text-xs text-gray-400 mt-1">
+                                            {formData.role === 'creator'
+                                                ? 'What kind of projects do you want to build? (e.g., SaaS, Mobile App, AI Tool)'
+                                                : 'What ideas or ventures do you want to bring to life?'}
                                         </p>
                                     </div>
                                 </motion.div>
