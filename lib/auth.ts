@@ -1,5 +1,6 @@
 import { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import clientPromise from '@/lib/mongodb';
 import dbConnect from '@/lib/db';
@@ -18,6 +19,10 @@ export const authOptions: NextAuthOptions = {
                     response_type: "code"
                 }
             }
+        }),
+        GitHubProvider({
+            clientId: process.env.GITHUB_ID!,
+            clientSecret: process.env.GITHUB_SECRET!,
         }),
     ],
     callbacks: {
@@ -49,26 +54,41 @@ export const authOptions: NextAuthOptions = {
                         if (fullUser) {
                             session.user.role = (fullUser as any).role;
                             session.user._id = (fullUser as any)._id.toString();
+                            session.user.profileCompleted = (fullUser as any).profileCompleted;
                         } else {
                             // Create user in custom model if not exists
-                            await User.create({
+                            const newUser = await User.create({
+                                username: `user_${Date.now()}`, // Temporary, will be set in profile completion
                                 name: session.user.name,
                                 email: session.user.email,
-                                password: '',
-                                role: 'innovator',
-                                country: '',
-                                profileImage: session.user.image || '/default-avatar.png',
+                                password: null,
+                                role: null,
+                                emailVerified: new Date(), // OAuth users have verified email
+                                image: session.user.image,
+                                googleId: token.provider === 'google' ? token.sub : undefined,
+                                githubId: token.provider === 'github' ? token.sub : undefined,
+                                profileCompleted: false,
+                                setupStep: 1,
                                 skills: [],
+                                interests: [],
+                                technologies: [],
                                 bio: '',
+                                availability: 'available',
+                                lookingFor: '',
+                                experienceLevel: 'beginner',
                                 github: '',
                                 linkedin: '',
+                                portfolio: '',
                             });
-                            session.user.role = 'innovator';
+                            session.user.role = null;
+                            session.user._id = newUser._id.toString();
+                            session.user.profileCompleted = false;
                         }
                     } catch (dbError) {
                         console.error('Error syncing with custom User model:', dbError);
                         // Continue anyway - user is authenticated via OAuth
-                        session.user.role = 'innovator'; // Default role
+                        session.user.role = null;
+                        session.user.profileCompleted = false;
                     }
                 }
                 return session;
@@ -84,6 +104,7 @@ export const authOptions: NextAuthOptions = {
                 token.email = user.email;
                 token.name = user.name;
                 token.picture = user.image;
+                token.provider = account.provider;
             }
             return token;
         },
@@ -91,7 +112,7 @@ export const authOptions: NextAuthOptions = {
     pages: {
         signIn: '/signin',
         error: '/signin',
-        newUser: '/dashboard', // Redirect new users to dashboard
+        newUser: '/complete-profile', // Redirect new users to complete profile
     },
     session: {
         strategy: 'jwt',

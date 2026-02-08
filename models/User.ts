@@ -18,6 +18,20 @@ export interface IUser extends Document {
   setupStep: number; // 1: basic, 2: username, 3: password (OAuth), 4: role, 5: profile
   needsPassword: boolean; // true if OAuth user needs password
 
+  // Matching & Profile fields
+  skills: string[]; // e.g., ["React", "Node.js", "Python"]
+  interests: string[]; // e.g., ["AI", "Web Development", "Mobile Apps"]
+  technologies: string[]; // e.g., ["JavaScript", "MongoDB", "AWS"]
+  bio: string;
+  availability: 'available' | 'busy' | 'not-available';
+  lookingFor: string; // What type of projects/collaborators they're seeking
+  experienceLevel: 'beginner' | 'intermediate' | 'expert';
+
+  // Social links
+  github: string;
+  linkedin: string;
+  portfolio: string;
+
   // OTP fields
   otp?: string;
   otpExpires?: Date;
@@ -95,6 +109,50 @@ const UserSchema = new Schema<IUser>(
     needsPassword: {
       type: Boolean,
       default: false
+    },
+    skills: {
+      type: [String],
+      default: []
+    },
+    interests: {
+      type: [String],
+      default: []
+    },
+    technologies: {
+      type: [String],
+      default: []
+    },
+    bio: {
+      type: String,
+      default: '',
+      maxlength: [500, 'Bio must not exceed 500 characters']
+    },
+    availability: {
+      type: String,
+      enum: ['available', 'busy', 'not-available'],
+      default: 'available'
+    },
+    lookingFor: {
+      type: String,
+      default: '',
+      maxlength: [200, 'Looking for must not exceed 200 characters']
+    },
+    experienceLevel: {
+      type: String,
+      enum: ['beginner', 'intermediate', 'expert'],
+      default: 'beginner'
+    },
+    github: {
+      type: String,
+      default: ''
+    },
+    linkedin: {
+      type: String,
+      default: ''
+    },
+    portfolio: {
+      type: String,
+      default: ''
     },
     otp: {
       type: String,
