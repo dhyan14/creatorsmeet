@@ -82,30 +82,52 @@ export default function HomePage() {
                             </div>
                         </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="flex items-center gap-4"
-                        >
-                            <Link href="/signin">
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-6 py-2 text-white hover:text-purple-400 transition-colors"
-                                >
-                                    Sign In
-                                </motion.button>
-                            </Link>
-                            <Link href="/signup">
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all"
-                                >
-                                    Get Started
-                                </motion.button>
-                            </Link>
-                        </motion.div>
+                        <div className="flex items-center gap-8">
+                            {/* Navigation Links */}
+                            <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="hidden md:flex items-center gap-6"
+                            >
+                                <Link href="#features" className="text-gray-300 hover:text-purple-400 transition-colors text-sm font-medium">
+                                    Features
+                                </Link>
+                                <Link href="#how-it-works" className="text-gray-300 hover:text-purple-400 transition-colors text-sm font-medium">
+                                    How It Works
+                                </Link>
+                                <Link href="#developers" className="text-gray-300 hover:text-purple-400 transition-colors text-sm font-medium">
+                                    Developers
+                                </Link>
+                                <Link href="#contact" className="text-gray-300 hover:text-purple-400 transition-colors text-sm font-medium">
+                                    Contact
+                                </Link>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="flex items-center gap-3"
+                            >
+                                <Link href="/signin">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="px-5 py-2 text-white hover:text-purple-400 transition-colors text-sm font-medium"
+                                    >
+                                        Sign In
+                                    </motion.button>
+                                </Link>
+                                <Link href="/signup">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="px-5 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all text-sm"
+                                    >
+                                        Get Started
+                                    </motion.button>
+                                </Link>
+                            </motion.div>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -130,14 +152,14 @@ export default function HomePage() {
                             </span>
                         </motion.div>
 
-                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                             Where{" "}
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-gradient">
                                 Ideas Meet Talent
                             </span>
                         </h1>
 
-                        <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
                             Connect with innovators and developers to turn your vision into reality.
                             CreatorsMeet brings together the brightest minds to build the future, one project at a time.
                         </p>
@@ -217,7 +239,7 @@ export default function HomePage() {
             </section>
 
             {/* Features Section */}
-            <section className="relative py-24 px-4">
+            <section id="features" className="relative py-24 px-4">
                 <div className="container mx-auto max-w-[1400px]">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
