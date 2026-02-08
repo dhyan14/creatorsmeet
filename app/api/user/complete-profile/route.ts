@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const {
             username,
+            password, // Optional - for OAuth users to set backup password
             role,
             skills,
             interests,
@@ -57,6 +58,13 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Hash password if provided
+        let hashedPassword = null;
+        if (password && password.length > 0) {
+            const bcrypt = require('bcryptjs');
+            hashedPassword = await bcrypt.hash(password, 10);
+        }
+
         // Find user by email or create new one
         let user = await User.findOne({ email: session.user.email });
 
@@ -68,7 +76,7 @@ export async function POST(request: NextRequest) {
                 email: session.user.email,
                 emailVerified: new Date(), // OAuth users have verified email
                 image: session.user.image,
-                password: null, // OAuth users don't have password
+                password: hashedPassword, // Optional backup password
                 role,
                 skills,
                 interests: interests || [],
@@ -98,6 +106,11 @@ export async function POST(request: NextRequest) {
             user.linkedin = linkedin || '';
             user.portfolio = portfolio || '';
             user.profileCompleted = true;
+
+            // Update password if provided
+            if (hashedPassword) {
+                user.password = hashedPassword;
+            }
 
             await user.save();
         }
