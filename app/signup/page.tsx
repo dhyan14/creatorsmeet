@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import {
   IconUser, IconMail, IconPhone, IconRocket, IconCheck
 } from '@tabler/icons-react';
@@ -699,13 +700,13 @@ export default function SignUp() {
                 <div className="grid grid-cols-2 gap-4">
                   <SocialButton
                     provider="google"
-                    onClick={() => window.location.href = '/api/auth/google'}
+                    onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
                     disabled={loading}
                     darkMode={darkMode}
                   />
                   <SocialButton
                     provider="github"
-                    onClick={() => window.location.href = '/api/auth/github'}
+                    onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
                     disabled={loading}
                     darkMode={darkMode}
                   />
