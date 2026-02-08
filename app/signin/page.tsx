@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { IconMail, IconPhone, IconRocket } from '@tabler/icons-react';
 import FormInput from '../components/auth/FormInput';
 import PasswordInput from '../components/auth/PasswordInput';
@@ -87,14 +88,14 @@ export default function SignIn() {
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
-    // Trigger Google OAuth
-    window.location.href = '/api/auth/google';
+    // Trigger Google OAuth using NextAuth
+    await signIn('google', { callbackUrl: '/dashboard' });
   };
 
   const handleGitHubSignIn = async () => {
     setLoading(true);
-    // Trigger GitHub OAuth
-    window.location.href = '/api/auth/github';
+    // Trigger GitHub OAuth using NextAuth
+    await signIn('github', { callbackUrl: '/dashboard' });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,8 +112,8 @@ export default function SignIn() {
 
   return (
     <div className={`min-h-screen py-12 px-4 relative overflow-hidden transition-colors ${darkMode
-        ? 'bg-black'
-        : 'bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50'
+      ? 'bg-black'
+      : 'bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50'
       }`}>
       {/* Animated Background */}
       <div className="absolute inset-0 -z-10">
