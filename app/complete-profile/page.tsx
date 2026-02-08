@@ -277,25 +277,42 @@ export default function CompleteProfile() {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium mb-2 text-gray-300">
-                                            Skills <span className="text-red-400">*</span>
+                                            {formData.role === 'creator' ? 'Skills' : formData.role === 'innovator' ? 'Areas of Interest' : 'Skills'} <span className="text-red-400">*</span>
                                         </label>
                                         <TechnologySelector selectedTechnologies={formData.skills}
                                             onChange={(skills) => setFormData(prev => ({ ...prev, skills }))}
                                             error={errors.skills} darkMode={true} />
-                                        <p className="text-xs text-gray-400 mt-1">Add your main technical skills</p>
+                                        <p className="text-xs text-gray-400 mt-1">
+                                            {formData.role === 'creator'
+                                                ? 'Add your main technical skills (e.g., React, Python, UI/UX Design)'
+                                                : 'Add areas you\'re interested in or experienced with'}
+                                        </p>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Interests (Optional)</label>
+                                        <label className="block text-sm font-medium mb-2 text-gray-300">
+                                            {formData.role === 'creator' ? 'Also Interested In (Optional)' : formData.role === 'innovator' ? 'Additional Interests (Optional)' : 'Interests (Optional)'}
+                                        </label>
                                         <TechnologySelector selectedTechnologies={formData.interests}
                                             onChange={(interests) => setFormData(prev => ({ ...prev, interests }))}
                                             darkMode={true} />
-                                        <p className="text-xs text-gray-400 mt-1">What topics interest you?</p>
+                                        <p className="text-xs text-gray-400 mt-1">
+                                            {formData.role === 'creator'
+                                                ? 'Other topics or technologies that interest you'
+                                                : 'What else excites you or you want to explore?'}
+                                        </p>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Preferred Technologies (Optional)</label>
+                                        <label className="block text-sm font-medium mb-2 text-gray-300">
+                                            {formData.role === 'creator' ? 'Preferred Technologies (Optional)' : formData.role === 'innovator' ? 'Industry Focus (Optional)' : 'Preferred Technologies (Optional)'}
+                                        </label>
                                         <TechnologySelector selectedTechnologies={formData.technologies}
                                             onChange={(technologies) => setFormData(prev => ({ ...prev, technologies }))}
                                             darkMode={true} />
+                                        <p className="text-xs text-gray-400 mt-1">
+                                            {formData.role === 'creator'
+                                                ? 'Technologies you prefer to work with'
+                                                : 'Which industries or sectors interest you most?'}
+                                        </p>
                                     </div>
                                 </motion.div>
                             )}
