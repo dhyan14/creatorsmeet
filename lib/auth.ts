@@ -108,14 +108,16 @@ export const authOptions: NextAuthOptions = {
             }
             return token;
         },
-        async redirect({ url, baseUrl, token }) {
+        async redirect({ url, baseUrl }) {
             // If redirecting after sign in, check if profile is complete
             try {
-                await dbConnect();
+                // Extract email from the URL if present (OAuth callback includes it)
+                const urlObj = new URL(url.startsWith('http') ? url : `${baseUrl}${url}`);
+                const email = urlObj.searchParams.get('email');
 
-                // Get token from the session (this is called after JWT callback)
-                if (token && token.email) {
-                    const user = await User.findOne({ email: token.email }).lean();
+                if (email) {
+                    await dbConnect();
+                    const user = await User.findOne({ email }).lean();
 
                     if (user && !(user as any).profileCompleted) {
                         // Profile not complete - redirect to complete-profile
