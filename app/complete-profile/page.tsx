@@ -33,6 +33,7 @@ export default function CompleteProfile() {
     // Pre-fill data from session when it loads
     useEffect(() => {
         if (session?.user) {
+            console.log('Session data:', session.user); // Debug log
             setFormData(prev => ({
                 ...prev,
                 name: session.user.name || ''
@@ -110,6 +111,10 @@ export default function CompleteProfile() {
 
     const handleSkillsChange = (skills: string[]) => {
         setFormData(prev => ({ ...prev, skills }));
+    };
+
+    const handleInterestsChange = (interests: string[]) => {
+        setFormData(prev => ({ ...prev, interests }));
     };
 
     const handleTechnologiesChange = (technologies: string[]) => {
