@@ -32,52 +32,75 @@ export async function POST(request: NextRequest) {
         } = body;
 
         // Validation
-        if (!username || !role || !skills || !interests) {
+        if (!username || !role) {
             return NextResponse.json(
-                { success: false, message: 'Missing required fields' },
+                { success: false, message: 'Username and role are required' },
+                { status: 400 }
+            );
+        }
+
+        if (!skills || skills.length === 0) {
+            return NextResponse.json(
+                { success: false, message: 'At least one skill is required' },
                 { status: 400 }
             );
         }
 
         await dbConnect();
 
-        // Find user by email
-        const user = await User.findOne({ email: session.user.email });
-
-        if (!user) {
+        // Check if username is already taken
+        const existingUsername = await User.findOne({ username, email: { $ne: session.user.email } });
+        if (existingUsername) {
             return NextResponse.json(
-                { success: false, message: 'User not found' },
-                { status: 404 }
+                { success: false, message: 'Username is already taken' },
+                { status: 400 }
             );
         }
 
-        // Check if username is already taken (if changing)
-        if (user.username !== username) {
-            const existingUser = await User.findOne({ username });
-            if (existingUser) {
-                return NextResponse.json(
-                    { success: false, message: 'Username already taken' },
-                    { status: 400 }
-                );
-            }
+        // Find user by email or create new one
+        let user = await User.findOne({ email: session.user.email });
+
+        if (!user) {
+            // Create new user with all data (OAuth user completing profile for first time)
+            user = await User.create({
+                username,
+                name: session.user.name,
+                email: session.user.email,
+                emailVerified: new Date(), // OAuth users have verified email
+                image: session.user.image,
+                password: null, // OAuth users don't have password
+                role,
+                skills,
+                interests: interests || [],
+                technologies: technologies || [],
+                bio: bio || '',
+                availability: availability || 'available',
+                lookingFor: lookingFor || '',
+                experienceLevel: experienceLevel || 'beginner',
+                github: github || '',
+                linkedin: linkedin || '',
+                portfolio: portfolio || '',
+                profileCompleted: true,
+                setupStep: 2
+            });
+        } else {
+            // Update existing user
+            user.username = username;
+            user.role = role;
+            user.skills = skills;
+            user.interests = interests || [];
+            user.technologies = technologies || [];
+            user.bio = bio || '';
+            user.availability = availability || 'available';
+            user.lookingFor = lookingFor || '';
+            user.experienceLevel = experienceLevel || 'beginner';
+            user.github = github || '';
+            user.linkedin = linkedin || '';
+            user.portfolio = portfolio || '';
+            user.profileCompleted = true;
+
+            await user.save();
         }
-
-        // Update user profile
-        user.username = username;
-        user.role = role;
-        user.skills = skills;
-        user.interests = interests;
-        user.technologies = technologies || [];
-        user.bio = bio || '';
-        user.availability = availability || 'available';
-        user.lookingFor = lookingFor || '';
-        user.experienceLevel = experienceLevel || 'beginner';
-        user.github = github || '';
-        user.linkedin = linkedin || '';
-        user.portfolio = portfolio || '';
-        user.profileCompleted = true;
-
-        await user.save();
 
         return NextResponse.json({
             success: true,

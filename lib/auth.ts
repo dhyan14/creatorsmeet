@@ -46,47 +46,25 @@ export const authOptions: NextAuthOptions = {
                     session.user.name = token.name as string || session.user.name;
                     session.user.image = token.picture as string || session.user.image;
 
-                    // Try to fetch additional data from custom User model if available
+                    // Try to fetch additional data from custom User model if exists
                     try {
                         await dbConnect();
                         const fullUser = await User.findOne({ email: session.user.email }).lean();
 
                         if (fullUser) {
+                            // User exists in database - attach their data
                             session.user.role = (fullUser as any).role;
                             session.user._id = (fullUser as any)._id.toString();
                             session.user.profileCompleted = (fullUser as any).profileCompleted;
                         } else {
-                            // Create user in custom model if not exists
-                            const newUser = await User.create({
-                                username: `user_${Date.now()}`, // Temporary, will be set in profile completion
-                                name: session.user.name,
-                                email: session.user.email,
-                                password: null,
-                                role: null,
-                                emailVerified: new Date(), // OAuth users have verified email
-                                image: session.user.image,
-                                googleId: token.provider === 'google' ? token.sub : undefined,
-                                githubId: token.provider === 'github' ? token.sub : undefined,
-                                profileCompleted: false,
-                                setupStep: 1,
-                                skills: [],
-                                interests: [],
-                                technologies: [],
-                                bio: '',
-                                availability: 'available',
-                                lookingFor: '',
-                                experienceLevel: 'beginner',
-                                github: '',
-                                linkedin: '',
-                                portfolio: '',
-                            });
+                            // User NOT in database yet - they need to complete profile
+                            // Don't create user here - wait for profile completion
                             session.user.role = null;
-                            session.user._id = newUser._id.toString();
                             session.user.profileCompleted = false;
                         }
                     } catch (dbError) {
-                        console.error('Error syncing with custom User model:', dbError);
-                        // Continue anyway - user is authenticated via OAuth
+                        console.error('Error checking user in database:', dbError);
+                        // If DB error, assume profile not completed
                         session.user.role = null;
                         session.user.profileCompleted = false;
                     }

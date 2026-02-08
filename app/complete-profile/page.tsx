@@ -15,6 +15,7 @@ export default function CompleteProfile() {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [formData, setFormData] = useState({
+        name: '',
         username: '',
         role: '' as 'creator' | 'innovator' | '',
         skills: [] as string[],
@@ -28,6 +29,16 @@ export default function CompleteProfile() {
         linkedin: '',
         portfolio: ''
     });
+
+    // Pre-fill data from session when it loads
+    useEffect(() => {
+        if (session?.user) {
+            setFormData(prev => ({
+                ...prev,
+                name: session.user.name || ''
+            }));
+        }
+    }, [session]);
 
     useEffect(() => {
         // Redirect if already authenticated with completed profile
@@ -161,6 +172,43 @@ export default function CompleteProfile() {
                     className="backdrop-blur-xl rounded-3xl p-8 border bg-white/5 border-white/10 shadow-2xl"
                 >
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Name - Pre-filled but editable */}
+                        <FormInput
+                            label="Full Name"
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="John Doe"
+                            error={errors.name}
+                            darkMode={true}
+                            required
+                        />
+
+                        {/* Email - Read-only, verified */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2 text-gray-300">
+                                Email
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="email"
+                                    value={session?.user?.email || ''}
+                                    disabled
+                                    className="w-full px-4 py-3 rounded-xl border bg-white/5 border-white/20 text-gray-400 cursor-not-allowed"
+                                />
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 text-green-400 text-sm">
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                    <span className="font-medium">Verified</span>
+                                </div>
+                            </div>
+                            <p className="text-xs text-gray-400 mt-1">
+                                Email verified via {session?.user?.image?.includes('google') ? 'Google' : 'GitHub'} OAuth
+                            </p>
+                        </div>
+
                         {/* Username */}
                         <FormInput
                             label="Username"
