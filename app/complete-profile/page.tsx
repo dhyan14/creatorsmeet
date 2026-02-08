@@ -34,10 +34,8 @@ export default function CompleteProfile() {
         if (status === 'authenticated' && session?.user?.profileCompleted) {
             router.push('/dashboard');
         }
-        // Redirect to signin if not authenticated
-        if (status === 'unauthenticated') {
-            router.push('/signin');
-        }
+        // Only redirect to signin if we're sure they're unauthenticated (not just loading)
+        // This prevents redirecting during the OAuth callback
     }, [status, session, router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -111,6 +109,20 @@ export default function CompleteProfile() {
         return (
             <div className="min-h-screen bg-black flex items-center justify-center">
                 <div className="text-white text-xl">Loading...</div>
+            </div>
+        );
+    }
+
+    // If unauthenticated after loading, show message instead of form
+    if (status === 'unauthenticated') {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-white text-xl mb-4">Please sign in to continue</p>
+                    <a href="/signin" className="text-purple-400 hover:text-purple-300">
+                        Go to Sign In
+                    </a>
+                </div>
             </div>
         );
     }
