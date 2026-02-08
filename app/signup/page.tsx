@@ -700,13 +700,13 @@ export default function SignUp() {
                 <div className="grid grid-cols-2 gap-4">
                   <SocialButton
                     provider="google"
-                    onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+                    onClick={() => signIn('google')}
                     disabled={loading}
                     darkMode={darkMode}
                   />
                   <SocialButton
                     provider="github"
-                    onClick={() => signIn('github', { callbackUrl: '/dashboard' })}
+                    onClick={() => signIn('github')}
                     disabled={loading}
                     darkMode={darkMode}
                   />

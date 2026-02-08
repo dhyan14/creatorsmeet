@@ -88,14 +88,14 @@ export default function SignIn() {
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
-    // Trigger Google OAuth using NextAuth
-    await signIn('google', { callbackUrl: '/dashboard' });
+    // Trigger Google OAuth using NextAuth - redirect callback will handle routing based on profile completion
+    await signIn('google');
   };
 
   const handleGitHubSignIn = async () => {
     setLoading(true);
-    // Trigger GitHub OAuth using NextAuth
-    await signIn('github', { callbackUrl: '/dashboard' });
+    // Trigger GitHub OAuth using NextAuth - redirect callback will handle routing based on profile completion
+    await signIn('github');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

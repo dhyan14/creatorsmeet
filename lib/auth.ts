@@ -108,6 +108,31 @@ export const authOptions: NextAuthOptions = {
             }
             return token;
         },
+        async redirect({ url, baseUrl, token }) {
+            // If redirecting after sign in, check if profile is complete
+            try {
+                await dbConnect();
+
+                // Get token from the session (this is called after JWT callback)
+                if (token && token.email) {
+                    const user = await User.findOne({ email: token.email }).lean();
+
+                    if (user && !(user as any).profileCompleted) {
+                        // Profile not complete - redirect to complete-profile
+                        return `${baseUrl}/complete-profile`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error in redirect callback:', error);
+            }
+
+            // Allow callback URLs from same origin
+            if (url.startsWith(baseUrl)) return url;
+            // Allow relative callback URLs  
+            else if (url.startsWith('/')) return `${baseUrl}${url}`;
+            //Default to dashboard if logged in
+            return `${baseUrl}/dashboard`;
+        },
     },
     pages: {
         signIn: '/signin',
