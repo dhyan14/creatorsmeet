@@ -24,6 +24,8 @@ export default function CompleteProfile() {
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout>();
+  // Keep a ref to the session email so the debounced check always has the latest value
+  const emailRef = useRef<string>('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -47,6 +49,8 @@ export default function CompleteProfile() {
   useEffect(() => {
     if (session?.user) {
       setFormData(prev => ({ ...prev, name: session.user.name || '' }));
+      // Always keep the ref up to date
+      emailRef.current = session.user.email || '';
     }
   }, [session]);
 
@@ -63,7 +67,8 @@ export default function CompleteProfile() {
     }
     setUsernameChecking(true);
     try {
-      const excludeEmail = session?.user?.email ? `&exclude=${encodeURIComponent(session.user.email)}` : '';
+      // Use ref so we always have the latest email regardless of closure age
+      const excludeEmail = emailRef.current ? `&exclude=${encodeURIComponent(emailRef.current)}` : '';
       const response = await fetch(`/api/auth/check-username?username=${val}${excludeEmail}`);
       const data = await response.json();
       setUsernameAvailable(data.available);
