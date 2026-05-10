@@ -63,7 +63,7 @@ export default function CompleteProfile() {
     }
     setUsernameChecking(true);
     try {
-      const response = await fetch(`/api/user/check-username?username=${val}`);
+      const response = await fetch(`/api/auth/check-username?username=${val}`);
       const data = await response.json();
       setUsernameAvailable(data.available);
       if (!data.available) {
