@@ -22,7 +22,7 @@ export default function CompleteProfile() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [usernameChecking, setUsernameChecking] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
-  
+
   const timerRef = useRef<NodeJS.Timeout>();
 
   const [formData, setFormData] = useState({
@@ -86,7 +86,7 @@ export default function CompleteProfile() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => { const ne = { ...prev }; delete ne[name]; return ne; });
-    
+
     if (name === 'username') {
       const formatted = value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
       setFormData(prev => ({ ...prev, username: formatted }));
@@ -113,12 +113,12 @@ export default function CompleteProfile() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateStep(currentStep)) return;
-    
+
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
       return;
     }
-    
+
     setLoading(true);
     setErrors({});
     try {
@@ -173,7 +173,7 @@ export default function CompleteProfile() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col items-center pt-12 pb-24 px-4 overflow-y-auto">
         <div className="w-full max-w-2xl">
-          
+
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
             <div className="inline-flex items-center gap-3 mb-6">
@@ -190,17 +190,17 @@ export default function CompleteProfile() {
           <div className="mb-10 relative">
             <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white/10 -translate-y-1/2 rounded-full z-0" />
             <div className="absolute top-1/2 left-0 h-0.5 bg-gradient-to-r from-violet-500 to-pink-500 -translate-y-1/2 rounded-full z-0 transition-all duration-500 ease-in-out" style={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }} />
-            
+
             <div className="relative z-10 flex justify-between">
               {stepTitles.map((step, idx) => {
                 const stepNum = idx + 1;
                 const isActive = currentStep === stepNum;
                 const isPast = currentStep > stepNum;
-                
+
                 return (
                   <div key={idx} className="flex flex-col items-center gap-2">
-                    <motion.div 
-                      animate={{ 
+                    <motion.div
+                      animate={{
                         scale: isActive ? 1.1 : 1,
                         backgroundColor: isActive || isPast ? 'rgba(139, 92, 246, 1)' : 'rgba(15, 15, 25, 1)',
                         borderColor: isActive || isPast ? 'transparent' : 'rgba(255, 255, 255, 0.1)'
@@ -221,7 +221,7 @@ export default function CompleteProfile() {
           {/* Form Container */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             className="p-8 rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-2xl relative overflow-hidden">
-            
+
             <form onSubmit={handleSubmit}>
               <AnimatePresence mode="wait" custom={currentStep}>
                 {currentStep === 1 && (
@@ -238,9 +238,8 @@ export default function CompleteProfile() {
                         <div className="relative">
                           <IconUser className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                           <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe"
-                            className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${
-                              errors.name ? 'border-red-500/50 focus:ring-red-500/30' : 'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
-                            }`}
+                            className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${errors.name ? 'border-red-500/50 focus:ring-red-500/30' : 'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
+                              }`}
                           />
                         </div>
                         {errors.name && <p className="text-xs text-red-400 mt-1 ml-1">{errors.name}</p>}
@@ -252,11 +251,10 @@ export default function CompleteProfile() {
                         <div className="relative flex items-center">
                           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20 text-sm">@</span>
                           <input type="text" name="username" value={formData.username} onChange={handleChange} placeholder="johndoe"
-                            className={`w-full pl-9 pr-10 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${
-                              errors.username ? 'border-red-500/50 focus:ring-red-500/30' : 
-                              usernameAvailable ? 'border-emerald-500/50 focus:ring-emerald-500/30' : 
-                              'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
-                            }`}
+                            className={`w-full pl-9 pr-10 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${errors.username ? 'border-red-500/50 focus:ring-red-500/30' :
+                                usernameAvailable ? 'border-emerald-500/50 focus:ring-emerald-500/30' :
+                                  'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
+                              }`}
                           />
                           <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
                             {usernameChecking && <IconLoader2 className="w-4 h-4 text-white/30 animate-spin" />}
@@ -355,7 +353,7 @@ export default function CompleteProfile() {
                         <label className="block text-sm font-medium text-white/70 mb-3">Experience Level</label>
                         <ExperienceSelector value={formData.experienceLevel} onChange={(level) => setFormData(prev => ({ ...prev, experienceLevel: level }))} darkMode={true} />
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm font-medium text-white/70 mb-3">Availability</label>
                         <AvailabilitySelector value={formData.availability} onChange={(availability) => setFormData(prev => ({ ...prev, availability }))} darkMode={true} />
@@ -421,7 +419,7 @@ export default function CompleteProfile() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="pt-4 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-start gap-3 mt-8">
                       <IconSparkles className="w-5 h-5 text-violet-400 shrink-0 mt-0.5" />
                       <div>
@@ -442,9 +440,9 @@ export default function CompleteProfile() {
                     <IconChevronLeft className="w-4 h-4" /> Back
                   </motion.button>
                 )}
-                
+
                 <motion.button type="submit" disabled={loading || (currentStep === 1 && usernameAvailable === false)}
-                  whileHover={{ scale: (loading || (currentStep === 1 && usernameAvailable === false)) ? 1 : 1.02 }} 
+                  whileHover={{ scale: (loading || (currentStep === 1 && usernameAvailable === false)) ? 1 : 1.02 }}
                   whileTap={{ scale: (loading || (currentStep === 1 && usernameAvailable === false)) ? 1 : 0.98 }}
                   className={`${currentStep === 1 ? 'w-full' : 'flex-[2]'} py-3 px-4 bg-gradient-to-r from-violet-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all disabled:opacity-50 text-sm flex items-center justify-center gap-2`}>
                   {loading ? (
