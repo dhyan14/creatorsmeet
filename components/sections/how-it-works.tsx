@@ -37,12 +37,8 @@ export function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      </div>
+    <section id="how-it-works" className="py-24 relative overflow-hidden bg-transparent">
+
 
       <div className="container mx-auto px-4 max-w-[1400px]">
         <motion.div

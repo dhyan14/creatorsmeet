@@ -103,11 +103,6 @@ export default function DevelopersSection() {
 
   return (
     <section id="developers" className="relative py-24 overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      </div>
 
       <div className="container mx-auto px-4">
         {/* Header Section */}

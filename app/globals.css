@@ -84,13 +84,26 @@
 }
 
 @keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
 
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
 
-  50% {
-    background-position: 100% 50%;
-  }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@layer utilities {
+  .border-white\/8  { border-color: rgba(255,255,255,0.08); }
+  .border-white\/6  { border-color: rgba(255,255,255,0.06); }
+  .bg-white\/4      { background-color: rgba(255,255,255,0.04); }
+  .bg-white\/6      { background-color: rgba(255,255,255,0.06); }
+  .bg-white\/8      { background-color: rgba(255,255,255,0.08); }
+  .animate-float    { animation: float 4s ease-in-out infinite; }
+  .animate-marquee  { animation: marquee 20s linear infinite; }
 }
