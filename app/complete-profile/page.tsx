@@ -1,391 +1,472 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    IconRocket, IconUser, IconBriefcase, IconCode, IconLink,
-    IconCheck, IconX, IconLoader, IconChevronRight, IconChevronLeft
+  IconRocket, IconUser, IconBriefcase, IconCode, IconLink,
+  IconCheck, IconX, IconLoader2, IconChevronRight, IconChevronLeft,
+  IconSparkles, IconShieldCheck, IconLock
 } from '@tabler/icons-react';
-import FormInput from '../components/auth/FormInput';
 import RoleSelector from '../components/auth/RoleSelector';
 import TechnologySelector from '../components/auth/TechnologySelector';
 import AvailabilitySelector from '../components/auth/AvailabilitySelector';
 import ExperienceSelector from '../components/auth/ExperienceSelector';
 
 export default function CompleteProfile() {
-    const { data: session, status } = useSession();
-    const router = useRouter();
-    const [currentStep, setCurrentStep] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState<Record<string, string>>({});
-    const [usernameChecking, setUsernameChecking] = useState(false);
-    const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [usernameChecking, setUsernameChecking] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  
+  const timerRef = useRef<NodeJS.Timeout>();
 
-    const [formData, setFormData] = useState({
-        name: '',
-        username: '',
-        password: '',
-        role: '' as 'creator' | 'innovator' | '',
-        skills: [] as string[],
-        interests: [] as string[],
-        technologies: [] as string[],
-        bio: '',
-        experienceLevel: 'beginner' as 'beginner' | 'intermediate' | 'expert',
-        availability: 'available' as 'available' | 'busy' | 'not-available',
-        lookingFor: '',
-        github: '',
-        linkedin: '',
-        portfolio: ''
-    });
+  const [formData, setFormData] = useState({
+    name: '',
+    username: '',
+    password: '',
+    role: '' as 'creator' | 'innovator' | '',
+    skills: [] as string[],
+    interests: [] as string[],
+    technologies: [] as string[],
+    bio: '',
+    experienceLevel: 'beginner' as 'beginner' | 'intermediate' | 'expert',
+    availability: 'available' as 'available' | 'busy' | 'not-available',
+    lookingFor: '',
+    github: '',
+    linkedin: '',
+    portfolio: ''
+  });
 
-    const totalSteps = 4;
+  const totalSteps = 4;
 
-    useEffect(() => {
-        if (session?.user) {
-            console.log('Session data:', session.user);
-            setFormData(prev => ({ ...prev, name: session.user.name || '' }));
-        }
-    }, [session]);
-
-    useEffect(() => {
-        if (status === 'authenticated' && session?.user?.profileCompleted) {
-            router.push('/dashboard');
-        }
-    }, [status, session, router]);
-
-    useEffect(() => {
-        const checkUsername = async () => {
-            if (!formData.username || formData.username.length < 3) {
-                setUsernameAvailable(null);
-                return;
-            }
-            setUsernameChecking(true);
-            try {
-                const response = await fetch(`/api/user/check-username?username=${formData.username}`);
-                const data = await response.json();
-                setUsernameAvailable(data.available);
-                if (!data.available) {
-                    setErrors(prev => ({ ...prev, username: data.message }));
-                } else {
-                    setErrors(prev => {
-                        const newErrors = { ...prev };
-                        delete newErrors.username;
-                        return newErrors;
-                    });
-                }
-            } catch (error) {
-                console.error('Error checking username:', error);
-            } finally {
-                setUsernameChecking(false);
-            }
-        };
-        const timer = setTimeout(checkUsername, 500);
-        return () => clearTimeout(timer);
-    }, [formData.username]);
-
-    const validateStep = (step: number): boolean => {
-        const newErrors: Record<string, string> = {};
-        if (step === 1) {
-            if (!formData.name) newErrors.name = 'Name is required';
-            if (!formData.username) newErrors.username = 'Username is required';
-            if (formData.username && !usernameAvailable) newErrors.username = 'Username is not available';
-        } else if (step === 2) {
-            if (!formData.role) newErrors.role = 'Role is required';
-            if (formData.skills.length === 0) newErrors.skills = 'At least one skill is required';
-        }
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!validateStep(currentStep)) return;
-        if (currentStep < totalSteps) {
-            setCurrentStep(currentStep + 1);
-            return;
-        }
-        setLoading(true);
-        setErrors({});
-        try {
-            const response = await fetch('/api/user/complete-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Failed to complete profile');
-            router.push('/dashboard');
-        } catch (error) {
-            setErrors({ submit: error instanceof Error ? error.message : 'Something went wrong' });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-        if (errors[name]) setErrors(prev => ({ ...{ ...prev }, [name]: undefined } as any));
-    };
-
-    if (status === 'loading') {
-        return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="text-white text-xl">Loading...</div>
-            </div>
-        );
+  useEffect(() => {
+    if (session?.user) {
+      setFormData(prev => ({ ...prev, name: session.user.name || '' }));
     }
+  }, [session]);
 
-    if (status === 'unauthenticated') {
-        return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="text-center">
-                    <p className="text-white text-xl mb-4">Please sign in to continue</p>
-                    <a href="/signin" className="text-purple-400 hover:text-purple-300">Go to Sign In</a>
-                </div>
-            </div>
-        );
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.profileCompleted) {
+      router.push('/dashboard');
     }
+  }, [status, session, router]);
 
-    const stepTitles = [
-        { icon: IconUser, title: 'Basic Info', desc: 'Your name and username' },
-        { icon: IconBriefcase, title: 'Role & Skills', desc: 'What you do best' },
-        { icon: IconCode, title: 'About You', desc: 'Tell us more' },
-        { icon: IconLink, title: 'Social Links', desc: 'Connect your profiles' }
-    ];
+  const checkUsername = async (val: string) => {
+    if (!val || val.length < 3) {
+      setUsernameAvailable(null);
+      return;
+    }
+    setUsernameChecking(true);
+    try {
+      const response = await fetch(`/api/user/check-username?username=${val}`);
+      const data = await response.json();
+      setUsernameAvailable(data.available);
+      if (!data.available) {
+        setErrors(prev => ({ ...prev, username: data.message || 'Username taken' }));
+      } else {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors.username;
+          return newErrors;
+        });
+      }
+    } catch (error) {
+      console.error('Error checking username:', error);
+    } finally {
+      setUsernameChecking(false);
+    }
+  };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => { const ne = { ...prev }; delete ne[name]; return ne; });
+    
+    if (name === 'username') {
+      const formatted = value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+      setFormData(prev => ({ ...prev, username: formatted }));
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => checkUsername(formatted), 500);
+    }
+  };
+
+  const validateStep = (step: number): boolean => {
+    const newErrors: Record<string, string> = {};
+    if (step === 1) {
+      if (!formData.name) newErrors.name = 'Name is required';
+      if (!formData.username) newErrors.username = 'Username is required';
+      if (formData.username && usernameAvailable === false) newErrors.username = 'Username is not available';
+    } else if (step === 2) {
+      if (!formData.role) newErrors.role = 'Role is required';
+      if (formData.role === 'creator' && formData.skills.length === 0) newErrors.skills = 'At least one skill is required';
+      if (formData.role === 'innovator' && formData.interests.length === 0) newErrors.interests = 'At least one interest is required';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateStep(currentStep)) return;
+    
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+      return;
+    }
+    
+    setLoading(true);
+    setErrors({});
+    try {
+      const response = await fetch('/api/user/complete-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Failed to complete profile');
+      router.push('/dashboard');
+    } catch (error) {
+      setErrors({ submit: error instanceof Error ? error.message : 'Something went wrong' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (status === 'loading') {
     return (
-        <div className="min-h-screen bg-black py-12 px-4 relative overflow-hidden">
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px] animate-pulse" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
-            </div>
-
-            <div className="max-w-3xl mx-auto">
-                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
-                    <div className="inline-flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center">
-                            <IconRocket className="w-7 h-7 text-white" />
-                        </div>
-                        <h1 className="text-3xl font-bold text-white">CreatorsMeet</h1>
-                    </div>
-                    <h2 className="text-2xl font-bold mb-2 text-white">Complete Your Profile</h2>
-                    <p className="text-gray-400">Step {currentStep} of {totalSteps} - {stepTitles[currentStep - 1].desc}</p>
-                </motion.div>
-
-                {/* Progress Bar */}
-                <div className="mb-8">
-                    <div className="flex justify-between items-center mb-4">
-                        {stepTitles.map((step, index) => {
-                            const StepIcon = step.icon;
-                            const stepNumber = index + 1;
-                            const isActive = currentStep === stepNumber;
-                            const isCompleted = currentStep > stepNumber;
-                            return (
-                                <div key={stepNumber} className="flex-1 flex items-center">
-                                    <div className="flex flex-col items-center relative">
-                                        <motion.div
-                                            animate={{ scale: isActive ? 1.1 : 1 }}
-                                            className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${isCompleted ? 'bg-green-500 border-green-500' :
-                                                isActive ? 'bg-gradient-to-r from-purple-600 to-pink-600 border-transparent' :
-                                                    'bg-white/5 border-white/20'
-                                                }`}
-                                        >
-                                            {isCompleted ? <IconCheck className="w-6 h-6 text-white" /> :
-                                                <StepIcon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-gray-400'}`} />}
-                                        </motion.div>
-                                        <p className={`text-xs mt-2 hidden md:block ${isActive ? 'text-white font-medium' : 'text-gray-500'}`}>
-                                            {step.title}
-                                        </p>
-                                    </div>
-                                    {index < stepTitles.length - 1 && (
-                                        <div className="flex-1 h-0.5 mx-2 bg-white/10">
-                                            <motion.div
-                                                initial={{ width: '0%' }}
-                                                animate={{ width: isCompleted ? '100%' : '0%' }}
-                                                className="h-full bg-gradient-to-r from-purple-600 to-pink-600"
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                    className="backdrop-blur-xl rounded-3xl p-8 border bg-white/5 border-white/10 shadow-2xl">
-                    <form onSubmit={handleSubmit}>
-                        <AnimatePresence mode="wait">
-                            {currentStep === 1 && (
-                                <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -20 }} className="space-y-6">
-                                    <FormInput label="Full Name" type="text" name="name" value={formData.name}
-                                        onChange={handleChange} placeholder="John Doe" error={errors.name} darkMode={true} required />
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Email</label>
-                                        <div className="relative">
-                                            <input type="email" value={session?.user?.email || ''} disabled
-                                                className="w-full px-4 py-3 rounded-xl border bg-white/5 border-white/20 text-gray-400 cursor-not-allowed" />
-                                            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 text-green-400 text-sm">
-                                                <IconCheck className="w-5 h-5" />
-                                                <span className="font-medium">Verified</span>
-                                            </div>
-                                        </div>
-                                        <p className="text-xs text-gray-400 mt-1">Email verified via OAuth</p>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">
-                                            Username <span className="text-red-400">*</span>
-                                        </label>
-                                        <div className="relative">
-                                            <input type="text" name="username" value={formData.username} onChange={handleChange}
-                                                placeholder="johndoe" required
-                                                className={`w-full px-4 py-3 rounded-xl border bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 focus:outline-none ${errors.username ? 'border-red-500' : ''}`} />
-                                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                                {usernameChecking && <IconLoader className="w-5 h-5 text-gray-400 animate-spin" />}
-                                                {!usernameChecking && usernameAvailable === true && <IconCheck className="w-5 h-5 text-green-400" />}
-                                                {!usernameChecking && usernameAvailable === false && <IconX className="w-5 h-5 text-red-400" />}
-                                            </div>
-                                        </div>
-                                        {errors.username && <p className="mt-1 text-sm text-red-400">{errors.username}</p>}
-                                        {!errors.username && usernameAvailable === true && <p className="mt-1 text-sm text-green-400">Username is available!</p>}
-                                        <p className="text-xs text-gray-400 mt-1">3-20 characters, letters, numbers, and underscores only</p>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Set Password (Optional)</label>
-                                        <input type="password" name="password" value={formData.password} onChange={handleChange}
-                                            placeholder="Set a password as backup login"
-                                            className="w-full px-4 py-3 rounded-xl border bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 focus:outline-none" />
-                                        <p className="text-xs text-gray-400 mt-1">You can sign in with OAuth or password</p>
-                                    </div>
-                                </motion.div>
-                            )}
-
-                            {currentStep === 2 && (
-                                <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -20 }} className="space-y-6">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">
-                                            I am a <span className="text-red-400">*</span>
-                                        </label>
-                                        <RoleSelector value={formData.role}
-                                            onChange={(role) => setFormData(prev => ({ ...prev, role }))}
-                                            error={errors.role} darkMode={true} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">
-                                            {formData.role === 'creator' ? 'Skills' : formData.role === 'innovator' ? 'Areas of Interest' : 'Skills'} <span className="text-red-400">*</span>
-                                        </label>
-                                        <TechnologySelector selectedTechnologies={formData.skills}
-                                            onChange={(skills) => setFormData(prev => ({ ...prev, skills }))}
-                                            error={errors.skills} darkMode={true} />
-                                        <p className="text-xs text-gray-400 mt-1">
-                                            {formData.role === 'creator'
-                                                ? 'Your technical skills (e.g., React, Python, UI/UX Design)'
-                                                : 'Business domains you\'re passionate about (e.g., Healthcare, Finance, Education)'}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">
-                                            {formData.role === 'creator' ? 'Technologies (Optional)' : formData.role === 'innovator' ? 'Technologies (Optional)' : 'Technologies (Optional)'}
-                                        </label>
-                                        <TechnologySelector selectedTechnologies={formData.technologies}
-                                            onChange={(technologies) => setFormData(prev => ({ ...prev, technologies }))}
-                                            darkMode={true} />
-                                        <p className="text-xs text-gray-400 mt-1">
-                                            {formData.role === 'creator'
-                                                ? 'Tools & frameworks you prefer to work with'
-                                                : 'Technologies you\'re familiar with or interested in learning'}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">
-                                            {formData.role === 'creator' ? 'Project Ideas (Optional)' : formData.role === 'innovator' ? 'Ideas (Optional)' : 'Ideas (Optional)'}
-                                        </label>
-                                        <TechnologySelector selectedTechnologies={formData.interests}
-                                            onChange={(interests) => setFormData(prev => ({ ...prev, interests }))}
-                                            darkMode={true} />
-                                        <p className="text-xs text-gray-400 mt-1">
-                                            {formData.role === 'creator'
-                                                ? 'What kind of projects do you want to build? (e.g., SaaS, Mobile App, AI Tool)'
-                                                : 'What ideas or ventures do you want to bring to life?'}
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            )}
-
-                            {currentStep === 3 && (
-                                <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -20 }} className="space-y-6">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Experience Level</label>
-                                        <ExperienceSelector value={formData.experienceLevel}
-                                            onChange={(level) => setFormData(prev => ({ ...prev, experienceLevel: level }))}
-                                            darkMode={true} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Availability</label>
-                                        <AvailabilitySelector value={formData.availability}
-                                            onChange={(availability) => setFormData(prev => ({ ...prev, availability }))}
-                                            darkMode={true} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Bio (Optional)</label>
-                                        <textarea name="bio" value={formData.bio} onChange={handleChange} rows={4} maxLength={500}
-                                            placeholder="Tell us about yourself..."
-                                            className="w-full px-4 py-3 rounded-xl border bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 focus:outline-none resize-none" />
-                                        <p className="text-xs text-gray-400 mt-1">{formData.bio.length}/500 characters</p>
-                                    </div>
-                                    <FormInput label="What are you looking for?" type="text" name="lookingFor"
-                                        value={formData.lookingFor} onChange={handleChange}
-                                        placeholder="e.g., Co-founder for SaaS project, Frontend developer..."
-                                        darkMode={true} />
-                                </motion.div>
-                            )}
-
-                            {currentStep === 4 && (
-                                <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -20 }} className="space-y-6">
-                                    <p className="text-gray-300 text-sm mb-4">Connect your social profiles (all optional)</p>
-                                    <FormInput label="GitHub" type="url" name="github" value={formData.github}
-                                        onChange={handleChange} placeholder="https://github.com/username" darkMode={true} />
-                                    <FormInput label="LinkedIn" type="url" name="linkedin" value={formData.linkedin}
-                                        onChange={handleChange} placeholder="https://linkedin.com/in/username" darkMode={true} />
-                                    <FormInput label="Portfolio" type="url" name="portfolio" value={formData.portfolio}
-                                        onChange={handleChange} placeholder="https://yourwebsite.com" darkMode={true} />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
-                        <div className="flex gap-4 mt-8">
-                            {currentStep > 1 && (
-                                <motion.button type="button" onClick={() => setCurrentStep(currentStep - 1)}
-                                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                                    className="flex-1 py-3 px-4 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all">
-                                    <IconChevronLeft className="w-5 h-5 inline mr-2" />Back
-                                </motion.button>
-                            )}
-                            <motion.button type="submit"
-                                disabled={loading || (currentStep === 1 && !usernameAvailable)}
-                                whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.98 }}
-                                className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                                {loading ? 'Saving...' : currentStep === totalSteps ? 'Complete Profile' : (
-                                    <>Next<IconChevronRight className="w-5 h-5 inline ml-2" /></>
-                                )}
-                            </motion.button>
-                        </div>
-
-                        {errors.submit && (
-                            <div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-center">
-                                <p className="text-sm text-red-400">{errors.submit}</p>
-                            </div>
-                        )}
-                    </form>
-                </motion.div>
-            </div>
-        </div>
+      <div className="min-h-screen bg-[#050510] flex items-center justify-center">
+        <IconLoader2 className="w-8 h-8 text-violet-500 animate-spin" />
+      </div>
     );
+  }
+
+  if (status === 'unauthenticated') {
+    router.push('/signin');
+    return null;
+  }
+
+  const stepTitles = [
+    { icon: <IconUser className="w-5 h-5" />, title: 'Identity' },
+    { icon: <IconBriefcase className="w-5 h-5" />, title: 'Role' },
+    { icon: <IconCode className="w-5 h-5" />, title: 'Details' },
+    { icon: <IconLink className="w-5 h-5" />, title: 'Social' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#050510] text-white flex">
+      {/* Background */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[#050510]" />
+        <div className="absolute inset-0" style={{
+          backgroundImage: `linear-gradient(rgba(139,92,246,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.03) 1px, transparent 1px)`,
+          backgroundSize: "60px 60px",
+        }} />
+        <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full" style={{ background: "radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)" }} />
+        <div className="absolute bottom-[10%] right-[5%] w-[400px] h-[400px] rounded-full" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.12) 0%, transparent 70%)" }} />
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col items-center pt-12 pb-24 px-4 overflow-y-auto">
+        <div className="w-full max-w-2xl">
+          
+          {/* Header */}
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
+            <div className="inline-flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                <IconRocket className="w-7 h-7 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold tracking-tight">CreatorsMeet</h1>
+            </div>
+            <h2 className="text-3xl font-extrabold mb-3">Complete your profile</h2>
+            <p className="text-white/40">Let's get you set up so you can start connecting.</p>
+          </motion.div>
+
+          {/* Progress Bar */}
+          <div className="mb-10 relative">
+            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white/10 -translate-y-1/2 rounded-full z-0" />
+            <div className="absolute top-1/2 left-0 h-0.5 bg-gradient-to-r from-violet-500 to-pink-500 -translate-y-1/2 rounded-full z-0 transition-all duration-500 ease-in-out" style={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }} />
+            
+            <div className="relative z-10 flex justify-between">
+              {stepTitles.map((step, idx) => {
+                const stepNum = idx + 1;
+                const isActive = currentStep === stepNum;
+                const isPast = currentStep > stepNum;
+                
+                return (
+                  <div key={idx} className="flex flex-col items-center gap-2">
+                    <motion.div 
+                      animate={{ 
+                        scale: isActive ? 1.1 : 1,
+                        backgroundColor: isActive || isPast ? 'rgba(139, 92, 246, 1)' : 'rgba(15, 15, 25, 1)',
+                        borderColor: isActive || isPast ? 'transparent' : 'rgba(255, 255, 255, 0.1)'
+                      }}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${isActive || isPast ? 'text-white shadow-lg shadow-violet-500/40' : 'text-white/30'}`}
+                    >
+                      {isPast ? <IconCheck className="w-5 h-5" /> : step.icon}
+                    </motion.div>
+                    <span className={`text-xs font-medium ${isActive ? 'text-violet-400' : isPast ? 'text-white/70' : 'text-white/30'}`}>
+                      {step.title}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Form Container */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            className="p-8 rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-2xl relative overflow-hidden">
+            
+            <form onSubmit={handleSubmit}>
+              <AnimatePresence mode="wait" custom={currentStep}>
+                {currentStep === 1 && (
+                  <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                    <div>
+                      <h3 className="text-xl font-bold mb-1">Who are you?</h3>
+                      <p className="text-sm text-white/40 mb-6">Let's start with your basic identity.</p>
+                    </div>
+
+                    <div className="space-y-4">
+                      {/* Name */}
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-2">Full Name <span className="text-pink-500">*</span></label>
+                        <div className="relative">
+                          <IconUser className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                          <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe"
+                            className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${
+                              errors.name ? 'border-red-500/50 focus:ring-red-500/30' : 'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
+                            }`}
+                          />
+                        </div>
+                        {errors.name && <p className="text-xs text-red-400 mt-1 ml-1">{errors.name}</p>}
+                      </div>
+
+                      {/* Username */}
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-2">Username <span className="text-pink-500">*</span></label>
+                        <div className="relative flex items-center">
+                          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20 text-sm">@</span>
+                          <input type="text" name="username" value={formData.username} onChange={handleChange} placeholder="johndoe"
+                            className={`w-full pl-9 pr-10 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${
+                              errors.username ? 'border-red-500/50 focus:ring-red-500/30' : 
+                              usernameAvailable ? 'border-emerald-500/50 focus:ring-emerald-500/30' : 
+                              'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
+                            }`}
+                          />
+                          <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
+                            {usernameChecking && <IconLoader2 className="w-4 h-4 text-white/30 animate-spin" />}
+                            {usernameAvailable === true && <IconCheck className="w-4 h-4 text-emerald-400" />}
+                            {usernameAvailable === false && <IconX className="w-4 h-4 text-red-400" />}
+                          </div>
+                        </div>
+                        {errors.username && <p className="text-xs text-red-400 mt-1 ml-1">{errors.username}</p>}
+                        {!errors.username && usernameAvailable === true && <p className="text-xs text-emerald-400 mt-1 ml-1">Username available!</p>}
+                      </div>
+
+                      {/* Email (Readonly if from OAuth) */}
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-2">Email</label>
+                        <div className="relative">
+                          <IconShieldCheck className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-400" />
+                          <input type="email" value={session?.user?.email || ''} disabled
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/5 bg-white/[0.01] text-white/40 cursor-not-allowed text-sm"
+                          />
+                        </div>
+                        <p className="text-[11px] text-white/30 mt-1 ml-1">Verified via authentication provider</p>
+                      </div>
+
+                      {/* Backup Password */}
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-2">Set Backup Password (Optional)</label>
+                        <div className="relative">
+                          <IconLock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                          <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Create a password"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/10 text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/50 transition-all"
+                          />
+                        </div>
+                        <p className="text-[11px] text-white/30 mt-1 ml-1">Allows you to sign in with email and password later</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {currentStep === 2 && (
+                  <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                    <div>
+                      <h3 className="text-xl font-bold mb-1">Choose your path</h3>
+                      <p className="text-sm text-white/40 mb-6">Are you here to build or bring ideas?</p>
+                    </div>
+
+                    <div className="space-y-8">
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-3">I am a <span className="text-pink-500">*</span></label>
+                        <RoleSelector value={formData.role} onChange={(role) => { setFormData(prev => ({ ...prev, role, skills: [], interests: [], technologies: [] })); setErrors({}); }} error={errors.role} darkMode={true} />
+                      </div>
+
+                      <AnimatePresence>
+                        {formData.role === 'creator' && (
+                          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="space-y-6">
+                            <div>
+                              <label className="block text-sm font-medium text-white/70 mb-2">Primary Skills <span className="text-pink-500">*</span></label>
+                              <p className="text-xs text-white/40 mb-3">Select the main areas of your expertise</p>
+                              <TechnologySelector selectedTechnologies={formData.skills} onChange={(skills) => setFormData(prev => ({ ...prev, skills }))} error={errors.skills} darkMode={true} />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-white/70 mb-2">Specific Technologies (Optional)</label>
+                              <p className="text-xs text-white/40 mb-3">Languages, frameworks, or tools you excel at</p>
+                              <TechnologySelector selectedTechnologies={formData.technologies} onChange={(technologies) => setFormData(prev => ({ ...prev, technologies }))} darkMode={true} />
+                            </div>
+                          </motion.div>
+                        )}
+
+                        {formData.role === 'innovator' && (
+                          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="space-y-6">
+                            <div>
+                              <label className="block text-sm font-medium text-white/70 mb-2">Areas of Interest <span className="text-pink-500">*</span></label>
+                              <p className="text-xs text-white/40 mb-3">Which domains or industries are you targeting?</p>
+                              <TechnologySelector selectedTechnologies={formData.interests} onChange={(interests) => setFormData(prev => ({ ...prev, interests }))} error={errors.interests} darkMode={true} />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-white/70 mb-2">Required Technologies (Optional)</label>
+                              <p className="text-xs text-white/40 mb-3">Any specific tech stacks your project needs</p>
+                              <TechnologySelector selectedTechnologies={formData.technologies} onChange={(technologies) => setFormData(prev => ({ ...prev, technologies }))} darkMode={true} />
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                )}
+
+                {currentStep === 3 && (
+                  <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                    <div>
+                      <h3 className="text-xl font-bold mb-1">Tell us more</h3>
+                      <p className="text-sm text-white/40 mb-6">Give potential collaborators a feel for who you are.</p>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-3">Experience Level</label>
+                        <ExperienceSelector value={formData.experienceLevel} onChange={(level) => setFormData(prev => ({ ...prev, experienceLevel: level }))} darkMode={true} />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-3">Availability</label>
+                        <AvailabilitySelector value={formData.availability} onChange={(availability) => setFormData(prev => ({ ...prev, availability }))} darkMode={true} />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-2">Short Bio (Optional)</label>
+                        <textarea name="bio" value={formData.bio} onChange={handleChange} rows={3} maxLength={500}
+                          placeholder={formData.role === 'creator' ? "I'm a full-stack developer who loves building SaaS products..." : "I'm a founder looking to build the next big ed-tech platform..."}
+                          className="w-full px-4 py-3 rounded-xl border border-white/10 text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/50 transition-all resize-none"
+                        />
+                        <div className="flex justify-end mt-1">
+                          <span className="text-[10px] text-white/30">{formData.bio.length}/500</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-2">What are you looking for?</label>
+                        <input type="text" name="lookingFor" value={formData.lookingFor} onChange={handleChange}
+                          placeholder={formData.role === 'creator' ? "e.g., A designer for a side project" : "e.g., A React developer for an MVP"}
+                          className="w-full px-4 py-3 rounded-xl border border-white/10 text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/50 transition-all"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {currentStep === 4 && (
+                  <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                    <div>
+                      <h3 className="text-xl font-bold mb-1">Connect your links</h3>
+                      <p className="text-sm text-white/40 mb-6">Showcase your work across the web (all optional).</p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-2">GitHub Profile</label>
+                        <div className="relative">
+                          <IconLink className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                          <input type="url" name="github" value={formData.github} onChange={handleChange} placeholder="https://github.com/username"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/10 text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/50 transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-2">LinkedIn Profile</label>
+                        <div className="relative">
+                          <IconLink className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                          <input type="url" name="linkedin" value={formData.linkedin} onChange={handleChange} placeholder="https://linkedin.com/in/username"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/10 text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/50 transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-white/70 mb-2">Personal Portfolio / Website</label>
+                        <div className="relative">
+                          <IconLink className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                          <input type="url" name="portfolio" value={formData.portfolio} onChange={handleChange} placeholder="https://yourwebsite.com"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/10 text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/50 transition-all"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-4 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-start gap-3 mt-8">
+                      <IconSparkles className="w-5 h-5 text-violet-400 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-violet-100">You're all set!</p>
+                        <p className="text-xs text-violet-300/70 mt-1">Click the button below to finish creating your profile and jump into CreatorsMeet.</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Navigation Buttons */}
+              <div className="flex gap-4 mt-8 pt-6 border-t border-white/10">
+                {currentStep > 1 && (
+                  <motion.button type="button" onClick={() => setCurrentStep(prev => prev - 1)}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="flex-1 py-3 px-4 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-white/70 font-medium transition-all text-sm flex items-center justify-center gap-2">
+                    <IconChevronLeft className="w-4 h-4" /> Back
+                  </motion.button>
+                )}
+                
+                <motion.button type="submit" disabled={loading || (currentStep === 1 && usernameAvailable === false)}
+                  whileHover={{ scale: (loading || (currentStep === 1 && usernameAvailable === false)) ? 1 : 1.02 }} 
+                  whileTap={{ scale: (loading || (currentStep === 1 && usernameAvailable === false)) ? 1 : 0.98 }}
+                  className={`${currentStep === 1 ? 'w-full' : 'flex-[2]'} py-3 px-4 bg-gradient-to-r from-violet-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all disabled:opacity-50 text-sm flex items-center justify-center gap-2`}>
+                  {loading ? (
+                    <><IconLoader2 className="w-4 h-4 animate-spin" /> Processing...</>
+                  ) : currentStep === totalSteps ? (
+                    <>Complete Profile <IconSparkles className="w-4 h-4" /></>
+                  ) : (
+                    <>Continue <IconChevronRight className="w-4 h-4" /></>
+                  )}
+                </motion.button>
+              </div>
+
+              {errors.submit && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
+                  <p className="text-sm text-red-400">{errors.submit}</p>
+                </motion.div>
+              )}
+            </form>
+          </motion.div>
+
+        </div>
+      </div>
+    </div>
+  );
 }
