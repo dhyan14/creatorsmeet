@@ -8,6 +8,9 @@ export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
         const username = searchParams.get('username');
+        // Optional: current user's email to exclude from the uniqueness check
+        // (used on complete-profile so a user doesn't see their own username as "taken")
+        const excludeEmail = searchParams.get('exclude');
 
         if (!username) {
             return NextResponse.json(
@@ -41,10 +44,16 @@ export async function GET(req: NextRequest) {
         // Connect to database
         await dbConnect();
 
-        // Check if username exists (case-insensitive)
-        const existingUser = await User.findOne({
+        // Build query — exclude the current user if an email is provided
+        const query: Record<string, any> = {
             username: username.toLowerCase()
-        }).collation({ locale: 'en', strength: 2 });
+        };
+        if (excludeEmail) {
+            query.email = { $ne: excludeEmail.toLowerCase() };
+        }
+
+        // Check if username exists (case-insensitive)
+        const existingUser = await User.findOne(query).collation({ locale: 'en', strength: 2 });
 
         if (existingUser) {
             return NextResponse.json(

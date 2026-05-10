@@ -63,7 +63,8 @@ export default function CompleteProfile() {
     }
     setUsernameChecking(true);
     try {
-      const response = await fetch(`/api/auth/check-username?username=${val}`);
+      const excludeEmail = session?.user?.email ? `&exclude=${encodeURIComponent(session.user.email)}` : '';
+      const response = await fetch(`/api/auth/check-username?username=${val}${excludeEmail}`);
       const data = await response.json();
       setUsernameAvailable(data.available);
       if (!data.available) {
