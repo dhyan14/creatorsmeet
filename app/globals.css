@@ -13,6 +13,35 @@
     color: rgb(var(--foreground-rgb));
     background: #050010;
   }
+
+  /* Global Select/Dropdown Fixes */
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1.2em;
+    padding-right: 2.5rem;
+  }
+
+  select option {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  select:focus option {
+    background-color: #2d2d2d;
+  }
+
+  select option:checked,
+  select option:hover {
+    background: linear-gradient(90deg, #9333ea 0%, #ec4899 100%);
+    color: white;
+  }
 }
 
 @layer components {
@@ -52,7 +81,16 @@
     animation: gradient-shift 3s ease infinite;
   }
 
-  /* Typing cursor blink — unique tech effect */
+  .animate-float    { animation: float 4s ease-in-out infinite; }
+  .animate-marquee  { animation: marquee 20s linear infinite; }
+
+  .border-white\/8  { border-color: rgba(255,255,255,0.08); }
+  .border-white\/6  { border-color: rgba(255,255,255,0.06); }
+  .bg-white\/4      { background-color: rgba(255,255,255,0.04); }
+  .bg-white\/6      { background-color: rgba(255,255,255,0.06); }
+  .bg-white\/8      { background-color: rgba(255,255,255,0.08); }
+
+  /* Typing cursor blink — tech effect */
   .tech-cursor::after {
     content: "|";
     display: inline-block;
@@ -61,7 +99,7 @@
     animation: cursorBlink 1s step-end infinite;
   }
 
-  /* Glowing underline that slides in — tech feel */
+  /* Glowing underline slide-in */
   .tech-underline {
     position: relative;
   }
@@ -82,7 +120,6 @@
   }
 }
 
-<<<<<<< HEAD
 /* ── Background glow drift (GPU: transform only) ── */
 @keyframes bgGlow {
   0%, 100% { transform: translate(0px, 0px); }
@@ -90,46 +127,21 @@
   66%       { transform: translate(-18px, 12px); }
 }
 
-/* ── Gradient text shift ── */
-=======
-/* Global Select/Dropdown Fixes */
-@layer base {
-  select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 0.7rem center;
-    background-size: 1.2em;
-    padding-right: 2.5rem;
-  }
-
-  select option {
-    background-color: #1a1a1a;
-    color: white;
-    padding: 0.5rem;
-    font-size: 0.95rem;
-  }
-
-  select:focus option {
-    background-color: #2d2d2d;
-  }
-
-  select option:checked,
-  select option:hover {
-    background: linear-gradient(90deg, #9333ea 0%, #ec4899 100%);
-    color: white;
-  }
-}
-
->>>>>>> a3ec40284a434400dbebda885ac02180ada3b448
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
   50%       { background-position: 100% 50%; }
 }
 
-<<<<<<< HEAD
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* ── Typing cursor blink ── */
 @keyframes cursorBlink {
   0%, 100% { opacity: 1; }
@@ -142,52 +154,32 @@
   to   { width: 100%; }
 }
 
-/* ── Data-stream: numbers/chars scroll upward on a node badge ── */
+/* ── Data-stream scrolls upward ── */
 @keyframes dataStream {
-  0%   { transform: translateY(0%);   opacity: 1; }
+  0%   { transform: translateY(0%);    opacity: 1; }
   100% { transform: translateY(-100%); opacity: 0; }
 }
 
-/* ── Circuit-trace draw: stroke-dashoffset progress ── */
+/* ── Circuit-trace stroke-dashoffset draw ── */
 @keyframes traceDraw {
   from { stroke-dashoffset: 400; }
   to   { stroke-dashoffset: 0;   }
 }
 
-/* ── Pulsing dot (status indicator) ── */
+/* ── Pulsing status dot ── */
 @keyframes pulseDot {
   0%, 100% { opacity: 1;   transform: scale(1);   }
   50%       { opacity: 0.5; transform: scale(1.4); }
 }
 
-/* ── Fade up (for staggered reveals) ── */
+/* ── Fade up staggered reveal ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0);    }
 }
 
-/* ── Skill-tag circuit glow on hover ── */
+/* ── Skill-tag glow pulse ── */
 @keyframes tagGlow {
-  0%, 100% { box-shadow: 0 0 0px rgba(168,85,247,0); }
+  0%, 100% { box-shadow: 0 0 0px rgba(168,85,247,0);   }
   50%       { box-shadow: 0 0 8px rgba(168,85,247,0.5); }
-=======
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-12px); }
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-@layer utilities {
-  .border-white\/8  { border-color: rgba(255,255,255,0.08); }
-  .border-white\/6  { border-color: rgba(255,255,255,0.06); }
-  .bg-white\/4      { background-color: rgba(255,255,255,0.04); }
-  .bg-white\/6      { background-color: rgba(255,255,255,0.06); }
-  .bg-white\/8      { background-color: rgba(255,255,255,0.08); }
-  .animate-float    { animation: float 4s ease-in-out infinite; }
-  .animate-marquee  { animation: marquee 20s linear infinite; }
->>>>>>> a3ec40284a434400dbebda885ac02180ada3b448
 }
