@@ -6,29 +6,61 @@ interface GridBackgroundProps {
   className?: string;
 }
 
+/**
+ * Tech Background — Vercel/SSR safe, lightweight
+ * Pure server component. No hooks, no window, no canvas.
+ * Two CSS layers: a dot-grid pattern + 2 soft gradient glows.
+ * All animation is via CSS keyframes (GPU composited).
+ */
 export default function GridBackground({ children, className }: GridBackgroundProps) {
   return (
-    <div className={cn("relative w-full overflow-x-hidden min-h-screen", className)} data-grid-background>
-      {/* Grid background */}
+    <div
+      className={cn("relative w-full overflow-x-hidden min-h-screen bg-[#050010]", className)}
+      data-grid-background
+    >
+      {/* Layer 1 — subtle dot grid */}
       <div
-        className={cn(
-          "absolute inset-0 z-0",
-          "[background-size:40px_40px]",
-          "[background-image:linear-gradient(to_right,rgba(255,255,255,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.2)_1px,transparent_1px)]",
-          "opacity-100"
-        )}
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(139, 92, 246, 0.18) 1px, transparent 1px)",
+          backgroundSize: "36px 36px",
+        }}
       />
-      
-      {/* Radial gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 z-10">
-        <div className="absolute inset-0 bg-black/60"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/70"></div>
-      </div>
-      
+
+      {/* Layer 2 — violet glow top-left */}
+      <div
+        className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none z-0"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 65%)",
+          animation: "bgGlow 22s ease-in-out infinite",
+          willChange: "transform",
+        }}
+      />
+
+      {/* Layer 3 — pink glow bottom-right */}
+      <div
+        className="absolute -bottom-40 -right-40 w-[450px] h-[450px] rounded-full pointer-events-none z-0"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 65%)",
+          animation: "bgGlow 28s ease-in-out infinite reverse",
+          willChange: "transform",
+        }}
+      />
+
+      {/* Layer 4 — top+bottom edge fade */}
+      <div
+        className="absolute inset-0 z-[1] pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, #050010 0%, transparent 8%, transparent 92%, #050010 100%)",
+        }}
+      />
+
       {/* Content */}
-      <div className="relative z-20">
-        {children}
-      </div>
+      <div className="relative z-10">{children}</div>
     </div>
   );
-} 
+}

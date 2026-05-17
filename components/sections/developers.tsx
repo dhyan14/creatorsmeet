@@ -34,6 +34,32 @@ const developers: Developer[] = [
       "Mentored junior developers in modern web technologies",
       "Implemented CI/CD pipelines for streamlined deployment"
     ]
+  },
+  {
+    name: "Chaitya Belani",
+    institution: "UCP Institute Of Technology, SVGU",
+    role: "Full Stack Developer & UI/UX Engineer",
+    bio: "Passionate about crafting pixel-perfect interfaces and building robust backend systems. Focused on delivering seamless user experiences through clean code and innovative design. Loves turning complex problems into elegant digital solutions.",
+    github: "https://github.com/chaitya14",
+    email: "mailto:chaitya.belani@example.com",
+    linkedin: "https://linkedin.com/in/chaitya-belani",
+    twitter: "https://twitter.com/chaitya_belani",
+    skills: [
+      "React / Next.js",
+      "TypeScript",
+      "UI/UX Design",
+      "TailwindCSS",
+      "Node.js",
+      "MongoDB",
+      "REST APIs",
+      "Vercel Deployment"
+    ],
+    achievements: [
+      "Co-developed CreatorsMeet — a platform for connecting creators & developers",
+      "Designed and implemented responsive UI systems used by 1000+ users",
+      "Integrated Google OAuth and JWT authentication flows",
+      "Optimised frontend performance achieving sub-2s load times on Vercel"
+    ]
   }
 ];
 
@@ -77,10 +103,32 @@ export default function DevelopersSection() {
 
   return (
     <section id="developers" className="relative py-24 overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      {/* Lightweight SVG circuit trace — CSS animated, zero blur cost */}
+      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
+        <svg
+          className="absolute top-0 left-0 w-full h-full opacity-[0.07]"
+          viewBox="0 0 800 600"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <path
+            d="M0 100 H200 V300 H500 V150 H800"
+            stroke="#a855f7" strokeWidth="1.5"
+            strokeDasharray="400" strokeDashoffset="400"
+            style={{ animation: 'traceDraw 3s ease forwards' }}
+          />
+          <path
+            d="M0 400 H150 V200 H400 V450 H700 V300 H800"
+            stroke="#ec4899" strokeWidth="1"
+            strokeDasharray="400" strokeDashoffset="400"
+            style={{ animation: 'traceDraw 4s ease 0.5s forwards' }}
+          />
+          <circle cx="200" cy="300" r="4" fill="#a855f7" opacity="0.6" />
+          <circle cx="500" cy="150" r="4" fill="#a855f7" opacity="0.6" />
+          <circle cx="400" cy="450" r="4" fill="#ec4899" opacity="0.6" />
+          <circle cx="150" cy="200" r="4" fill="#ec4899" opacity="0.6" />
+        </svg>
       </div>
 
       <div className="container mx-auto px-4">
@@ -99,13 +147,13 @@ export default function DevelopersSection() {
             transition={{ duration: 0.5 }}
             className="inline-block mb-4"
           >
-            <span className="px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium">
-              👨‍💻 The Team Behind CreatorsMeet
+            <span className="px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium tech-underline">
+              &lt;/&gt; The Team Behind CreatorsMeet
             </span>
           </motion.div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             Meet Our{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-gradient">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-gradient tech-cursor">
               Developers
             </span>
           </h2>
@@ -238,8 +286,8 @@ export default function DevelopersSection() {
                         transition={{ duration: 2, repeat: Infinity }}
                         className="flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full"
                       >
-                        <div className="w-2 h-2 bg-green-500 rounded-full" />
-                        <span className="text-green-400 text-xs font-medium">Available</span>
+                        <div className="w-2 h-2 bg-green-500 rounded-full pulse-dot" />
+                        <span className="text-green-400 text-xs font-mono">● Online</span>
                       </motion.div>
                     </div>
 
@@ -308,7 +356,8 @@ export default function DevelopersSection() {
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: idx * 0.05 }}
                                 whileHover={{ scale: 1.1, y: -2 }}
-                                className="px-3 py-1.5 bg-purple-500/10 text-purple-300 rounded-full text-sm border border-purple-500/20 hover:border-purple-500/40 hover:bg-purple-500/20 transition-all cursor-default"
+                                className="px-3 py-1.5 bg-purple-500/10 text-purple-300 rounded-full text-sm border border-purple-500/20 hover:border-purple-500/40 hover:bg-purple-500/20 transition-all cursor-default font-mono"
+                                style={{ animation: `tagGlow 3s ease-in-out ${idx * 0.3}s infinite` }}
                               >
                                 {skill}
                               </motion.span>
