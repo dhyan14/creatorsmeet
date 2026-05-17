@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import { Developer } from "@/types/developer";
 import { DeveloperPopup } from "@/components/ui/developer-popup";
 
@@ -26,19 +26,18 @@ const developers: Developer[] = [
       "System Architecture",
       "Team Leadership",
       "AI Integration",
-      "Cloud Platforms"
+      "Cloud Platforms",
     ],
     achievements: [
       "Built CreatorsMeet platform connecting innovators with developers",
       "Led development of multiple successful web applications",
       "Mentored junior developers in modern web technologies",
-      "Implemented CI/CD pipelines for streamlined deployment"
-    ]
+      "Implemented CI/CD pipelines for streamlined deployment",
+    ],
   },
   {
     name: "Chaitya Belani",
     institution: "UCP Institute Of Technology, SVGU",
-<<<<<<< HEAD
     role: "Full Stack Developer & UI/UX Engineer",
     bio: "Passionate about crafting pixel-perfect interfaces and building robust backend systems. Focused on delivering seamless user experiences through clean code and innovative design. Loves turning complex problems into elegant digital solutions.",
     github: "https://github.com/chaitya14",
@@ -53,66 +52,42 @@ const developers: Developer[] = [
       "Node.js",
       "MongoDB",
       "REST APIs",
-      "Vercel Deployment"
+      "Vercel Deployment",
     ],
     achievements: [
       "Co-developed CreatorsMeet — a platform for connecting creators & developers",
       "Designed and implemented responsive UI systems used by 1000+ users",
       "Integrated Google OAuth and JWT authentication flows",
-      "Optimised frontend performance achieving sub-2s load times on Vercel"
-=======
-    role: "Full Stack Developer & UI/UX Specialist",
-    bio: "Passionate developer focused on creating seamless user experiences and robust backend systems. Dedicated to writing clean, maintainable code and delivering high-quality solutions that make a difference.",
-    github: "https://github.com/chaityabelani",
-    email: "mailto:chaitya@example.com",
-    linkedin: "https://linkedin.com/in/chaityabelani",
-    twitter: "https://twitter.com/chaityabelani",
-    skills: [
-      "Full Stack Development",
-      "React/Next.js",
-      "UI/UX Design",
-      "TypeScript",
-      "Database Design",
-      "API Development",
-      "Responsive Design",
-      "Performance Optimization"
+      "Optimised frontend performance achieving sub-2s load times on Vercel",
     ],
-    achievements: [
-      "Co-developed CreatorsMeet platform with modern design principles",
-      "Implemented responsive and accessible user interfaces",
-      "Optimized application performance and user experience",
-      "Collaborated on building scalable backend architectures"
->>>>>>> a3ec40284a434400dbebda885ac02180ada3b448
-    ]
-  }
+  },
 ];
 
 const stats = [
   { label: "Projects Built", value: "50+", icon: "🚀" },
   { label: "Developers Helped", value: "100+", icon: "👥" },
   { label: "Code Commits", value: "10K+", icon: "💻" },
-  { label: "Coffee Consumed", value: "∞", icon: "☕" }
+  { label: "Coffee Consumed", value: "∞", icon: "☕" },
 ];
 
 export default function DevelopersSection() {
   const [selectedDeveloper, setSelectedDeveloper] = useState<Developer | null>(null);
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
 
-  // Effect to toggle body scroll and hide header
   useEffect(() => {
-    const header = document.querySelector('header');
+    const header = document.querySelector("header");
 
     if (selectedDeveloper) {
-      document.body.style.overflow = 'hidden';
-      if (header) (header as HTMLElement).style.display = 'none';
+      document.body.style.overflow = "hidden";
+      if (header) (header as HTMLElement).style.display = "none";
     } else {
-      document.body.style.overflow = 'unset';
-      if (header) (header as HTMLElement).style.display = 'block';
+      document.body.style.overflow = "unset";
+      if (header) (header as HTMLElement).style.display = "block";
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
-      if (header) (header as HTMLElement).style.display = 'block';
+      document.body.style.overflow = "unset";
+      if (header) (header as HTMLElement).style.display = "block";
     };
   }, [selectedDeveloper]);
 
@@ -120,15 +95,14 @@ export default function DevelopersSection() {
     const rect = event.currentTarget.getBoundingClientRect();
     setClickPosition({
       x: rect.x + rect.width / 2,
-      y: rect.y + rect.height / 2
+      y: rect.y + rect.height / 2,
     });
     setSelectedDeveloper(developer);
   };
 
   return (
     <section id="developers" className="relative py-24 overflow-hidden">
-<<<<<<< HEAD
-      {/* Lightweight SVG circuit trace — CSS animated, zero blur cost */}
+      {/* Lightweight SVG circuit trace — CSS stroke-dashoffset animation */}
       <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
         <svg
           className="absolute top-0 left-0 w-full h-full opacity-[0.07]"
@@ -139,15 +113,19 @@ export default function DevelopersSection() {
         >
           <path
             d="M0 100 H200 V300 H500 V150 H800"
-            stroke="#a855f7" strokeWidth="1.5"
-            strokeDasharray="400" strokeDashoffset="400"
-            style={{ animation: 'traceDraw 3s ease forwards' }}
+            stroke="#a855f7"
+            strokeWidth="1.5"
+            strokeDasharray="400"
+            strokeDashoffset="400"
+            style={{ animation: "traceDraw 3s ease forwards" }}
           />
           <path
             d="M0 400 H150 V200 H400 V450 H700 V300 H800"
-            stroke="#ec4899" strokeWidth="1"
-            strokeDasharray="400" strokeDashoffset="400"
-            style={{ animation: 'traceDraw 4s ease 0.5s forwards' }}
+            stroke="#ec4899"
+            strokeWidth="1"
+            strokeDasharray="400"
+            strokeDashoffset="400"
+            style={{ animation: "traceDraw 4s ease 0.5s forwards" }}
           />
           <circle cx="200" cy="300" r="4" fill="#a855f7" opacity="0.6" />
           <circle cx="500" cy="150" r="4" fill="#a855f7" opacity="0.6" />
@@ -155,11 +133,9 @@ export default function DevelopersSection() {
           <circle cx="150" cy="200" r="4" fill="#ec4899" opacity="0.6" />
         </svg>
       </div>
-=======
->>>>>>> a3ec40284a434400dbebda885ac02180ada3b448
 
       <div className="container mx-auto px-4">
-        {/* Header Section */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -190,7 +166,7 @@ export default function DevelopersSection() {
           </p>
         </motion.div>
 
-        {/* Stats Section */}
+        {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -215,9 +191,7 @@ export default function DevelopersSection() {
                 <div className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400 mb-2">
                   {stat.value}
                 </div>
-                <div className="text-zinc-400 text-sm font-medium">
-                  {stat.label}
-                </div>
+                <div className="text-zinc-400 text-sm font-medium">{stat.label}</div>
               </div>
             </motion.div>
           ))}
@@ -234,7 +208,7 @@ export default function DevelopersSection() {
               transition={{ duration: 0.8, delay: index * 0.2 }}
               className="w-full max-w-2xl"
             >
-              {/* Mobile View - Enhanced */}
+              {/* Mobile View */}
               <motion.div
                 className="lg:hidden w-full cursor-pointer group"
                 onClick={(e) => handleDeveloperClick(developer, e)}
@@ -247,11 +221,7 @@ export default function DevelopersSection() {
                       <div className="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-r from-purple-500 to-pink-500 p-0.5 flex-shrink-0">
                         <div className="w-full h-full rounded-full overflow-hidden bg-zinc-900/60 flex items-center justify-center">
                           {developer.imageUrl ? (
-                            <img
-                              src={developer.imageUrl}
-                              alt={developer.name}
-                              className="w-full h-full object-cover"
-                            />
+                            <img src={developer.imageUrl} alt={developer.name} className="w-full h-full object-cover" />
                           ) : (
                             <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
                               {developer.name.charAt(0)}
@@ -265,18 +235,11 @@ export default function DevelopersSection() {
                       <h3 className="text-xl font-bold text-white mb-1 group-hover:text-purple-400 transition-colors">
                         {developer.name}
                       </h3>
-                      <p className="text-purple-400 text-sm font-medium mb-1">
-                        {developer.institution}
-                      </p>
-                      <p className="text-pink-400 text-sm mb-3">
-                        {developer.role}
-                      </p>
+                      <p className="text-purple-400 text-sm font-medium mb-1">{developer.institution}</p>
+                      <p className="text-pink-400 text-sm mb-3">{developer.role}</p>
                       <div className="flex flex-wrap gap-2 mb-3">
                         {developer.skills.slice(0, 3).map((skill, idx) => (
-                          <span
-                            key={idx}
-                            className="px-2 py-1 bg-purple-500/10 text-purple-300 rounded-full text-xs border border-purple-500/20"
-                          >
+                          <span key={idx} className="px-2 py-1 bg-purple-500/10 text-purple-300 rounded-full text-xs border border-purple-500/20">
                             {skill}
                           </span>
                         ))}
@@ -286,9 +249,7 @@ export default function DevelopersSection() {
                           </span>
                         )}
                       </div>
-                      <p className="text-zinc-400 text-sm line-clamp-2">
-                        {developer.bio}
-                      </p>
+                      <p className="text-zinc-400 text-sm line-clamp-2">{developer.bio}</p>
                     </div>
                   </div>
                   <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center">
@@ -302,7 +263,7 @@ export default function DevelopersSection() {
                 </div>
               </motion.div>
 
-              {/* Desktop View - Enhanced */}
+              {/* Desktop View */}
               <div className="hidden lg:block cursor-pointer" onClick={(e) => handleDeveloperClick(developer, e)}>
                 <CardContainer containerClassName="py-12">
                   <CardBody className="glass-effect bg-zinc-900/40 backdrop-blur-sm relative group/card hover:shadow-2xl hover:shadow-purple-500/20 border-purple-500/20 hover:border-purple-500/40 w-full max-w-[35rem] h-auto rounded-2xl p-8 border transition-all duration-300">
@@ -325,11 +286,7 @@ export default function DevelopersSection() {
                       >
                         <div className="w-full h-full rounded-full overflow-hidden bg-zinc-900 flex items-center justify-center">
                           {developer.imageUrl ? (
-                            <img
-                              src={developer.imageUrl}
-                              alt={developer.name}
-                              className="w-full h-full object-cover"
-                            />
+                            <img src={developer.imageUrl} alt={developer.name} className="w-full h-full object-cover" />
                           ) : (
                             <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
                               {developer.name.charAt(0)}
@@ -339,32 +296,19 @@ export default function DevelopersSection() {
                       </CardItem>
                     </div>
 
-                    <CardItem
-                      translateZ={50}
-                      className="text-3xl font-bold text-center text-white mb-2 group-hover/card:text-purple-400 transition-colors"
-                    >
+                    <CardItem translateZ={50} className="text-3xl font-bold text-center text-white mb-2 group-hover/card:text-purple-400 transition-colors">
                       {developer.name}
                     </CardItem>
 
-                    <CardItem
-                      translateZ={40}
-                      className="text-purple-400 text-center mb-2 font-medium"
-                    >
+                    <CardItem translateZ={40} className="text-purple-400 text-center mb-2 font-medium">
                       {developer.institution}
                     </CardItem>
 
-                    <CardItem
-                      translateZ={40}
-                      className="text-pink-400 text-center mb-4 font-medium"
-                    >
+                    <CardItem translateZ={40} className="text-pink-400 text-center mb-4 font-medium">
                       {developer.role}
                     </CardItem>
 
-                    <CardItem
-                      as="p"
-                      translateZ={30}
-                      className="text-zinc-300 text-center text-base mb-6 leading-relaxed"
-                    >
+                    <CardItem as="p" translateZ={30} className="text-zinc-300 text-center text-base mb-6 leading-relaxed">
                       {developer.bio}
                     </CardItem>
 
@@ -417,42 +361,16 @@ export default function DevelopersSection() {
 
                     <CardItem translateZ={50} className="space-y-4">
                       <div className="flex justify-center gap-3">
-                        <motion.a
-                          whileHover={{ scale: 1.1, y: -3 }}
-                          whileTap={{ scale: 0.95 }}
-                          href={developer.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors text-white hover:text-purple-400 border border-transparent hover:border-purple-500/30"
-                        >
+                        <motion.a whileHover={{ scale: 1.1, y: -3 }} whileTap={{ scale: 0.95 }} href={developer.github} target="_blank" rel="noopener noreferrer" className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors text-white hover:text-purple-400 border border-transparent hover:border-purple-500/30">
                           <FaGithub className="w-5 h-5" />
                         </motion.a>
-                        <motion.a
-                          whileHover={{ scale: 1.1, y: -3 }}
-                          whileTap={{ scale: 0.95 }}
-                          href={developer.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors text-white hover:text-purple-400 border border-transparent hover:border-purple-500/30"
-                        >
+                        <motion.a whileHover={{ scale: 1.1, y: -3 }} whileTap={{ scale: 0.95 }} href={developer.linkedin} target="_blank" rel="noopener noreferrer" className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors text-white hover:text-purple-400 border border-transparent hover:border-purple-500/30">
                           <FaLinkedin className="w-5 h-5" />
                         </motion.a>
-                        <motion.a
-                          whileHover={{ scale: 1.1, y: -3 }}
-                          whileTap={{ scale: 0.95 }}
-                          href={developer.twitter}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors text-white hover:text-purple-400 border border-transparent hover:border-purple-500/30"
-                        >
+                        <motion.a whileHover={{ scale: 1.1, y: -3 }} whileTap={{ scale: 0.95 }} href={developer.twitter} target="_blank" rel="noopener noreferrer" className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors text-white hover:text-purple-400 border border-transparent hover:border-purple-500/30">
                           <FaTwitter className="w-5 h-5" />
                         </motion.a>
-                        <motion.a
-                          whileHover={{ scale: 1.1, y: -3 }}
-                          whileTap={{ scale: 0.95 }}
-                          href={developer.email}
-                          className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors text-white hover:text-purple-400 border border-transparent hover:border-purple-500/30"
-                        >
+                        <motion.a whileHover={{ scale: 1.1, y: -3 }} whileTap={{ scale: 0.95 }} href={developer.email} className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors text-white hover:text-purple-400 border border-transparent hover:border-purple-500/30">
                           <HiMail className="w-5 h-5" />
                         </motion.a>
                       </div>
@@ -484,11 +402,9 @@ export default function DevelopersSection() {
           className="text-center mt-16"
         >
           <div className="inline-block glass-effect bg-zinc-900/40 backdrop-blur-sm p-8 rounded-2xl border border-purple-500/20">
-            <h3 className="text-2xl font-bold text-white mb-3">
-              Want to Join Our Team?
-            </h3>
+            <h3 className="text-2xl font-bold text-white mb-3">Want to Join Our Team?</h3>
             <p className="text-zinc-400 mb-6 max-w-md">
-              We're always looking for talented developers to collaborate with. Let's build something amazing together!
+              We&apos;re always looking for talented developers to collaborate with. Let&apos;s build something amazing together!
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -509,4 +425,4 @@ export default function DevelopersSection() {
       />
     </section>
   );
-} 
+}
