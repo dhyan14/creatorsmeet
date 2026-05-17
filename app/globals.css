@@ -82,6 +82,7 @@
   }
 }
 
+<<<<<<< HEAD
 /* ── Background glow drift (GPU: transform only) ── */
 @keyframes bgGlow {
   0%, 100% { transform: translate(0px, 0px); }
@@ -90,11 +91,45 @@
 }
 
 /* ── Gradient text shift ── */
+=======
+/* Global Select/Dropdown Fixes */
+@layer base {
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1.2em;
+    padding-right: 2.5rem;
+  }
+
+  select option {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  select:focus option {
+    background-color: #2d2d2d;
+  }
+
+  select option:checked,
+  select option:hover {
+    background: linear-gradient(90deg, #9333ea 0%, #ec4899 100%);
+    color: white;
+  }
+}
+
+>>>>>>> a3ec40284a434400dbebda885ac02180ada3b448
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
   50%       { background-position: 100% 50%; }
 }
 
+<<<<<<< HEAD
 /* ── Typing cursor blink ── */
 @keyframes cursorBlink {
   0%, 100% { opacity: 1; }
@@ -135,4 +170,24 @@
 @keyframes tagGlow {
   0%, 100% { box-shadow: 0 0 0px rgba(168,85,247,0); }
   50%       { box-shadow: 0 0 8px rgba(168,85,247,0.5); }
+=======
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@layer utilities {
+  .border-white\/8  { border-color: rgba(255,255,255,0.08); }
+  .border-white\/6  { border-color: rgba(255,255,255,0.06); }
+  .bg-white\/4      { background-color: rgba(255,255,255,0.04); }
+  .bg-white\/6      { background-color: rgba(255,255,255,0.06); }
+  .bg-white\/8      { background-color: rgba(255,255,255,0.08); }
+  .animate-float    { animation: float 4s ease-in-out infinite; }
+  .animate-marquee  { animation: marquee 20s linear infinite; }
+>>>>>>> a3ec40284a434400dbebda885ac02180ada3b448
 }

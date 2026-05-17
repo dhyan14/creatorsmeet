@@ -10,6 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 interface UserProfile {
   _id: string;
   name: string;
+  username: string; // Add username field
   email: string;
   role: string;
   bio: string;
@@ -33,7 +34,7 @@ type UpdateableProfileFields = Pick<UserProfile, 'name' | 'bio' | 'skills' | 'co
 
 export async function GET() {
   console.log('GET /api/user/me - Start');
-  
+
   try {
     // 1. Get and validate token
     const cookieStore = cookies();

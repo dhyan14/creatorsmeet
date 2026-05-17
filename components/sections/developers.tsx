@@ -38,6 +38,7 @@ const developers: Developer[] = [
   {
     name: "Chaitya Belani",
     institution: "UCP Institute Of Technology, SVGU",
+<<<<<<< HEAD
     role: "Full Stack Developer & UI/UX Engineer",
     bio: "Passionate about crafting pixel-perfect interfaces and building robust backend systems. Focused on delivering seamless user experiences through clean code and innovative design. Loves turning complex problems into elegant digital solutions.",
     github: "https://github.com/chaitya14",
@@ -59,6 +60,29 @@ const developers: Developer[] = [
       "Designed and implemented responsive UI systems used by 1000+ users",
       "Integrated Google OAuth and JWT authentication flows",
       "Optimised frontend performance achieving sub-2s load times on Vercel"
+=======
+    role: "Full Stack Developer & UI/UX Specialist",
+    bio: "Passionate developer focused on creating seamless user experiences and robust backend systems. Dedicated to writing clean, maintainable code and delivering high-quality solutions that make a difference.",
+    github: "https://github.com/chaityabelani",
+    email: "mailto:chaitya@example.com",
+    linkedin: "https://linkedin.com/in/chaityabelani",
+    twitter: "https://twitter.com/chaityabelani",
+    skills: [
+      "Full Stack Development",
+      "React/Next.js",
+      "UI/UX Design",
+      "TypeScript",
+      "Database Design",
+      "API Development",
+      "Responsive Design",
+      "Performance Optimization"
+    ],
+    achievements: [
+      "Co-developed CreatorsMeet platform with modern design principles",
+      "Implemented responsive and accessible user interfaces",
+      "Optimized application performance and user experience",
+      "Collaborated on building scalable backend architectures"
+>>>>>>> a3ec40284a434400dbebda885ac02180ada3b448
     ]
   }
 ];
@@ -77,7 +101,7 @@ export default function DevelopersSection() {
   // Effect to toggle body scroll and hide header
   useEffect(() => {
     const header = document.querySelector('header');
-    
+
     if (selectedDeveloper) {
       document.body.style.overflow = 'hidden';
       if (header) (header as HTMLElement).style.display = 'none';
@@ -103,6 +127,7 @@ export default function DevelopersSection() {
 
   return (
     <section id="developers" className="relative py-24 overflow-hidden">
+<<<<<<< HEAD
       {/* Lightweight SVG circuit trace — CSS animated, zero blur cost */}
       <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
         <svg
@@ -130,6 +155,8 @@ export default function DevelopersSection() {
           <circle cx="150" cy="200" r="4" fill="#ec4899" opacity="0.6" />
         </svg>
       </div>
+=======
+>>>>>>> a3ec40284a434400dbebda885ac02180ada3b448
 
       <div className="container mx-auto px-4">
         {/* Header Section */}
@@ -208,7 +235,7 @@ export default function DevelopersSection() {
               className="w-full max-w-2xl"
             >
               {/* Mobile View - Enhanced */}
-              <motion.div 
+              <motion.div
                 className="lg:hidden w-full cursor-pointer group"
                 onClick={(e) => handleDeveloperClick(developer, e)}
                 whileHover={{ scale: 1.02 }}
@@ -364,7 +391,7 @@ export default function DevelopersSection() {
                             ))}
                           </div>
                         </div>
-                        
+
                         <div>
                           <h3 className="text-white text-sm font-semibold mb-3 text-center flex items-center justify-center gap-2">
                             <span className="text-lg">🏆</span>
@@ -429,7 +456,7 @@ export default function DevelopersSection() {
                           <HiMail className="w-5 h-5" />
                         </motion.a>
                       </div>
-                      
+
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}

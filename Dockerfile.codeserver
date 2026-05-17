@@ -1,0 +1,12 @@
+FROM codercom/code-server:latest
+
+# Set password
+ENV PASSWORD=${PASSWORD:-creatorsmeet2024}
+
+# Copy wrapper script
+COPY --chmod=755 entrypoint.sh /usr/local/bin/entrypoint.sh
+
+EXPOSE 8080
+
+# Use wrapper script
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

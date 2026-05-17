@@ -1,525 +1,491 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import {
+  IconRocket, IconMail, IconArrowRight, IconArrowLeft,
+  IconSparkles, IconEye, IconEyeOff, IconCheck, IconX,
+  IconBrandGoogle, IconBrandGithub, IconUser, IconAt,
+  IconLock, IconShieldCheck, IconLoader2
+} from '@tabler/icons-react';
 
-export default function SignupPage() {
+/* ─── Password strength helper ─── */
+function getPasswordStrength(pw: string) {
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (/[a-z]/.test(pw)) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/\d/.test(pw)) score++;
+  if (/[^a-zA-Z0-9]/.test(pw)) score++;
+  return score; // 0-5
+}
+const strengthLabel = ["", "Weak", "Fair", "Good", "Strong", "Excellent"];
+const strengthColor = ["", "#ef4444", "#f97316", "#eab308", "#22c55e", "#10b981"];
+
+/* ─── Username availability hook ─── */
+function useUsernameCheck() {
+  const [status, setStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
+  const timer = useRef<NodeJS.Timeout>();
+
+  const check = (val: string) => {
+    if (val.length < 3) { setStatus('idle'); return; }
+    setStatus('checking');
+    clearTimeout(timer.current);
+    timer.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/auth/check-username?username=${encodeURIComponent(val)}`);
+        const data = await res.json();
+        setStatus(data.available ? 'available' : 'taken');
+      } catch { setStatus('idle'); }
+    }, 500);
+  };
+
+  return { status, check };
+}
+
+export default function SignUp() {
   const router = useRouter();
-  const [step, setStep] = useState<'idea' | 'analysis' | 'registration'>('idea');
-  const [projectIdea, setProjectIdea] = useState('');
-  const [formData, setFormData] = useState({
+  const [step, setStep] = useState(1); // 1 = account, 2 = OTP
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const username = useUsernameCheck();
+
+  const [form, setForm] = useState({
     name: '',
+    username: '',
     email: '',
     password: '',
-    country: '',
-    role: 'innovator',
-    projectRequirements: {
-      description: '',
-      technologies: [],
-      preferredStack: ''
-    },
-    developerStack: {
-      name: '',
-      technologies: []
-    }
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [analysisResults, setAnalysisResults] = useState<{
-    technologies: Array<{ name: string; confidence: number }>;
-    potentialMatches?: Array<{ id: string; name: string; technologies: string[] }>;
-  } | null>(null);
+  // Field-level errors
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  const analyzeIdea = async () => {
-    setLoading(true);
+  const set = (field: string, value: string) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+    setFieldErrors(prev => ({ ...prev, [field]: '' }));
     setError('');
+    if (field === 'username') username.check(value);
+  };
 
-    try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          role: 'innovator',
-          projectRequirements: {
-            description: projectIdea
-          }
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to analyze project');
-      }
-
-      setAnalysisResults(data);
-      setStep('analysis');
-      setFormData(prev => ({
-        ...prev,
-        projectRequirements: {
-          ...prev.projectRequirements,
-          description: projectIdea,
-          technologies: data.technologies.map((tech: { name: string }) => tech.name)
-        }
-      }));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to analyze project');
-    } finally {
-      setLoading(false);
+  // Auto-generate username from name
+  const generateUsername = (name: string) => {
+    const base = name.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 15);
+    if (base.length >= 3) {
+      const suggestion = base + Math.floor(Math.random() * 100);
+      set('username', suggestion);
+      username.check(suggestion);
     }
+  };
+
+  const validate = (): boolean => {
+    const errs: Record<string, string> = {};
+    if (!form.name.trim() || form.name.length < 2) errs.name = 'Enter your full name';
+    if (!form.username.trim() || form.username.length < 3) errs.username = 'Username must be 3+ characters';
+    else if (!/^[a-z0-9_-]+$/.test(form.username.toLowerCase())) errs.username = 'Only letters, numbers, _ and -';
+    else if (username.status === 'taken') errs.username = 'Username already taken';
+    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Enter a valid email';
+    if (form.password.length < 8) errs.password = 'At least 8 characters';
+    else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(form.password)) errs.password = 'Need uppercase, lowercase & number';
+    setFieldErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-
+    if (!validate()) return;
+    setLoading(true); setError('');
     try {
-      const response = await fetch('/api/auth/signup', {
+      const res = await fetch('/api/auth/signup', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          username: form.username.toLowerCase(),
+          password: form.password,
+        }),
+        credentials: 'include'
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Something went wrong');
-      }
-
-      router.push('/dashboard');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Registration failed');
+      if (data.otpSent) { setStep(2); return; }
+      router.push('/complete-profile');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
-    } finally {
-      setLoading(false);
+    } finally { setLoading(false); }
+  };
+
+  const handleOtp = async (otp: string) => {
+    setLoading(true); setError('');
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, otp }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Verification failed');
+      router.push('/complete-profile');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally { setLoading(false); }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      await fetch('/api/auth/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email }),
+      });
+    } catch { /* silent */ }
+  };
+
+  const strength = getPasswordStrength(form.password);
+
+  return (
+    <div className="min-h-screen bg-[#050510] text-white flex">
+      {/* Background */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[#050510]" />
+        <div className="absolute inset-0" style={{
+          backgroundImage: `linear-gradient(rgba(139,92,246,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.03) 1px, transparent 1px)`,
+          backgroundSize: "60px 60px",
+        }} />
+        <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full" style={{ background: "radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)" }} />
+        <div className="absolute bottom-[10%] right-[5%] w-[400px] h-[400px] rounded-full" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.12) 0%, transparent 70%)" }} />
+      </div>
+
+      {/* Left Panel — Desktop only */}
+      <div className="hidden lg:flex lg:w-[42%] relative items-center justify-center p-12">
+        <div className="relative z-10 max-w-md">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+            <Link href="/" className="inline-flex items-center gap-3 mb-12">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-600 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                <IconRocket className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-lg font-bold text-white">CreatorsMeet</p>
+                <p className="text-[11px] text-white/40">by Youdex Technologies</p>
+              </div>
+            </Link>
+
+            <h2 className="text-4xl xl:text-5xl font-extrabold leading-tight mb-6 tracking-tight">
+              Start building{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-pink-400 to-violet-400">something amazing</span>
+            </h2>
+            <p className="text-white/40 text-base leading-relaxed mb-10">
+              Join thousands of creators and developers building the future together.
+              It takes less than a minute to get started.
+            </p>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 mb-10">
+              {[
+                { val: "10K+", label: "Creators" },
+                { val: "5K+", label: "Projects" },
+                { val: "95%", label: "Match Rate" },
+              ].map((s, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 + i * 0.1 }}
+                  className="text-center p-3 rounded-xl border border-white/8 bg-white/[0.03]">
+                  <p className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-pink-400">{s.val}</p>
+                  <p className="text-[11px] text-white/30 mt-0.5">{s.label}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Testimonial */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+              className="p-4 rounded-2xl border border-white/8 bg-white/[0.03]">
+              <p className="text-sm text-white/50 italic leading-relaxed mb-3">
+                "Found the perfect developer for my startup idea within 24 hours. CreatorsMeet is a game changer."
+              </p>
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center text-xs font-bold">A</div>
+                <div>
+                  <p className="text-xs font-semibold text-white/70">Alex M.</p>
+                  <p className="text-[10px] text-white/30">Startup Founder</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+        <div className="absolute right-0 top-[15%] bottom-[15%] w-px bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+      </div>
+
+      {/* Right Panel — Form */}
+      <div className="flex-1 flex items-center justify-center px-4 py-10">
+        <div className="w-full max-w-md">
+          {/* Mobile logo */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="lg:hidden text-center mb-8">
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-pink-600 flex items-center justify-center">
+                <IconRocket className="w-5 h-5 text-white" />
+              </div>
+              <p className="text-lg font-bold">CreatorsMeet</p>
+            </Link>
+          </motion.div>
+
+          <AnimatePresence mode="wait">
+            {/* ════════ STEP 1: Account Details ════════ */}
+            {step === 1 && (
+              <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <div className="mb-6">
+                  <h1 className="text-2xl font-bold mb-1">Create your account</h1>
+                  <p className="text-white/40 text-sm">Quick signup — set up your profile after</p>
+                </div>
+
+                {/* Social buttons first */}
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  <motion.button type="button" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    onClick={() => signIn('google')}
+                    className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-colors text-sm font-medium text-white/70">
+                    <IconBrandGoogle className="w-4 h-4" /> Google
+                  </motion.button>
+                  <motion.button type="button" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    onClick={() => signIn('github')}
+                    className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-colors text-sm font-medium text-white/70">
+                    <IconBrandGithub className="w-4 h-4" /> GitHub
+                  </motion.button>
+                </div>
+
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/8" /></div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="px-3 bg-[#050510] text-white/30">or continue with email</span>
+                  </div>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Name */}
+                  <div>
+                    <div className="relative">
+                      <IconUser className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                      <input type="text" placeholder="Full name" value={form.name}
+                        onChange={e => { set('name', e.target.value); if (!form.username && e.target.value.length > 2) generateUsername(e.target.value); }}
+                        className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${
+                          fieldErrors.name ? 'border-red-500/50 focus:ring-red-500/30' : 'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
+                        }`}
+                      />
+                    </div>
+                    {fieldErrors.name && <p className="text-xs text-red-400 mt-1 ml-1">{fieldErrors.name}</p>}
+                  </div>
+
+                  {/* Username */}
+                  <div>
+                    <div className="relative">
+                      <IconAt className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                      <input type="text" placeholder="Username" value={form.username}
+                        onChange={e => set('username', e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))}
+                        className={`w-full pl-10 pr-10 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${
+                          fieldErrors.username || username.status === 'taken' ? 'border-red-500/50 focus:ring-red-500/30' :
+                          username.status === 'available' ? 'border-emerald-500/50 focus:ring-emerald-500/30' :
+                          'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
+                        }`}
+                      />
+                      {/* Status indicator */}
+                      <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
+                        {username.status === 'checking' && <IconLoader2 className="w-4 h-4 text-white/30 animate-spin" />}
+                        {username.status === 'available' && <IconCheck className="w-4 h-4 text-emerald-400" />}
+                        {username.status === 'taken' && <IconX className="w-4 h-4 text-red-400" />}
+                      </div>
+                    </div>
+                    {fieldErrors.username && <p className="text-xs text-red-400 mt-1 ml-1">{fieldErrors.username}</p>}
+                    {username.status === 'available' && <p className="text-xs text-emerald-400 mt-1 ml-1">Username available!</p>}
+                    {username.status === 'taken' && !fieldErrors.username && <p className="text-xs text-red-400 mt-1 ml-1">Username taken</p>}
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <div className="relative">
+                      <IconMail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                      <input type="email" placeholder="Email address" value={form.email}
+                        onChange={e => set('email', e.target.value)}
+                        className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${
+                          fieldErrors.email ? 'border-red-500/50 focus:ring-red-500/30' : 'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
+                        }`}
+                      />
+                    </div>
+                    {fieldErrors.email && <p className="text-xs text-red-400 mt-1 ml-1">{fieldErrors.email}</p>}
+                  </div>
+
+                  {/* Password */}
+                  <div>
+                    <div className="relative">
+                      <IconLock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                      <input type={showPassword ? 'text' : 'password'} placeholder="Create password" value={form.password}
+                        onChange={e => set('password', e.target.value)}
+                        className={`w-full pl-10 pr-10 py-3 rounded-xl border text-sm bg-white/[0.03] placeholder-white/25 text-white focus:outline-none focus:ring-2 transition-all ${
+                          fieldErrors.password ? 'border-red-500/50 focus:ring-red-500/30' : 'border-white/10 focus:ring-violet-500/30 focus:border-violet-500/50'
+                        }`}
+                      />
+                      <button type="button" onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors">
+                        {showPassword ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                    {fieldErrors.password && <p className="text-xs text-red-400 mt-1 ml-1">{fieldErrors.password}</p>}
+                    {/* Strength bar */}
+                    {form.password.length > 0 && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <div className="flex-1 flex gap-1">
+                          {[1,2,3,4,5].map(i => (
+                            <div key={i} className="flex-1 h-1 rounded-full transition-all duration-300"
+                              style={{ backgroundColor: i <= strength ? strengthColor[strength] : 'rgba(255,255,255,0.06)' }} />
+                          ))}
+                        </div>
+                        <span className="text-[10px] font-medium" style={{ color: strengthColor[strength] }}>
+                          {strengthLabel[strength]}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Error */}
+                  {error && (
+                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
+                      className="p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                      <p className="text-xs text-red-400 text-center">{error}</p>
+                    </motion.div>
+                  )}
+
+                  {/* Submit */}
+                  <motion.button type="submit" disabled={loading} whileHover={{ scale: loading ? 1 : 1.02 }} whileTap={{ scale: loading ? 1 : 0.97 }}
+                    className="w-full flex items-center justify-center gap-2 py-3 mt-2 bg-gradient-to-r from-violet-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all disabled:opacity-50 text-sm">
+                    {loading ? <><IconLoader2 className="w-4 h-4 animate-spin" /> Creating account...</> : <>Create account <IconArrowRight className="w-4 h-4" /></>}
+                  </motion.button>
+
+                  {/* Terms note */}
+                  <p className="text-[11px] text-white/25 text-center leading-relaxed">
+                    By signing up, you agree to our{' '}
+                    <Link href="/terms" className="text-violet-400/60 hover:text-violet-400">Terms</Link>{' '}and{' '}
+                    <Link href="/privacy" className="text-violet-400/60 hover:text-violet-400">Privacy Policy</Link>
+                  </p>
+                </form>
+              </motion.div>
+            )}
+
+            {/* ════════ STEP 2: OTP Verification ════════ */}
+            {step === 2 && (
+              <motion.div key="step2" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
+                <OTPVerification
+                  email={form.email}
+                  loading={loading}
+                  error={error}
+                  onVerify={handleOtp}
+                  onResend={handleResendOtp}
+                  onBack={() => setStep(1)}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Sign in link */}
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+            className="text-center mt-6 text-sm text-white/30">
+            Already have an account?{' '}
+            <Link href="/signin" className="font-semibold text-violet-400 hover:text-violet-300 transition-colors">Sign in</Link>
+          </motion.p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── OTP Component ─── */
+function OTPVerification({ email, loading, error, onVerify, onResend, onBack }: {
+  email: string; loading: boolean; error: string;
+  onVerify: (otp: string) => void; onResend: () => void; onBack: () => void;
+}) {
+  const [otp, setOtp] = useState(['','','','','','']);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const refs = useRef<(HTMLInputElement | null)[]>([]);
+
+  useEffect(() => {
+    refs.current[0]?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const t = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(t);
+    }
+  }, [resendCooldown]);
+
+  const handleChange = (i: number, val: string) => {
+    if (!/^\d?$/.test(val)) return;
+    const next = [...otp];
+    next[i] = val;
+    setOtp(next);
+    if (val && i < 5) refs.current[i + 1]?.focus();
+    if (next.every(d => d !== '')) onVerify(next.join(''));
+  };
+
+  const handleKeyDown = (i: number, e: React.KeyboardEvent) => {
+    if (e.key === 'Backspace' && !otp[i] && i > 0) refs.current[i - 1]?.focus();
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (pasted.length === 6) {
+      const next = pasted.split('');
+      setOtp(next);
+      refs.current[5]?.focus();
+      onVerify(pasted);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  
-  const springConfig = { damping: 25, stiffness: 150 };
-  const mouseXSpring = useSpring(mouseX, springConfig);
-  const mouseYSpring = useSpring(mouseY, springConfig);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const { innerWidth, innerHeight } = window;
-      mouseX.set((clientX / innerWidth - 0.5) * 50);
-      mouseY.set((clientY / innerHeight - 0.5) * 50);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-950/20 to-black flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f12_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f12_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/20 via-transparent to-pink-900/20" />
+    <div className="text-center">
+      <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-violet-600 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+        <IconShieldCheck className="w-8 h-8 text-white" />
+      </div>
+      <h1 className="text-2xl font-bold mb-2">Check your email</h1>
+      <p className="text-sm text-white/40 mb-8">
+        We sent a 6-digit code to <span className="text-violet-400 font-medium">{email}</span>
+      </p>
+
+      {/* OTP boxes */}
+      <div className="flex justify-center gap-2.5 mb-6" onPaste={handlePaste}>
+        {otp.map((digit, i) => (
+          <input key={i} ref={el => { refs.current[i] = el; }} type="text" inputMode="numeric"
+            maxLength={1} value={digit} onChange={e => handleChange(i, e.target.value)}
+            onKeyDown={e => handleKeyDown(i, e)}
+            className={`w-12 h-14 text-center text-xl font-bold rounded-xl border bg-white/[0.03] text-white focus:outline-none focus:ring-2 transition-all ${
+              digit ? 'border-violet-500/50 focus:ring-violet-500/30' : 'border-white/10 focus:ring-violet-500/30'
+            }`}
+          />
+        ))}
       </div>
 
-      {/* Animated Orbs */}
-      <motion.div
-        style={{ x: mouseXSpring, y: mouseYSpring }}
-        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[120px] animate-pulse"
-      />
-      <motion.div
-        style={{ x: mouseXSpring, y: mouseYSpring }}
-        className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-pink-500/30 rounded-full blur-[120px] animate-pulse"
-        transition={{ delay: 0.5 }}
-      />
-      <motion.div
-        style={{ x: mouseXSpring, y: mouseYSpring }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/20 rounded-full blur-[150px]"
-      />
+      {error && (
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs text-red-400 mb-4">{error}</motion.p>
+      )}
 
-      {/* Floating Particles */}
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-purple-400/30 rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            opacity: [0.2, 1, 0.2],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 2,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
+      {loading && (
+        <div className="flex items-center justify-center gap-2 text-sm text-white/40 mb-4">
+          <IconLoader2 className="w-4 h-4 animate-spin" /> Verifying...
+        </div>
+      )}
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="max-w-lg w-full relative z-10"
-      >
-        {/* Back Button */}
-        <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6 group">
-          <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Back to Home
-        </Link>
+      <button type="button" disabled={resendCooldown > 0}
+        onClick={() => { onResend(); setResendCooldown(60); }}
+        className="text-xs text-white/30 hover:text-violet-400 transition-colors disabled:opacity-40 mb-4">
+        {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Didn't receive it? Resend code"}
+      </button>
 
-        <motion.div
-          className="relative"
-          whileHover={{ scale: 1.01 }}
-          transition={{ type: "spring", stiffness: 300 }}
-        >
-          {/* Glow Effect */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-3xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity" />
-          
-          <div className="relative glass-effect bg-black/60 backdrop-blur-2xl p-8 md:p-10 rounded-3xl border border-white/20 shadow-2xl">
-            {/* Logo and Title */}
-            <div className="text-center mb-8">
-              <Link href="/" className="inline-block">
-                <motion.div
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur-md opacity-50" />
-                    <Image
-                      src="/logo.png"
-                      alt="CreatorsMeet Logo"
-                      width={70}
-                      height={70}
-                      className="mx-auto rounded-xl relative z-10"
-                    />
-                  </div>
-                </motion.div>
-              </Link>
-              
-              <motion.h2 
-                className="mt-6 text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 animate-gradient"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                {step === 'idea' ? '✨ Describe Your Vision' : 
-                 step === 'analysis' ? '🎯 AI Analysis Results' : 
-                 '🚀 Create Your Account'}
-              </motion.h2>
-              
-              <motion.p 
-                className="mt-3 text-gray-400"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                {step === 'registration' && (
-                  <>
-                    Already have an account?{' '}
-                    <Link href="/signin" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors">
-                      Sign in
-                    </Link>
-                  </>
-                )}
-                {step === 'idea' && 'Let AI analyze your idea and match you with the perfect team'}
-              </motion.p>
-            </div>
-
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-lg text-sm flex items-center gap-3 mb-6"
-            >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {error}
-            </motion.div>
-          )}
-
-          {step === 'idea' && (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Project Idea
-                </label>
-                <textarea
-                  value={projectIdea}
-                  onChange={(e) => setProjectIdea(e.target.value)}
-                  placeholder="Describe your project idea in detail. Include features, target users, and any specific requirements..."
-                  className="w-full h-40 bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none"
-                  required
-                />
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={analyzeIdea}
-                disabled={loading || !projectIdea.trim()}
-                className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                    Analyze with AI
-                  </>
-                )}
-              </motion.button>
-            </div>
-          )}
-
-          {step === 'analysis' && analysisResults && (
-            <div className="space-y-6">
-              <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-2xl p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold text-white">Analysis Complete!</h3>
-                </div>
-                
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="text-sm font-semibold text-gray-300 mb-3">Recommended Technologies</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {analysisResults.technologies.map((tech) => (
-                        <motion.span
-                          key={tech.name}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          whileHover={{ scale: 1.05 }}
-                          className="px-3 py-1.5 bg-purple-500/20 border border-purple-500/30 text-purple-300 rounded-lg text-sm font-medium"
-                        >
-                          {tech.name} ({Math.round(tech.confidence * 100)}%)
-                        </motion.span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {analysisResults.potentialMatches && analysisResults.potentialMatches.length > 0 && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-300 mb-3">Potential Team Members</h4>
-                      <div className="space-y-2">
-                        {analysisResults.potentialMatches.map((coder, index) => (
-                          <motion.div
-                            key={coder.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            className="flex items-center justify-between p-4 bg-black/40 border border-white/10 rounded-lg hover:border-purple-500/30 transition-all"
-                          >
-                            <div>
-                              <p className="text-white font-semibold">{coder.name}</p>
-                              <p className="text-sm text-gray-400 mt-1">
-                                {coder.technologies.join(' • ')}
-                              </p>
-                            </div>
-                            <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setStep('registration')}
-                    className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/50 flex items-center justify-center gap-2"
-                  >
-                    Continue to Registration
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </motion.button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {step === 'registration' && (
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="John Doe"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 text-white placeholder-gray-500 transition-all"
-                    autoComplete="name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Country</label>
-                  <input
-                    type="text"
-                    name="country"
-                    placeholder="United States"
-                    required
-                    value={formData.country}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 text-white placeholder-gray-500 transition-all"
-                    autoComplete="country"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="you@example.com"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 text-white placeholder-gray-500 transition-all"
-                  autoComplete="email"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Create a secure password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 text-white placeholder-gray-500 transition-all"
-                  autoComplete="new-password"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">I am a</label>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 text-white transition-all"
-                  required
-                >
-                  <option value="innovator">Innovator (I have an idea)</option>
-                  <option value="coder">Developer (I can code)</option>
-                </select>
-              </div>
-
-              {formData.role === 'innovator' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Project Idea</label>
-                  <textarea
-                    name="projectRequirements.description"
-                    placeholder="Describe your project idea..."
-                    value={formData.projectRequirements.description}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      projectRequirements: {
-                        ...prev.projectRequirements,
-                        description: e.target.value
-                      }
-                    }))}
-                    className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 text-white placeholder-gray-500 transition-all resize-none"
-                    rows={4}
-                  />
-                </div>
-              )}
-
-              {formData.role === 'coder' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Tech Stack</label>
-                  <input
-                    type="text"
-                    name="developerStack.name"
-                    placeholder="e.g., MERN, MEAN, React/Node.js"
-                    value={formData.developerStack.name}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      developerStack: {
-                        ...prev.developerStack,
-                        name: e.target.value
-                      }
-                    }))}
-                    className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 text-white placeholder-gray-500 transition-all"
-                  />
-                </div>
-              )}
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Creating account...
-                  </>
-                ) : (
-                  <>
-                    Create Account
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </>
-                )}
-              </motion.button>
-            </form>
-          )}
-          </div>
-        </motion.div>
-
-        <p className="text-center text-gray-500 text-xs mt-6">
-          By signing up, you agree to our Terms of Service and Privacy Policy
-        </p>
-      </motion.div>
+      <div className="pt-4">
+        <button type="button" onClick={onBack}
+          className="inline-flex items-center gap-1.5 text-sm text-white/30 hover:text-white/60 transition-colors">
+          <IconArrowLeft className="w-3.5 h-3.5" /> Back to signup
+        </button>
+      </div>
     </div>
   );
-} 
+}
